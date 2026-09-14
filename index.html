@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Digital Point — সিভি, চাকরির আবেদন ও ভর্তি ফরম সহায়তা</title>
+<meta name="theme-color" content="#EFEFEF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Digital Point" id="appTitleMeta">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="সিভি, কভার লেটার, চাকরির আবেদন ও ভর্তি ফরম পূরণে সহায়তা — মোবাইল অ্যাপ থেকে সরাসরি অর্ডার ও ট্র্যাক করুন।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEFEF;
+    --paper-alt:#E3E3E3;
+    --ink:#1B2A22;
+    --ink-soft:#4B5A50;
+    --stamp:#9C2B1B;
+    --stamp-dark:#7C2115;
+    --green:#1F4B3B;
+    --gold:#A9812E;
+    --steel:#3B5B7C;
+    --purple:#6B3FA0;
+    --teal:#1F7A8C;
+    --line:#D3D3D3;
+    --tint-stamp:#FBEAE7;
+    --tint-green:#E7F0EA;
+    --tint-steel:#E7EFF6;
+    --tint-gold:#FBF3E0;
+    --tint-purple:#F1EAFA;
+    --tint-teal:#E3F3F5;
+    --max:760px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 550px at 6% -8%, rgba(31,75,59,.07), transparent 60%),
+      radial-gradient(950px 520px at 96% 4%, rgba(59,91,124,.07), transparent 58%),
+      radial-gradient(900px 480px at 18% 55%, rgba(169,129,46,.05), transparent 55%),
+      radial-gradient(1000px 520px at 88% 70%, rgba(107,63,160,.05), transparent 55%),
+      radial-gradient(900px 480px at 30% 100%, rgba(156,43,27,.045), transparent 55%),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Hind Siliguri', sans-serif;
+    font-size:17px;
+    line-height:1.7;
+    overscroll-behavior-y:none;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  /* app-like touch feedback */
+  a,button,.btn{touch-action:manipulation;}
+  a:active,button:active,.btn:active{opacity:.75;}
+  h1,h2,h3,.disp{
+    font-family:'Tiro Bangla', serif;
+    font-weight:400;
+    margin:0;
+    color:var(--ink);
+  }
+  a{color:inherit;}
+  img,svg{display:block;max-width:100%;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px;}
+  .wrap-wide{max-width:920px;margin:0 auto;padding:0 24px;}
+
+  /* header */
+  header{
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:var(--paper);z-index:50;
+    padding-top:env(safe-area-inset-top);
+  }
+  header::after{
+    content:"";display:block;height:3px;width:100%;
+    background:linear-gradient(90deg, var(--stamp), var(--gold), var(--green), var(--steel), var(--purple));
+  }
+  .nav{
+    max-width:920px;margin:0 auto;padding:9px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .brand{font-family:'Tiro Bangla',serif;font-size:24px;letter-spacing:0.5px;}
+  .brand span{color:var(--stamp);}
+  .navlinks{display:flex;gap:26px;font-size:15px;flex-wrap:wrap;}
+  .navlinks a{text-decoration:none;color:var(--ink-soft);border-bottom:1px solid transparent;padding-bottom:2px;}
+  .navlinks a:hover{color:var(--ink);border-bottom-color:var(--stamp);}
+  .nav-cta{
+    background:var(--green);color:var(--paper);padding:8px 16px;border-radius:3px;
+    text-decoration:none;font-size:14px;white-space:nowrap;line-height:1.3;
+  }
+  .apk-btn{
+    display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:20px;
+    background:linear-gradient(135deg, var(--green), var(--steel));color:var(--paper);text-decoration:none;
+    font-size:13px;font-weight:600;font-family:'Hind Siliguri',sans-serif;
+    white-space:nowrap;flex-shrink:0;line-height:1.3;
+    box-shadow:0 2px 8px rgba(31,75,59,.25);
+  }
+  .apk-btn:hover{filter:brightness(0.94);}
+  .apk-btn svg{width:15px;height:15px;flex-shrink:0;}
+
+  /* hero */
+  .hero{
+    max-width:920px;margin:0 auto;padding:8px 24px 56px;
+  }
+  .hero h1{font-size:44px;line-height:1.22;}
+  .hero h1.hidden{display:none;}
+  .hero p{color:var(--ink-soft);font-size:18px;max-width:46ch;margin-top:16px;}
+  .hero p.hidden{display:none;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;padding-top:24px;padding-bottom:6px;}
+  .btn{
+    display:inline-block;padding:11px 20px;border-radius:3px;text-decoration:none;
+    font-size:15.5px;font-weight:600;border:1px solid transparent;background:none;
+    font-family:'Hind Siliguri',sans-serif;cursor:pointer;line-height:1.3;
+  }
+  .btn-primary{background:var(--stamp);color:var(--paper);}
+  .btn-primary:hover{background:var(--stamp-dark);}
+  .btn-ghost{border-color:var(--ink);color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper);}
+  .btn-sm{padding:7px 14px;font-size:13.5px;}
+  .btn:disabled{opacity:.55;cursor:not-allowed;}
+  .tags{margin-top:12px;font-size:14px;color:var(--ink-soft);}
+  .tags b{color:var(--ink);font-weight:600;}
+
+  /* scrolling marquee strip (admin-managed text), shown above the hero */
+  .marquee-wrap{
+    overflow:hidden;background:var(--paper-alt);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:6px 0;margin-top:20px;
+  }
+  .marquee-wrap.hidden{display:none;}
+  .marquee-track{display:flex;width:max-content;will-change:transform;animation:marquee-scroll 30s linear infinite;}
+  .marquee-item{
+    flex-shrink:0;display:flex;align-items:center;white-space:nowrap;
+    padding:0 22px;font-size:12.5px;color:#000;line-height:1.4;
+  }
+  .marquee-item::after{content:"●";margin-left:22px;color:var(--stamp);font-size:6px;}
+  @keyframes marquee-scroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  @media (prefers-reduced-motion: reduce){ .marquee-track{animation:none;} }
+
+  section{padding:56px 0;}
+  /* soft pastel colour panels per section — centred to match .wrap's width,
+     giving each block of the page its own gentle accent while staying tidy */
+  #how,#notice,#order,#track,#reviews{border-radius:22px;}
+  #how{background:linear-gradient(180deg, var(--tint-steel), transparent 92%);}
+  #notice{background:linear-gradient(180deg, var(--tint-gold), transparent 92%);}
+  #order{background:linear-gradient(180deg, var(--tint-green), transparent 92%);}
+  #track{background:linear-gradient(180deg, var(--tint-teal), transparent 92%);}
+  #reviews{background:linear-gradient(180deg, var(--tint-purple), transparent 92%);}
+  .section-head{margin-bottom:8px;}
+  .section-head h2{font-size:30px;position:relative;display:inline-block;padding-bottom:10px;}
+  .section-head h2::after{
+    content:"";position:absolute;left:0;bottom:0;height:3px;width:52px;border-radius:2px;
+    background:linear-gradient(90deg, var(--accent-a, var(--stamp)), var(--accent-b, var(--gold)));
+  }
+  #how .section-head h2::after{--accent-a:var(--steel);--accent-b:var(--green);}
+  #notice .section-head h2::after{--accent-a:var(--gold);--accent-b:var(--stamp);}
+  #services .section-head h2::after{--accent-a:var(--green);--accent-b:var(--steel);}
+  #order .section-head h2::after{--accent-a:var(--green);--accent-b:var(--gold);}
+  #track .section-head h2::after{--accent-a:var(--teal);--accent-b:var(--steel);}
+  #reviews .section-head h2::after{--accent-a:var(--purple);--accent-b:var(--stamp);}
+  .section-sub{color:var(--ink-soft);margin-top:10px;font-size:15.5px;max-width:60ch;}
+  .rule{height:1px;background:var(--line);border:0;margin:0;}
+
+  /* services — colour-accented card grid (2 columns on mobile/app mode) */
+  .service-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:22px;
+  }
+  @media (min-width:761px){ .service-grid{grid-template-columns:repeat(3,1fr);gap:18px;} }
+  .service-card{
+    background:linear-gradient(160deg, var(--tint, var(--paper-alt)) 0%, var(--paper-alt) 70%);
+    border:1px solid var(--line);border-radius:14px;
+    padding:16px 14px 14px;display:flex;flex-direction:column;
+    border-top:4px solid var(--accent, var(--green));
+    box-shadow:0 2px 10px rgba(27,42,34,.06);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .service-card:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(27,42,34,.12);}
+  .service-card h3{font-size:15.5px;line-height:1.35;min-height:2.7em;}
+  .service-card .service-price{
+    font-family:'Tiro Bangla',serif;font-size:16.5px;color:var(--accent, var(--gold));
+    margin-top:6px;font-weight:400;
+  }
+  .service-card .service-desc{
+    color:var(--ink-soft);font-size:12.5px;margin:8px 0 0;line-height:1.55;flex:1;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .service-card .service-desc.expanded{-webkit-line-clamp:unset;overflow:visible;}
+  .service-actions{display:flex;gap:7px;margin-top:12px;}
+  .service-actions button{
+    flex:1;border-radius:8px;font-size:12.5px;padding:8px 4px;text-align:center;
+    font-family:'Hind Siliguri',sans-serif;cursor:pointer;line-height:1.3;white-space:nowrap;
+  }
+  .btn-detail{background:transparent;border:1.5px solid var(--accent, var(--steel));color:var(--accent, var(--steel));}
+  .btn-detail:hover{background:var(--accent, var(--steel));color:var(--paper);}
+  .btn-order{background:var(--accent, var(--green));border:1.5px solid var(--accent, var(--green));color:var(--paper);}
+  .btn-order:hover{filter:brightness(0.92);}
+  @media (max-width:400px){
+    .service-actions{flex-direction:column;}
+    .service-card h3{min-height:0;}
+  }
+
+  /* how it works */
+  .steps{
+    margin-top:32px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;
+  }
+  .step{position:relative;padding-right:20px;}
+  .step:not(:last-child)::after{
+    content:"";position:absolute;top:16px;left:calc(100% - 12px);width:calc(100% - 8px);height:1px;
+    background:var(--line);display:block;
+  }
+  .step-num{
+    width:34px;height:34px;border:1.5px solid var(--green);color:var(--green);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:'Tiro Bangla',serif;font-size:16px;background:var(--paper);position:relative;z-index:2;
+  }
+  .step h4{font-family:'Tiro Bangla',serif;font-weight:400;font-size:17px;margin:14px 0 6px;}
+  .step p{font-size:14px;color:var(--ink-soft);margin:0;}
+
+  /* pricing receipt */
+  .receipt{
+    margin-top:28px;background:var(--paper-alt);border:1px solid var(--line);
+    border-radius:2px;padding:28px 30px;position:relative;
+  }
+  .receipt::before,.receipt::after{
+    content:"";position:absolute;left:0;right:0;height:10px;
+    background-image:radial-gradient(circle at 10px 5px, var(--paper) 5px, transparent 5.5px);
+    background-size:20px 10px;background-repeat:repeat-x;
+  }
+  .receipt::before{top:-5px;}
+  .receipt::after{bottom:-5px;transform:rotate(180deg);}
+  .rline{
+    display:flex;justify-content:space-between;gap:16px;padding:10px 0;
+    border-bottom:1px dashed var(--line);font-size:15.5px;
+  }
+  .rline:last-child{border-bottom:0;}
+  .rline .amt{font-family:'Tiro Bangla',serif;color:var(--gold);white-space:nowrap;}
+  .rnote{margin-top:18px;font-size:13.5px;color:var(--ink-soft);}
+
+  /* order form */
+  .order-box{
+    margin-top:28px;background:var(--paper-alt);border:1px solid var(--line);padding:32px;border-radius:3px;
+  }
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:14.5px;margin-bottom:7px;color:var(--ink-soft);}
+  .field input,.field select,.field textarea{
+    width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:3px;
+    background:var(--paper);color:var(--ink);font-family:'Hind Siliguri',sans-serif;font-size:15.5px;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:2px solid var(--green);outline-offset:1px;
+  }
+  .field textarea{resize:vertical;min-height:96px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .order-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:8px;}
+  .direct-call{font-size:14.5px;color:var(--ink-soft);}
+  .form-msg{font-size:14px;margin-top:14px;padding:10px 0;display:none;}
+  .form-msg.show{display:block;}
+  .form-msg.err{color:var(--stamp-dark);}
+
+  /* order confirmation stub */
+  .confirm-box{
+    margin-top:28px;background:var(--paper-alt);border:1px solid var(--green);padding:28px 30px;border-radius:3px;
+  }
+  .confirm-box h3{font-size:19px;color:var(--green);}
+  .confirm-id{font-family:'Tiro Bangla',serif;font-size:20px;color:var(--stamp);margin:10px 0;letter-spacing:1px;}
+  .confirm-box p{font-size:14.5px;color:var(--ink-soft);margin:6px 0 0;}
+
+  /* congratulations pop-up (shown right after a successful order) */
+  .congrats-modal{
+    position:fixed;inset:0;z-index:200;background:rgba(27,42,34,.55);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .congrats-modal.hidden{display:none;}
+  .congrats-box{
+    background:var(--paper);border-radius:10px;padding:38px 32px 32px;max-width:340px;width:100%;
+    text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.28);
+    animation:congrats-pop .38s cubic-bezier(.2,.9,.3,1.2);
+  }
+  @keyframes congrats-pop{0%{transform:scale(.72);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  @media (prefers-reduced-motion: reduce){ .congrats-box{animation:none;} }
+  .congrats-check{
+    width:74px;height:74px;border-radius:50%;background:#2E9E4F;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 20px;
+  }
+  .congrats-check svg{width:38px;height:38px;}
+  .congrats-box h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:25px;color:var(--green);}
+  .congrats-box p{margin-top:10px;color:var(--ink-soft);font-size:15px;}
+  .congrats-box .btn{margin-top:22px;}
+
+  /* APK "install warning" notice pop-up (shown before the APK actually downloads) */
+  .apk-modal-box{
+    background:var(--paper);border-radius:14px;padding:30px 26px 26px;max-width:380px;width:100%;
+    text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.28);
+    animation:congrats-pop .38s cubic-bezier(.2,.9,.3,1.2);
+  }
+  @media (prefers-reduced-motion: reduce){ .apk-modal-box{animation:none;} }
+  .apk-modal-icon{
+    width:60px;height:60px;border-radius:50%;margin:0 auto 18px;
+    background:linear-gradient(135deg, var(--steel), var(--green));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px rgba(59,91,124,.35);
+  }
+  .apk-modal-icon svg{width:30px;height:30px;}
+  .apk-modal-box h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:21px;color:var(--ink);}
+  .apk-modal-box p{color:var(--ink-soft);font-size:14.5px;line-height:1.7;margin-top:14px;text-align:left;}
+  .apk-modal-box p b{color:var(--stamp-dark);}
+  .apk-modal-note{
+    margin-top:14px;background:var(--paper-alt);border-left:3px solid var(--gold);
+    border-radius:4px;padding:10px 14px;font-size:13.5px;color:var(--ink);text-align:left;line-height:1.6;
+  }
+  .apk-modal-actions{display:flex;gap:10px;margin-top:22px;}
+  .apk-modal-actions .btn{flex:1;text-align:center;}
+
+  /* tracking */
+  .track-box{margin-top:28px;background:var(--paper-alt);border:1px solid var(--line);padding:28px 30px;border-radius:3px;}
+  .track-search{display:flex;gap:12px;flex-wrap:wrap;}
+  .track-search input{flex:1;min-width:200px;padding:12px 14px;border:1px solid var(--line);border-radius:3px;background:var(--paper);font-family:'Hind Siliguri',sans-serif;font-size:15.5px;}
+  .track-results{margin-top:26px;display:flex;flex-direction:column;gap:20px;}
+  .order-card{background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:22px 24px;}
+  .order-card-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;}
+  .order-card h4{font-size:18px;}
+  .order-meta{font-size:13.5px;color:var(--ink-soft);margin-top:4px;}
+  .badge{display:inline-block;font-size:13px;padding:5px 12px;border-radius:20px;font-family:'Hind Siliguri',sans-serif;font-weight:600;white-space:nowrap;color:var(--paper);}
+  .badge-pending{background:var(--gold);}
+  .badge-processing{background:var(--steel);}
+  .badge-ready{background:#5C7A3A;}
+  .badge-delivered{background:var(--green);}
+  .badge-cancelled{background:var(--stamp);}
+  .order-details{margin-top:12px;font-size:14.5px;color:var(--ink-soft);white-space:pre-wrap;}
+  .timeline{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px;}
+  .timeline-item{display:grid;grid-template-columns:16px 1fr;gap:10px;padding-bottom:14px;position:relative;}
+  .timeline-item::before{content:"";position:absolute;left:5px;top:18px;bottom:0;width:1px;background:var(--line);}
+  .timeline-item:last-child::before{display:none;}
+  .timeline-dot{width:11px;height:11px;border-radius:50%;background:var(--green);margin-top:4px;}
+  .timeline-note{font-size:14px;}
+  .timeline-time{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+  .track-empty{color:var(--ink-soft);font-size:14.5px;margin-top:18px;}
+
+  .payment-area{margin-top:14px;}
+  .payment-box{font-size:14px;padding:10px 14px;border-radius:3px;display:inline-block;}
+
+  .delivery-files{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;}
+  .delivery-files h5{font-family:'Tiro Bangla',serif;font-weight:400;font-size:15px;margin:0 0 8px;}
+  .delivery-file-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px;}
+  .delivery-file-item:last-child{border-bottom:0;}
+  .delivery-file-item .df-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .delivery-file-item .df-size{color:var(--ink-soft);font-size:12.5px;flex-shrink:0;}
+  .delivery-file-item a{flex-shrink:0;}
+
+  .cashmemo-box{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;}
+  .cashmemo-box h5{font-family:'Tiro Bangla',serif;font-weight:400;font-size:15px;margin:0 0 10px;}
+  .cashmemo-card{background:var(--paper-alt);border:1px solid var(--line);border-radius:6px;padding:14px 16px;font-size:14px;}
+  .cashmemo-row{display:flex;justify-content:space-between;gap:10px;padding:4px 0;}
+  .cashmemo-row span:first-child{color:var(--ink-soft);}
+  .cashmemo-card .cm-btn-wrap{margin-top:10px;}
+  .payment-pending{background:var(--paper-alt);color:var(--ink-soft);border:1px dashed var(--line);}
+  .payment-verified{background:#e7efe3;color:var(--green);border:1px solid var(--green);font-weight:600;}
+  .pay-form{margin-top:14px;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:18px 20px;}
+  .pay-numbers{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;margin-bottom:14px;color:var(--ink-soft);}
+  .pay-numbers b{color:var(--ink);font-family:'Tiro Bangla',serif;}
+  .pay-qr{margin:0 0 16px;}
+  .pay-qr-img{width:150px;height:150px;object-fit:contain;border:1px solid var(--line);border-radius:6px;background:#fff;padding:6px;}
+
+  /* brand logo */
+  .brand{display:flex;align-items:center;gap:9px;}
+  .brand-logo{height:34px;width:auto;border-radius:4px;display:block;}
+  .brand-logo.hidden{display:none;}
+
+  /* header stats — icons only, no labels */
+  .nav-stats{display:flex;align-items:center;gap:16px;}
+  .stat-pill{display:flex;align-items:center;gap:5px;color:var(--ink-soft);}
+  .stat-pill svg{width:16px;height:16px;flex-shrink:0;}
+  .stat-pill b{font-family:'Tiro Bangla',serif;font-weight:400;color:var(--ink);font-size:14px;}
+  .stat-dot{width:8px;height:8px;border-radius:50%;background:#5C7A3A;display:inline-block;animation:pulse-dot 1.6s infinite;}
+  @keyframes pulse-dot{0%{opacity:1;}50%{opacity:.28;}100%{opacity:1;}}
+  @media (prefers-reduced-motion: reduce){ .stat-dot{animation:none;} }
+  .brand-stats{display:none;}
+
+  /* reviews */
+  .reviews-list{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
+  .review-card{background:var(--paper-alt);border:1px solid var(--line);border-radius:3px;padding:20px;}
+  .review-stars{color:var(--gold);font-size:15px;letter-spacing:2px;}
+  .review-name{font-family:'Tiro Bangla',serif;font-size:16px;margin-top:8px;}
+  .review-comment{font-size:14.5px;color:var(--ink-soft);margin-top:6px;}
+  .review-date{font-size:12px;color:var(--ink-soft);margin-top:12px;}
+  .review-form-box{margin-top:32px;background:var(--paper-alt);border:1px solid var(--line);padding:26px 28px;border-radius:3px;}
+  .review-form-box h4{font-family:'Tiro Bangla',serif;font-weight:400;font-size:18px;margin-bottom:16px;}
+  .form-msg.ok{color:var(--green);}
+
+  footer{
+    border-top:3px solid transparent;
+    border-image:linear-gradient(90deg, var(--green), var(--steel), var(--gold), var(--stamp), var(--purple)) 1;
+    padding:40px 0 32px;margin-top:24px;background:linear-gradient(180deg, rgba(31,75,59,.04), transparent 60%);
+  }
+  .foot-grid{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+  .foot-brand{font-family:'Tiro Bangla',serif;font-size:20px;}
+  .foot-note{font-size:13px;color:var(--ink-soft);max-width:42ch;margin-top:10px;}
+  .foot-contact{font-size:14.5px;color:var(--ink-soft);text-align:right;}
+  .foot-contact div{margin-bottom:4px;}
+  .foot-admin{display:block;margin-top:14px;font-size:12px;color:var(--line);text-decoration:none;}
+  .foot-admin:hover{color:var(--ink-soft);}
+
+  /* bottom app-style tab bar (mobile only) */
+  .app-tabbar{
+    display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:var(--paper);border-top:1px solid var(--line);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+  .app-tabbar-inner{display:flex;justify-content:space-around;align-items:center;max-width:520px;margin:0 auto;}
+  .app-tab{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    color:var(--ink-soft);text-decoration:none;font-size:11px;padding:4px 6px;
+    min-width:56px;border-radius:8px;
+  }
+  .app-tab svg{width:21px;height:21px;}
+  .app-tab.active{color:var(--stamp);}
+  .app-tab:active{background:var(--paper-alt);}
+
+  /* live update toast (new notice / new service alerts) */
+  .site-toast{
+    position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;
+    transform:translateX(-50%) translateY(-140%);
+    max-width:calc(100% - 32px);width:max-content;
+    background:var(--green);color:var(--paper);
+    padding:12px 22px;border-radius:30px;font-size:14px;font-weight:600;
+    box-shadow:0 10px 30px rgba(27,42,34,.28);
+    z-index:300;opacity:0;pointer-events:none;
+    transition:transform .35s cubic-bezier(.2,.9,.3,1.2), opacity .35s ease;
+  }
+  .site-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+  /* notice board */
+  .notice-list{margin-top:24px;display:flex;flex-direction:column;gap:12px;}
+  .notice-card{background:var(--paper-alt);border:1px solid var(--line);border-radius:3px;padding:18px 20px;}
+  .notice-top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+  .notice-top h4{font-size:17px;flex:1;min-width:0;}
+  .notice-badge-new{display:inline-block;font-size:11px;background:var(--stamp);color:var(--paper);padding:2px 8px;border-radius:10px;margin-inline-start:8px;vertical-align:middle;}
+  .notice-body{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);font-size:15px;color:var(--ink-soft);white-space:pre-wrap;display:none;}
+  .notice-body.open{display:block;}
+  .notice-body a.notice-link{display:inline-block;margin-top:12px;font-size:14px;color:var(--steel);text-decoration:underline;word-break:break-all;}
+  .notice-date{font-size:12.5px;color:var(--ink-soft);margin-top:4px;}
+
+  @media (max-width:760px){
+    .hero{padding:16px 24px 40px;}
+    .hero h1{font-size:27px;line-height:1.2;}
+    .steps{grid-template-columns:1fr 1fr;row-gap:28px;}
+    .step:nth-child(2)::after{display:none;}
+    .row2{grid-template-columns:1fr;}
+    .foot-grid{flex-direction:column;}
+    .foot-contact{text-align:left;}
+    .nav{padding:7px 16px;}
+    .order-card-top{flex-direction:column;}
+
+    /* app mode: use bottom tab bar instead of a desktop nav row */
+    .navlinks{display:none;}
+    .nav-stats{display:none;}
+    .nav-cta{display:none;}
+    .app-tabbar{display:block;}
+    /* keep the APK button pinned to the top-right of the header, no matter how
+       wide the brand/stats block gets — never let it wrap onto its own row */
+    .nav{flex-wrap:nowrap;align-items:flex-start;}
+    .brand{flex:1 1 auto;min-width:0;flex-wrap:wrap;row-gap:1px;}
+    .brand-stats{display:flex;flex-basis:100%;flex-wrap:wrap;gap:9px;order:3;margin-top:-1px;}
+    .apk-btn{flex-shrink:0;margin-top:1px;}
+    .brand-stats .stat-pill{gap:2px;}
+    .brand-stats svg{width:10px;height:10px;}
+    .brand-stats b{font-size:10px;}
+    .brand-stats .stat-dot{width:5px;height:5px;}
+    body{padding-bottom:calc(64px + env(safe-area-inset-bottom));}
+    /* keep 16px on form fields so iOS doesn't auto-zoom on focus — buttons already meet a comfortable tap size at their normal (desktop) padding, so they're left as-is instead of being inflated further */
+    .field input,.field select,.field textarea{font-size:16px;}
+    .track-search input{font-size:16px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand" id="brandBox">
+      <img id="brandLogoImg" class="brand-logo hidden" alt="লোগো">
+      <span><span id="brandName">Digital Point</span><span>.</span></span>
+      <div class="brand-stats">
+        <span class="stat-pill" title="মোট ভিজিটর">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <b id="statVisitorsM">0</b>
+        </span>
+        <span class="stat-pill" title="লাইভ ভিজিটর">
+          <span class="stat-dot"></span>
+          <b id="statLiveM">0</b>
+        </span>
+        <span class="stat-pill" title="মোট অর্ডার">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4l1.2 12.1a2 2 0 0 0 2 1.9h9.6a2 2 0 0 0 2-1.9L20 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+          <b id="statOrdersM">0</b>
+        </span>
+        <span class="stat-pill" title="মোট APK ডাউনলোড">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+          <b id="statDownloadsM">0</b>
+        </span>
+      </div>
+    </div>
+    <div class="navlinks" id="navLinks">
+      <a href="#services">সেবা ও মূল্য</a>
+      <a href="#how">কীভাবে কাজ করে</a>
+      <a href="#notice">নোটিশ বোর্ড</a>
+      <a href="#reviews">রিভিউ</a>
+      <a href="#order">অর্ডার করুন</a>
+      <a href="#track">অর্ডার ট্র্যাক করুন</a>
+    </div>
+    <a class="apk-btn" id="apkDownloadLink" href="https://github.com/ourdestination/dorkhasta/releases/download/v1.0/Digital Pointapk" title="অ্যান্ড্রয়েড অ্যাপ ডাউনলোড করুন (APK)" aria-label="APK ডাউনলোড করুন" onclick="return openApkInfoModal(event)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+      <span>APK</span>
+    </a>
+    <div class="nav-stats">
+      <span class="stat-pill" title="মোট ভিজিটর">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <b id="statVisitors">0</b>
+      </span>
+      <span class="stat-pill" title="লাইভ ভিজিটর">
+        <span class="stat-dot"></span>
+        <b id="statLive">0</b>
+      </span>
+      <span class="stat-pill" title="মোট অর্ডার">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4l1.2 12.1a2 2 0 0 0 2 1.9h9.6a2 2 0 0 0 2-1.9L20 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+        <b id="statOrders">0</b>
+      </span>
+      <span class="stat-pill" title="মোট APK ডাউনলোড">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+        <b id="statDownloads">0</b>
+      </span>
+    </div>
+    <a class="nav-cta" href="#order">এখনই শুরু করুন</a>
+  </div>
+</header>
+
+<div id="marqueeWrap" class="marquee-wrap hidden">
+  <div id="marqueeTrack" class="marquee-track"></div>
+</div>
+
+<div class="hero-ctas wrap-wide">
+  <a class="btn btn-primary" href="#order">অর্ডার করুন</a>
+  <a class="btn btn-ghost" href="#track">অর্ডার ট্র্যাক করুন</a>
+</div>
+
+<section class="hero wrap-wide">
+  <h1 id="heroTitle"></h1>
+  <p id="heroSub"></p>
+  <div class="tags"><b>সিভি</b> &nbsp;·&nbsp; <b>চাকরির আবেদন</b> &nbsp;·&nbsp; <b>ভর্তি ফরম</b></div>
+</section>
+
+<hr class="rule wrap-wide">
+
+<section id="how" class="wrap">
+  <div class="section-head">
+    <h2>কীভাবে কাজ করে</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">১</div>
+      <h4>সেবা বেছে নিন</h4>
+      <p>নিচের ফর্মে কোন কাজ দরকার লিখুন।</p>
+    </div>
+    <div class="step">
+      <div class="step-num">২</div>
+      <h4>তথ্য পাঠান</h4>
+      <p>WhatsApp-এ প্রয়োজনীয় তথ্য ও ছবি পাঠিয়ে দিন।</p>
+    </div>
+    <div class="step">
+      <div class="step-num">৩</div>
+      <h4>পেমেন্ট করুন</h4>
+      <p>bKash বা Nagad-এ অগ্রিম পেমেন্ট।</p>
+    </div>
+    <div class="step">
+      <div class="step-num">৪</div>
+      <h4>ট্র্যাক করুন</h4>
+      <p>মোবাইল নম্বর দিয়ে যেকোনো সময় অর্ডারের অবস্থা দেখুন।</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule wrap-wide">
+
+<section id="notice" class="wrap">
+  <div class="section-head">
+    <h2>নোটিশ বোর্ড</h2>
+    <p class="section-sub">সর্বশেষ ঘোষণা ও তথ্য এখানে দেওয়া হবে — শিরোনামে ট্যাপ করে বিস্তারিত দেখুন।</p>
+  </div>
+  <div class="notice-list" id="noticeList">
+    <div class="track-empty">নোটিশ লোড হচ্ছে...</div>
+  </div>
+</section>
+
+<hr class="rule wrap-wide">
+
+<section id="services" class="wrap">
+  <div class="section-head">
+    <h2>সেবাসমূহ ও মূল্য তালিকা</h2>
+  </div>
+  <div class="service-grid" id="serviceGrid"></div>
+  <div class="rnote">সরকারি ফি (আবেদন ফি, পরীক্ষার ফি ইত্যাদি) উপরের মূল্যের বাইরে, আলাদাভাবে পরিশোধযোগ্য।</div>
+</section>
+
+<hr class="rule wrap-wide">
+
+<section id="order" class="wrap">
+  <div class="section-head">
+    <h2>অর্ডার করুন</h2>
+    <p class="section-sub">ফর্মটি পূরণ করে জমা দিন — অর্ডার সরাসরি আমাদের সিস্টেমে যুক্ত হবে এবং আপনি মোবাইল নম্বর দিয়ে এর অবস্থা ট্র্যাক করতে পারবেন।</p>
+  </div>
+
+  <div class="order-box" id="orderBox">
+    <div class="row2">
+      <div class="field">
+        <label for="name">আপনার নাম</label>
+        <input id="name" type="text" placeholder="যেমন: রাকিবুল ইসলাম">
+      </div>
+      <div class="field">
+        <label for="phone">মোবাইল নম্বর (Whatsapp)</label>
+        <input id="phone" type="tel" placeholder="01XXXXXXXXX">
+      </div>
+    </div>
+    <div class="field">
+      <label for="service">কোন সেবা প্রয়োজন</label>
+      <select id="service">
+        <option>সিভি তৈরি / সংশোধন</option>
+        <option>কভার লেটার</option>
+        <option>চাকরির আবেদন পূরণ</option>
+        <option>ভর্তি ফরম পূরণ</option>
+        <option>অন্যান্য</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="details">বিস্তারিত লিখুন</label>
+      <textarea id="details" placeholder="কোন চাকরি/প্রতিষ্ঠানের জন্য, কবে জমা দিতে হবে ইত্যাদি লিখুন"></textarea>
+      <p style="color:var(--stamp);font-weight:600;font-size:13.5px;margin:8px 0 0;">প্রয়োজনীয় ডকুমেন্ট Whatsapp-এ পাঠান</p>
+    </div>
+    <div class="order-actions">
+      <button id="submitOrderBtn" class="btn btn-primary" onclick="submitOrder()">অর্ডার জমা দিন</button>
+      <a id="waBtn" class="btn btn-ghost" href="#" target="_blank" rel="noopener">WhatsApp-এ পাঠান</a>
+      <span class="direct-call" id="directCall">অথবা সরাসরি কল করুন: 01XXX-XXXXXX</span>
+    </div>
+    <div class="form-msg" id="orderMsg"></div>
+  </div>
+
+  <div class="confirm-box" id="confirmBox" style="display:none;">
+    <h3>✓ অর্ডার গ্রহণ করা হয়েছে</h3>
+    <div class="confirm-id" id="confirmId"></div>
+    <p>এই নম্বরটি রেখে দিন। নিচের "অর্ডার ট্র্যাক করুন" অংশে আপনার মোবাইল নম্বর দিয়ে যেকোনো সময় অর্ডারের সর্বশেষ অবস্থা দেখতে পারবেন।</p>
+    <div class="order-actions" style="margin-top:14px;">
+      <a href="#order" class="btn btn-ghost btn-sm" onclick="editLastOrder()">অর্ডার আপডেট করুন</a>
+      <a href="#track" class="btn btn-ghost btn-sm" onclick="prefillTrack()">এখনই ট্র্যাক করুন</a>
+      <a href="#order" class="btn btn-primary btn-sm" onclick="newOrder()">নতুন অর্ডার যুক্ত করুন</a>
+    </div>
+  </div>
+</section>
+
+<hr class="rule wrap-wide">
+
+<section id="track" class="wrap">
+  <div class="section-head">
+    <h2>অর্ডার ট্র্যাক করুন</h2>
+    <p class="section-sub">আপনার মোবাইল নম্বরই আপনার পরিচয় — একই নম্বর দিয়ে করা সকল অর্ডারের অবস্থা এখানে দেখা যাবে।</p>
+  </div>
+  <div class="track-box">
+    <div class="track-search">
+      <input id="trackPhone" type="tel" placeholder="মোবাইল নম্বর লিখুন (যেমন: 01712345678)">
+      <button class="btn btn-primary" onclick="trackOrders()">খুঁজুন</button>
+    </div>
+    <div id="trackResults" class="track-results"></div>
+  </div>
+</section>
+
+<hr class="rule wrap-wide">
+
+<section id="reviews" class="wrap">
+  <div class="section-head">
+    <h2>কাস্টমার রিভিউ</h2>
+    <p class="section-sub">আমাদের সেবা নিয়ে কাস্টমারদের অভিজ্ঞতা ও মতামত।</p>
+  </div>
+  <div class="reviews-list" id="reviewsList">
+    <div class="track-empty">রিভিউ লোড হচ্ছে...</div>
+  </div>
+
+  <div class="review-form-box" id="reviewFormBox">
+    <h4>আপনার অভিজ্ঞতা শেয়ার করুন</h4>
+    <div class="row2">
+      <div class="field">
+        <label for="revName">আপনার নাম</label>
+        <input id="revName" type="text" placeholder="যেমন: সুমাইয়া আক্তার">
+      </div>
+      <div class="field">
+        <label for="revRating">রেটিং</label>
+        <select id="revRating">
+          <option value="5">★★★★★ (৫)</option>
+          <option value="4">★★★★☆ (৪)</option>
+          <option value="3">★★★☆☆ (৩)</option>
+          <option value="2">★★☆☆☆ (২)</option>
+          <option value="1">★☆☆☆☆ (১)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="revComment">আপনার মতামত</label>
+      <textarea id="revComment" placeholder="সেবাটি সম্পর্কে আপনার অভিজ্ঞতা লিখুন"></textarea>
+    </div>
+    <button class="btn btn-primary" id="submitReviewBtn" onclick="submitReview()">রিভিউ জমা দিন</button>
+    <div class="form-msg" id="reviewMsg"></div>
+  </div>
+</section>
+
+<div id="congratsModal" class="congrats-modal hidden" role="dialog" aria-modal="true">
+  <div class="congrats-box">
+    <div class="congrats-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12.5 9.5 18 20 6"/></svg>
+    </div>
+    <h3>Congratulations!</h3>
+    <p>আপনার অর্ডার সফলভাবে গ্রহণ করা হয়েছে।</p>
+    <button class="btn btn-primary btn-sm" type="button" onclick="closeCongratsModal()">ঠিক আছে</button>
+  </div>
+</div>
+
+<div id="apkInfoModal" class="congrats-modal hidden" role="dialog" aria-modal="true">
+  <div class="apk-modal-box">
+    <div class="apk-modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2 L20 5.5 V11 C20 16 16.5 20.5 12 22 C7.5 20.5 4 16 4 11 V5.5 Z"/>
+        <path d="M8.5 12 L11 14.5 L15.5 9.5"/>
+      </svg>
+    </div>
+    <h3>ইনস্টলের আগে একটি কথা</h3>
+    <p>ইনস্টলের সময় আপনার ফোন হয়তো দেখাতে পারে যে <b>"এই অ্যাপটি ক্ষতিকর হতে পারে"</b> — এতে ঘাবড়ে যাবেন না। Google Play Store-এ প্রকাশ ও লাইসেন্স করা না থাকার কারণেই ফোন এই সতর্কবার্তা দেখায়, অ্যাপে কোনো সমস্যা থাকার কারণে নয়।</p>
+    <div class="apk-modal-note">✅ এই অ্যাপটি সম্পূর্ণভাবে আমাদের নিজস্ব তৈরি — নিরাপদ, নির্ভরযোগ্য ও নিশ্চিন্তে ব্যবহারযোগ্য।</div>
+    <div class="apk-modal-actions">
+      <button class="btn btn-ghost btn-sm" type="button" onclick="closeApkInfoModal()">বাতিল</button>
+      <a class="btn btn-primary btn-sm" href="#" onclick="return confirmApkDownload(event)">ডাউনলোড করুন</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap-wide foot-grid">
+    <div>
+      <div class="foot-brand"><span id="footBrandName">Digital Point</span><span style="color:#9C2B1B">.</span></div>
+      <p class="foot-note">এটি একটি ব্যক্তিগত ফ্রিল্যান্স সেবা — কোনো সরকারি প্রতিষ্ঠান বা দালাল সংস্থা নয়। আমরা শুধু ফরম পূরণ ও কাগজপত্র প্রস্তুতিতে সহায়তা করি।</p>
+      <a class="foot-admin" href="admin.html">ম্যানেজমেন্ট প্যানেল</a>
+    </div>
+    <div class="foot-contact" id="footContact">
+      <div>WhatsApp: 01XXX-XXXXXX</div>
+      <div>ইমেইল: hello@example.com</div>
+      <div>ঢাকা, বাংলাদেশ</div>
+    </div>
+  </div>
+</footer>
+
+<nav class="app-tabbar" id="appTabbar" aria-label="মোবাইল মেনু">
+  <div class="app-tabbar-inner">
+    <a class="app-tab" href="#" onclick="scrollTop(event)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      হোম
+    </a>
+    <a class="app-tab" href="#services">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+      সেবা
+    </a>
+    <a class="app-tab" href="#notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      নোটিশ
+    </a>
+    <a class="app-tab" href="#order">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4l1.2 12.1a2 2 0 0 0 2 1.9h9.6a2 2 0 0 0 2-1.9L20 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+      অর্ডার
+    </a>
+    <a class="app-tab" href="#track">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      ট্র্যাক
+    </a>
+  </div>
+</nav>
+
+<script>
+function scrollTop(e){ if(e) e.preventDefault(); window.scrollTo({top:0,behavior:"smooth"}); }
+
+/* ---- congratulations pop-up (shown right after a successful order) ---- */
+function showCongratsModal(){
+  document.getElementById("congratsModal").classList.remove("hidden");
+}
+function closeCongratsModal(){
+  document.getElementById("congratsModal").classList.add("hidden");
+}
+document.getElementById("congratsModal").addEventListener("click", e=>{
+  if(e.target.id==="congratsModal") closeCongratsModal();
+});
+
+/* ---- APK "install warning" notice — shown before the APK file actually downloads ---- */
+function openApkInfoModal(e){
+  if(e) e.preventDefault();
+  document.getElementById("apkInfoModal").classList.remove("hidden");
+  return false;
+}
+function closeApkInfoModal(){
+  document.getElementById("apkInfoModal").classList.add("hidden");
+}
+function confirmApkDownload(e){
+  if(e) e.preventDefault();
+  closeApkInfoModal();
+  if(typeof window.trackApkDownload === "function") window.trackApkDownload();
+  const src = document.getElementById("apkDownloadLink").getAttribute("href");
+  const a = document.createElement("a");
+  a.href = src;
+  a.setAttribute("download","");
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  return false;
+}
+document.getElementById("apkInfoModal").addEventListener("click", e=>{
+  if(e.target.id==="apkInfoModal") closeApkInfoModal();
+});
+</script>
+
+<div class="site-toast" id="siteToast"></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import {getDatabase,ref,push,set,update,get,child,onValue,runTransaction,onDisconnect,remove} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+/* ---- Firebase (reused project from index_5 — isolated under the "dorkhast" key) ---- */
+const firebaseConfig = {
+  apiKey: "AIzaSyCl1GbGiwzNq5-nXw4TtLBKHY3_TfnD0iM",
+  authDomain: "ourfamily02-664c7.firebaseapp.com",
+  databaseURL: "https://ourfamily02-664c7-default-rtdb.firebaseio.com",
+  projectId: "ourfamily02-664c7",
+  storageBucket: "ourfamily02-664c7.firebasestorage.app",
+  messagingSenderId: "758591808249",
+  appId: "1:758591808249:web:4983e10ec587bc1a423828",
+  measurementId: "G-6BRTHENBFJ"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* ---- defaults (used until admin sets real content in the management panel) ---- */
+const DEFAULT_SERVICES = [
+  {title:"সিভি তৈরি (নতুন)", price:"৳৪০০", desc:"নতুন সিভি তৈরি, প্রফেশনাল ফরম্যাটে সাজিয়ে দেওয়া।", category:"সিভি ও কভার লেটার"},
+  {title:"সিভি সংশোধন", price:"৳৩০০", desc:"পুরনো সিভি হালনাগাদ ও উন্নত করে দেওয়া।", category:"সিভি ও কভার লেটার"},
+  {title:"কভার লেটার", price:"৳২০০", desc:"নির্দিষ্ট চাকরির বিজ্ঞপ্তি অনুযায়ী মানানসই কভার লেটার লিখে দেওয়া।", category:"সিভি ও কভার লেটার"},
+  {title:"চাকরির আবেদন পূরণ (প্রতি আবেদন)", price:"৳২৫০", desc:"সরকারি ও বেসরকারি চাকরির অনলাইন ফরম পূরণ, ছবি-স্বাক্ষর রিসাইজ, আবেদন জমা।", category:"চাকরির আবেদন"},
+  {title:"ভর্তি ফরম পূরণ", price:"৳৩০০", desc:"SSC/HSC পরবর্তী ভর্তি পরীক্ষার অনলাইন ফরম নির্ভুলভাবে পূরণ ও জমা।", category:"ভর্তি ফরম"},
+  {title:"জরুরি ডেলিভারি (একই দিন)", price:"+৳১০০", desc:"একই দিনে কাজ সম্পন্ন করার জন্য বাড়তি চার্জ।", category:"অন্যান্য"}
+];
+const DEFAULT_CONTACT = {whatsapp:"8801XXXXXXXXX", phoneDisplay:"01XXX-XXXXXX", email:"hello@example.com", address:"ঢাকা, বাংলাদেশ", paymentBkash:"", paymentRocket:"", paymentNagad:""};
+const DEFAULT_HERO = {title:"", subtitle:""};
+const DEFAULT_MARQUEE = [];
+
+const STATUS_LABEL = {
+  pending:"অপেক্ষমান", processing:"কাজ চলছে",
+  ready:"প্রস্তুত (ডেলিভারির অপেক্ষায়)", delivered:"ডেলিভারি সম্পন্ন", cancelled:"বাতিল"
+};
+const PAYMENT_LABEL = {bkash:"বিকাশ", rocket:"রকেট", nagad:"নগদ"};
+
+const $=x=>document.getElementById(x);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const fmt=x=>x?new Date(x).toLocaleString("bn-BD",{dateStyle:"medium",timeStyle:"short"}):"";
+
+/* ---- phone normalization: this is the customer's unique ID ---- */
+function normalizePhone(raw){
+  let d=String(raw||"").replace(/\D/g,"");
+  if(d.startsWith("880")) d="0"+d.slice(3);
+  if(d.length===10 && !d.startsWith("0")) d="0"+d;
+  return d;
+}
+
+/* ---- load site content (services / pricing / contact / hero) ---- */
+async function loadSiteContent(){
+  try{
+    const snap=await get(ref(db,"dorkhast/site"));
+    const site=snap.exists()?snap.val():{};
+    renderContact(site.contact||DEFAULT_CONTACT);
+    renderHero(site.hero||DEFAULT_HERO);
+    renderLogo(site.logo);
+    renderMarquee(site.marquee);
+    renderBrand(site.siteName, site.apkLink);
+    window.__paymentQR = (site.paymentQR||"").trim();
+  }catch(e){
+    console.error(e);
+    renderContact(DEFAULT_CONTACT);
+    renderHero(DEFAULT_HERO);
+    renderMarquee(DEFAULT_MARQUEE);
+    renderBrand();
+    window.__paymentQR = "";
+  }
+}
+const DEFAULT_SITE_NAME = "Digital Point";
+const TITLE_SUFFIX = " — সিভি, চাকরির আবেদন ও ভর্তি ফরম সহায়তা";
+/* ---- website name (brand) and APK download link, both editable from the admin panel ---- */
+function renderBrand(siteName, apkLink){
+  const name = (siteName||"").trim() || DEFAULT_SITE_NAME;
+  window.__siteName = name;
+  document.title = name + TITLE_SUFFIX;
+  const appTitleMeta = $("appTitleMeta");
+  if(appTitleMeta) appTitleMeta.setAttribute("content", name);
+  const brandName = $("brandName");
+  if(brandName) brandName.textContent = name;
+  const footBrandName = $("footBrandName");
+  if(footBrandName) footBrandName.textContent = name;
+  const apkBtn = $("apkDownloadLink");
+  if(apkBtn && apkLink && apkLink.trim()) apkBtn.setAttribute("href", apkLink.trim());
+}
+function renderMarquee(raw){
+  const wrap=$("marqueeWrap");
+  const track=$("marqueeTrack");
+  const list = raw ? (Array.isArray(raw) ? raw : Object.values(raw)) : DEFAULT_MARQUEE;
+  const texts = list.map(t=>String(t||"").trim()).filter(Boolean);
+  if(!texts.length){
+    wrap.classList.add("hidden");
+    track.innerHTML="";
+    track.style.animation="none";
+    return;
+  }
+  wrap.classList.remove("hidden");
+  const itemsHTML = texts.map(t=>`<span class="marquee-item">${esc(t)}</span>`).join("");
+  // duplicate content once so the loop can scroll seamlessly from -50% back to 0
+  track.innerHTML = itemsHTML + itemsHTML;
+  track.style.animation="none";
+  requestAnimationFrame(()=>{
+    const singleWidth = track.scrollWidth/2;
+    const speed = 35; // px per second — a slower, easy-to-read pace
+    const duration = Math.max(singleWidth/speed, 10);
+    track.style.animation = `marquee-scroll ${duration}s linear infinite`;
+  });
+}
+function renderLogo(logoUrl){
+  window.__siteLogo = logoUrl || "";
+  const img=$("brandLogoImg");
+  if(logoUrl){ img.src=logoUrl; img.classList.remove("hidden"); }
+  else{ img.classList.add("hidden"); img.removeAttribute("src"); }
+}
+let __allServices = [];
+/* a small, professional accent palette — each card gets a matching bold accent
+   colour and a soft pastel tint of the same hue, cycling in order, so the grid
+   reads as colourful/lively without ever clashing */
+const SERVICE_ACCENTS = [
+  {accent:"#9C2B1B", tint:"#FBEAE7"},
+  {accent:"#1F4B3B", tint:"#E7F0EA"},
+  {accent:"#3B5B7C", tint:"#E7EFF6"},
+  {accent:"#A9812E", tint:"#FBF3E0"},
+  {accent:"#6B3FA0", tint:"#F1EAFA"},
+  {accent:"#1F7A8C", tint:"#E3F3F5"}
+];
+
+function renderServices(list){
+  __allServices = list;
+  renderServiceCards();
+  renderServiceSelectOptions();
+}
+function renderServiceSelectOptions(){
+  const sel = $("service");
+  if(!sel) return;
+  const current = sel.value;
+  sel.innerHTML = __allServices.map(s=>`<option value="${esc(s.title)}">${esc(s.title)}</option>`).join("") +
+    `<option value="অন্যান্য">অন্যান্য</option>`;
+  if([...sel.options].some(o=>o.value===current)) sel.value=current;
+}
+/* services are shown as a colour-accented card grid — 2 columns on mobile/app
+   mode, 3 on wider screens — in the admin's chosen order ("sort" position) */
+function renderServiceCards(){
+  const grid = $("serviceGrid");
+  if(!grid) return;
+  if(!__allServices.length){
+    grid.innerHTML = `<div class="track-empty">এখনও কোনো সেবা যুক্ত করা হয়নি।</div>`;
+    return;
+  }
+  grid.innerHTML = __allServices.map((s,i)=>{
+    const c = SERVICE_ACCENTS[i % SERVICE_ACCENTS.length];
+    return `<div class="service-card" style="--accent:${c.accent};--tint:${c.tint}">
+      <h3>${esc(s.title)}</h3>
+      <div class="service-price">${esc(s.price)}</div>
+      <p class="service-desc" id="svcDesc-${i}">${esc(s.desc)}</p>
+      <div class="service-actions">
+        <button type="button" class="btn-detail" data-detail-idx="${i}">বিস্তারিত</button>
+        <button type="button" class="btn-order" data-order-service="${esc(s.title)}">অর্ডার করুন</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+window.orderNow = function(title){
+  const sel=$("service");
+  if(sel){
+    const match=[...sel.options].some(o=>o.value===title);
+    if(match) sel.value=title;
+  }
+  buildWA();
+  document.getElementById("order").scrollIntoView({behavior:"smooth"});
+};
+$("serviceGrid").addEventListener("click", e=>{
+  const orderBtn = e.target.closest("[data-order-service]");
+  if(orderBtn){ window.orderNow(orderBtn.dataset.orderService); return; }
+  const detailBtn = e.target.closest("[data-detail-idx]");
+  if(detailBtn){
+    const desc = $("svcDesc-"+detailBtn.dataset.detailIdx);
+    if(!desc) return;
+    const expanded = desc.classList.toggle("expanded");
+    detailBtn.textContent = expanded ? "সংক্ষেপে" : "বিস্তারিত";
+  }
+});
+function renderContact(c){
+  $("footContact").innerHTML = `
+    <div>WhatsApp: ${esc(c.phoneDisplay||"")}</div>
+    <div>ইমেইল: ${esc(c.email||"")}</div>
+    <div>${esc(c.address||"")}</div>`;
+  $("directCall").textContent = "অথবা সরাসরি কল করুন: " + (c.phoneDisplay||"");
+  window.__waNumber = (c.whatsapp||DEFAULT_CONTACT.whatsapp);
+  window.__paymentNumbers = {bkash:c.paymentBkash||"", rocket:c.paymentRocket||"", nagad:c.paymentNagad||""};
+  window.__siteContact = c || {};
+  buildWA();
+}
+function renderHero(h){
+  const title=(h.title||DEFAULT_HERO.title).trim();
+  const sub=(h.subtitle||DEFAULT_HERO.subtitle).trim();
+  const h1=$("heroTitle"), p=$("heroSub");
+  h1.innerHTML=title;
+  p.textContent=sub;
+  h1.classList.toggle("hidden", !title);
+  p.classList.toggle("hidden", !sub);
+}
+loadSiteContent();
+
+/* ---- live update notifications: banner + 2x chime whenever admin adds a
+   new notice or a new service, so a browsing customer notices immediately ---- */
+let __siteAudioCtx=null;
+function getSiteAudioCtx(){
+  if(!__siteAudioCtx) __siteAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  return __siteAudioCtx;
+}
+document.addEventListener("click", ()=>{ try{ const c=getSiteAudioCtx(); if(c.state==="suspended") c.resume(); }catch(e){} });
+function playSiteNotifSound(){
+  try{
+    const ctx=getSiteAudioCtx();
+    const tone=(freq,start,dur)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type="sine"; o.frequency.value=freq;
+      o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.0001, ctx.currentTime+start);
+      g.gain.exponentialRampToValueAtTime(0.32, ctx.currentTime+start+0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+start+dur);
+      o.start(ctx.currentTime+start); o.stop(ctx.currentTime+start+dur+0.05);
+    };
+    // two-tone chime, played exactly twice per the admin's request
+    const cycleDuration = 0.62;
+    for(let c=0;c<2;c++){
+      const base=c*cycleDuration;
+      tone(880, base, 0.16);
+      tone(1180, base+0.17, 0.22);
+    }
+  }catch(e){ console.error(e); }
+}
+let __siteToastQueue=[], __siteToastShowing=false;
+function notifySiteUpdate(msg){
+  playSiteNotifSound();
+  __siteToastQueue.push(msg);
+  if(!__siteToastShowing) showNextSiteToast();
+}
+function showNextSiteToast(){
+  const box=$("siteToast");
+  if(!box || !__siteToastQueue.length){ __siteToastShowing=false; return; }
+  __siteToastShowing=true;
+  const msg=__siteToastQueue.shift();
+  box.textContent=msg;
+  box.classList.add("show");
+  clearTimeout(window.__siteToastTimer);
+  window.__siteToastTimer=setTimeout(()=>{
+    box.classList.remove("show");
+    setTimeout(showNextSiteToast, 300);
+  }, 4200);
+}
+
+/* ---- services: live listener so new services trigger a notification too ---- */
+let __knownServiceIds=null;
+function loadServicesRealtime(){
+  onValue(ref(db,"dorkhast/site/services"), s=>{
+    const data=s.val()||{};
+    const list=Object.entries(data).map(([id,v])=>({id,...v})).sort((a,b)=>(a.sort||0)-(b.sort||0));
+    renderServices(list.length?list:DEFAULT_SERVICES);
+    const ids=list.map(x=>x.id);
+    if(__knownServiceIds===null){
+      __knownServiceIds=new Set(ids); // first snapshot — don't notify for existing services
+    }else{
+      const added=ids.filter(id=>!__knownServiceIds.has(id));
+      if(added.length){
+        added.forEach(id=>{
+          const svc=list.find(x=>x.id===id);
+          notifySiteUpdate("নতুন সেবা যুক্ত হয়েছে: " + (svc?.title||""));
+        });
+      }
+      __knownServiceIds=new Set(ids);
+    }
+  });
+}
+loadServicesRealtime();
+
+/* ---- header stats: total visitors, live visitors, total orders ---- */
+function trackVisitorStats(){
+  // count this browser as a visitor once per session
+  try{
+    if(!sessionStorage.getItem("dorkhast_counted")){
+      sessionStorage.setItem("dorkhast_counted","1");
+      runTransaction(ref(db,"dorkhast/stats/totalVisitors"), v=>(v||0)+1);
+    }
+  }catch(e){ /* sessionStorage unavailable, skip counting */ }
+
+  // mark this tab as "live" and auto-remove on disconnect
+  try{
+    const presenceRef = push(ref(db,"dorkhast/presence"));
+    set(presenceRef, true);
+    onDisconnect(presenceRef).remove();
+  }catch(e){ console.error(e); }
+
+  onValue(ref(db,"dorkhast/presence"), s=>{
+    const v=s.val();
+    const n=(v?Object.keys(v).length:0).toLocaleString("bn-BD");
+    $("statLive").textContent=n; $("statLiveM").textContent=n;
+  });
+  onValue(ref(db,"dorkhast/stats/totalVisitors"), s=>{
+    const n=(s.val()||0).toLocaleString("bn-BD");
+    $("statVisitors").textContent=n; $("statVisitorsM").textContent=n;
+  });
+  onValue(ref(db,"dorkhast/stats/totalOrders"), s=>{
+    const n=(s.val()||0).toLocaleString("bn-BD");
+    $("statOrders").textContent=n; $("statOrdersM").textContent=n;
+  });
+  onValue(ref(db,"dorkhast/stats/totalApkDownloads"), s=>{
+    const n=(s.val()||0).toLocaleString("bn-BD");
+    $("statDownloads").textContent=n; $("statDownloadsM").textContent=n;
+  });
+}
+trackVisitorStats();
+window.trackApkDownload=function(){
+  // fires alongside the normal file download; never blocks it
+  try{ runTransaction(ref(db,"dorkhast/stats/totalApkDownloads"), v=>(v||0)+1); }catch(e){}
+};
+
+/* ---- customer reviews ---- */
+function loadReviews(){
+  onValue(ref(db,"dorkhast/site/reviews"), s=>{
+    const data=s.val()||{};
+    const list=Object.values(data).sort((a,b)=>(b.at||0)-(a.at||0));
+    renderReviews(list);
+  });
+}
+function renderReviews(list){
+  $("reviewsList").innerHTML = list.length ? list.map(r=>{
+    const rating = Math.max(1, Math.min(5, Number(r.rating)||5));
+    return `<div class="review-card">
+      <div class="review-stars">${"★".repeat(rating)}${"☆".repeat(5-rating)}</div>
+      <div class="review-name">${esc(r.name)}</div>
+      <div class="review-comment">${esc(r.comment)}</div>
+      <div class="review-date">${fmt(r.at)}</div>
+    </div>`;
+  }).join("") : `<div class="track-empty">এখনও কোনো রিভিউ নেই। প্রথম রিভিউটি আপনিই দিন!</div>`;
+}
+window.submitReview = async function(){
+  const name=$("revName").value.trim();
+  const rating=Number($("revRating").value);
+  const comment=$("revComment").value.trim();
+  const msgEl=$("reviewMsg");
+  const showRevMsg=(t,ok)=>{ msgEl.textContent=t; msgEl.classList.add("show"); msgEl.classList.toggle("err",!ok); msgEl.classList.toggle("ok",!!ok); };
+  if(!name) return showRevMsg("আপনার নাম লিখুন।", false);
+  if(!comment) return showRevMsg("আপনার মতামত লিখুন।", false);
+  const btn=$("submitReviewBtn");
+  btn.disabled=true; btn.textContent="জমা হচ্ছে...";
+  try{
+    const id=push(ref(db,"dorkhast/site/reviews")).key;
+    await set(ref(db,"dorkhast/site/reviews/"+id), {name, rating, comment, at:Date.now()});
+    showRevMsg("ধন্যবাদ! আপনার রিভিউ যুক্ত হয়েছে ✓", true);
+    $("revName").value=""; $("revComment").value=""; $("revRating").value="5";
+  }catch(e){
+    console.error(e);
+    showRevMsg("দুঃখিত, রিভিউ জমা দেওয়া যায়নি। আবার চেষ্টা করুন।", false);
+  }finally{
+    btn.disabled=false; btn.textContent="রিভিউ জমা দিন";
+  }
+};
+loadReviews();
+
+/* ---- notice board ---- */
+let noticeCleanupInFlight=new Set();
+let __knownNoticeIds=null;
+function loadNotices(){
+  onValue(ref(db,"dorkhast/site/notices"), s=>{
+    const data=s.val()||{};
+    const now=Date.now();
+    const all=Object.entries(data).map(([id,n])=>({id,...n}));
+    // best-effort client-side cleanup of expired notices
+    all.forEach(n=>{
+      if(n.expiresAt && n.expiresAt<=now && !noticeCleanupInFlight.has(n.id)){
+        noticeCleanupInFlight.add(n.id);
+        remove(ref(db,"dorkhast/site/notices/"+n.id)).catch(e=>console.error(e));
+      }
+    });
+    const active=all.filter(n=>!n.expiresAt || n.expiresAt>now).sort((a,b)=>(b.at||0)-(a.at||0));
+    renderNotices(active);
+
+    const ids=all.map(n=>n.id);
+    if(__knownNoticeIds===null){
+      __knownNoticeIds=new Set(ids); // first snapshot — don't notify for existing notices
+    }else{
+      const added=ids.filter(id=>!__knownNoticeIds.has(id));
+      if(added.length){
+        added.forEach(id=>{
+          const n=all.find(x=>x.id===id);
+          if(n && (!n.expiresAt || n.expiresAt>now)) notifySiteUpdate("নতুন নোটিশ: " + (n.title||""));
+        });
+      }
+      __knownNoticeIds=new Set(ids);
+    }
+  });
+}
+function renderNotices(list){
+  const box=$("noticeList");
+  const dayMs=1000*60*60*24;
+  box.innerHTML = list.length ? list.map(n=>{
+    const isNew = n.at && (Date.now()-n.at) < dayMs*3;
+    return `<div class="notice-card">
+      <div class="notice-top" onclick="toggleNotice('${n.id}')" role="button">
+        <div>
+          <h4>${esc(n.title)}${isNew?'<span class="notice-badge-new">নতুন</span>':""}</h4>
+          <div class="notice-date">${fmt(n.at)}</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="event.stopPropagation();toggleNotice('${n.id}')">বিস্তারিত</button>
+      </div>
+      <div class="notice-body" id="noticeBody-${n.id}">
+        ${n.desc?esc(n.desc):""}
+        ${n.link?`<a class="notice-link" href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.link)}</a>`:""}
+      </div>
+    </div>`;
+  }).join("") : `<div class="track-empty">এখনও কোনো নোটিশ যুক্ত করা হয়নি।</div>`;
+}
+window.toggleNotice = function(id){
+  const el=$("noticeBody-"+id);
+  if(!el) return;
+  el.classList.toggle("open");
+};
+loadNotices();
+
+/* ---- WhatsApp helper (optional, alongside the direct order submission) ---- */
+function buildWA(){
+  const name=$("name").value.trim(), phone=$("phone").value.trim();
+  const service=$("service").value, details=$("details").value.trim();
+  let msg="আমি একটি অর্ডার দিতে চাই।\n\n";
+  msg+="নাম: "+(name||"-")+"\n";
+  msg+="মোবাইল: "+(phone||"-")+"\n";
+  msg+="সেবা: "+service+"\n";
+  msg+="বিস্তারিত: "+(details||"-");
+  const waNumber = window.__waNumber || DEFAULT_CONTACT.whatsapp;
+  $("waBtn").setAttribute("href","https://wa.me/"+waNumber+"?text="+encodeURIComponent(msg));
+}
+['name','phone','service','details'].forEach(id=>$(id).addEventListener('input', buildWA));
+
+/* ---- order submission -> Firebase ---- */
+function showMsg(text, isErr){
+  const el=$("orderMsg");
+  el.textContent=text; el.classList.add("show");
+  el.classList.toggle("err", !!isErr);
+}
+
+/* ---- auto-record the customer under a "customer records" section named after the
+   service type, so the admin panel's customer-record list fills in by itself.
+   this is independent of the order itself — deleting the order later never removes it. ---- */
+async function recordCustomerForOrder(serviceName, name, phone){
+  try{
+    const snap = await get(ref(db,"dorkhast/site/customerRecords"));
+    const sections = snap.exists() ? snap.val() : {};
+    let sectionId = Object.keys(sections).find(id => (sections[id].name||"").trim() === String(serviceName||"").trim());
+    if(!sectionId){
+      sectionId = push(ref(db,"dorkhast/site/customerRecords")).key;
+      await set(ref(db,"dorkhast/site/customerRecords/"+sectionId), {name:serviceName, at:Date.now(), customers:{}});
+    }
+    const existingCustomers = (sections[sectionId] && sections[sectionId].customers) || {};
+    const alreadyRecorded = Object.values(existingCustomers).some(c=>normalizePhone(c.phone)===phone);
+    if(!alreadyRecorded){
+      const custKey = push(ref(db,"dorkhast/site/customerRecords/"+sectionId+"/customers")).key;
+      await set(ref(db,"dorkhast/site/customerRecords/"+sectionId+"/customers/"+custKey), {name, phone, at:Date.now()});
+    }
+  }catch(e){ console.error(e); }
+}
+
+window.submitOrder = async function(){
+  const name=$("name").value.trim();
+  const phoneRaw=$("phone").value.trim();
+  const service=$("service").value;
+  const details=$("details").value.trim();
+  const phone=normalizePhone(phoneRaw);
+
+  if(!name) return showMsg("অনুগ্রহ করে আপনার নাম লিখুন।", true);
+  if(!/^0\d{9,10}$/.test(phone)) return showMsg("সঠিক মোবাইল নম্বর দিন (যেমন: 01712345678)।", true);
+
+  const btn=$("submitOrderBtn");
+  btn.disabled=true; btn.textContent="জমা হচ্ছে...";
+  try{
+    const orderId = push(ref(db,"dorkhast/orders")).key;
+    const now = Date.now();
+    const orderData = {
+      orderId, name, phone, service, details,
+      status:"pending",
+      trackingHistory:{
+        [push(ref(db,"dorkhast/orders/"+orderId+"/trackingHistory")).key]:{status:"pending", note:"অর্ডার গ্রহণ করা হয়েছে।", at:now}
+      },
+      createdAt:now, updatedAt:now
+    };
+    const updates={};
+    updates["dorkhast/orders/"+orderId] = orderData;
+    updates["dorkhast/ordersByPhone/"+phone+"/"+orderId] = orderData;
+    await update(ref(db), updates);
+    runTransaction(ref(db,"dorkhast/stats/totalOrders"), v=>(v||0)+1);
+    recordCustomerForOrder(service, name, phone);
+
+    showMsg("");
+    $("orderMsg").classList.remove("show");
+    $("orderBox").style.display="none";
+    $("confirmBox").style.display="block";
+    $("confirmId").textContent = "অর্ডার নম্বর: DKH-" + orderId.slice(-6).toUpperCase();
+    window.__lastPhone = phone;
+    window.__lastOrder = {orderId, name, phone, service, details, createdAt:now};
+    ['name','phone','service','details'].forEach(id=>{ if(id!=='service') $(id).value=""; });
+    showCongratsModal();
+  }catch(e){
+    console.error(e);
+    showMsg("দুঃখিত, অর্ডার জমা দেওয়া যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।", true);
+  }finally{
+    btn.disabled=false; btn.textContent="অর্ডার জমা দিন";
+  }
+};
+
+window.prefillTrack = function(){
+  if(window.__lastPhone){ $("trackPhone").value = window.__lastPhone; trackOrders(); }
+};
+
+window.newOrder = function(){
+  $("confirmBox").style.display="none";
+  $("orderBox").style.display="block";
+  $("orderMsg").classList.remove("show");
+  $("submitOrderBtn").textContent="অর্ডার জমা দিন";
+  $("submitOrderBtn").setAttribute("onclick","submitOrder()");
+  window.__lastOrder = null;
+};
+
+/* ---- editing the just-submitted order (from the "order received" section) ---- */
+window.editLastOrder = function(){
+  const o = window.__lastOrder;
+  if(!o) return;
+  $("name").value=o.name;
+  $("phone").value=o.phone;
+  $("service").value=o.service;
+  $("details").value=o.details;
+  buildWA();
+  $("confirmBox").style.display="none";
+  $("orderBox").style.display="block";
+  $("orderMsg").classList.remove("show");
+  $("submitOrderBtn").textContent="অর্ডার আপডেট করুন";
+  $("submitOrderBtn").setAttribute("onclick","updateExistingOrder()");
+};
+
+window.updateExistingOrder = async function(){
+  const o = window.__lastOrder;
+  if(!o) return submitOrder();
+  const name=$("name").value.trim();
+  const phoneRaw=$("phone").value.trim();
+  const service=$("service").value;
+  const details=$("details").value.trim();
+  const phone=normalizePhone(phoneRaw);
+
+  if(!name) return showMsg("অনুগ্রহ করে আপনার নাম লিখুন।", true);
+  if(!/^0\d{9,10}$/.test(phone)) return showMsg("সঠিক মোবাইল নম্বর দিন (যেমন: 01712345678)।", true);
+
+  const btn=$("submitOrderBtn");
+  btn.disabled=true; btn.textContent="আপডেট হচ্ছে...";
+  try{
+    const orderId=o.orderId;
+    const now=Date.now();
+    const histKey=push(ref(db,"dorkhast/orders/"+orderId+"/trackingHistory")).key;
+    const histEntry={status:"pending", note:"কাস্টমার অর্ডারের তথ্য হালনাগাদ করেছেন।", at:now};
+    const updates={};
+    updates[`dorkhast/orders/${orderId}/name`]=name;
+    updates[`dorkhast/orders/${orderId}/phone`]=phone;
+    updates[`dorkhast/orders/${orderId}/service`]=service;
+    updates[`dorkhast/orders/${orderId}/details`]=details;
+    updates[`dorkhast/orders/${orderId}/updatedAt`]=now;
+    updates[`dorkhast/orders/${orderId}/trackingHistory/${histKey}`]=histEntry;
+
+    if(phone!==o.phone){
+      // move the record to the new phone's bucket, remove from the old one
+      updates[`dorkhast/ordersByPhone/${o.phone}/${orderId}`]=null;
+      updates[`dorkhast/ordersByPhone/${phone}/${orderId}`]={
+        orderId, name, phone, service, details,
+        status:"pending", createdAt:o.createdAt||now, updatedAt:now,
+        trackingHistory:{[histKey]:histEntry}
+      };
+    }else{
+      updates[`dorkhast/ordersByPhone/${phone}/${orderId}/name`]=name;
+      updates[`dorkhast/ordersByPhone/${phone}/${orderId}/service`]=service;
+      updates[`dorkhast/ordersByPhone/${phone}/${orderId}/details`]=details;
+      updates[`dorkhast/ordersByPhone/${phone}/${orderId}/updatedAt`]=now;
+      updates[`dorkhast/ordersByPhone/${phone}/${orderId}/trackingHistory/${histKey}`]=histEntry;
+    }
+    await update(ref(db), updates);
+
+    window.__lastOrder = {...o, name, phone, service, details};
+    window.__lastPhone = phone;
+    $("confirmId").textContent = "অর্ডার নম্বর: DKH-" + orderId.slice(-6).toUpperCase();
+    $("orderMsg").classList.remove("show");
+    $("orderBox").style.display="none";
+    $("confirmBox").style.display="block";
+  }catch(e){
+    console.error(e);
+    showMsg("দুঃখিত, আপডেট করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।", true);
+  }finally{
+    btn.disabled=false; btn.textContent="অর্ডার আপডেট করুন";
+  }
+};
+
+/* ---- order tracking by phone (the customer's unique ID) ---- */
+window.trackOrders = async function(){
+  const phone = normalizePhone($("trackPhone").value.trim());
+  const box=$("trackResults");
+  if(!/^0\d{9,10}$/.test(phone)){
+    box.innerHTML = `<div class="track-empty">সঠিক মোবাইল নম্বর দিন।</div>`;
+    return;
+  }
+  box.innerHTML = `<div class="track-empty">খোঁজা হচ্ছে...</div>`;
+  try{
+    const snap = await get(ref(db,"dorkhast/ordersByPhone/"+phone));
+    if(!snap.exists()){
+      box.innerHTML = `<div class="track-empty">এই নম্বরে কোনো অর্ডার পাওয়া যায়নি।</div>`;
+      return;
+    }
+    const orders = Object.values(snap.val()).sort((a,b)=>b.createdAt-a.createdAt);
+    window.__trackOrdersData = orders;
+    box.innerHTML = orders.map(orderCard).join("");
+  }catch(e){
+    console.error(e);
+    box.innerHTML = `<div class="track-empty">দুঃখিত, তথ্য আনা যায়নি। আবার চেষ্টা করুন।</div>`;
+  }
+};
+
+/* ---- open a tracking link shared by admin (e.g. from WhatsApp): ?track=01XXXXXXXXX ---- */
+(function autoTrackFromLink(){
+  try{
+    const params = new URLSearchParams(window.location.search);
+    const phone = params.get("track");
+    if(!phone) return;
+    $("trackPhone").value = phone;
+    document.getElementById("track").scrollIntoView({behavior:"smooth"});
+    window.trackOrders();
+  }catch(e){ console.error(e); }
+})();
+
+function paymentSectionHTML(o){
+  if(o.status!=='ready') return "";
+  const p=o.paymentInfo;
+  if(p && p.verified){
+    return `<div class="payment-box payment-verified">✓ পেমেন্ট ভেরিফাইড${p.amount?(" — ৳"+esc(p.amount)):""}</div>`;
+  }
+  if(p && !p.verified){
+    return `<div class="payment-box payment-pending">পেমেন্ট তথ্য জমা হয়েছে, যাচাইয়ের অপেক্ষায়...</div>`;
+  }
+  const NUM = window.__paymentNumbers||{};
+  const QR = window.__paymentQR||"";
+  return `
+    <button class="btn btn-primary btn-sm" type="button" onclick="togglePay('${esc(o.orderId)}')">পেমেন্ট করুন</button>
+    <div class="pay-form" id="payform-${esc(o.orderId)}" style="display:none;">
+      <div class="pay-numbers">
+        <div>বিকাশ: <b>${esc(NUM.bkash||"—")}</b></div>
+        <div>রকেট: <b>${esc(NUM.rocket||"—")}</b></div>
+        <div>নগদ: <b>${esc(NUM.nagad||"—")}</b></div>
+      </div>
+      ${QR?`<div class="pay-qr"><img src="${QR}" alt="পেমেন্ট QR কোড" class="pay-qr-img" onerror="this.closest('.pay-qr').innerHTML='<div class=&quot;track-empty&quot;>QR ছবি লোড করা যায়নি, অনুগ্রহ করে উপরের নম্বরে সরাসরি পেমেন্ট করুন।</div>'"></div>`:""}
+      <div class="field">
+        <label>পেমেন্ট মাধ্যম</label>
+        <select id="payMethod-${esc(o.orderId)}">
+          <option value="bkash">বিকাশ</option>
+          <option value="rocket">রকেট</option>
+          <option value="nagad">নগদ</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>যে নম্বর থেকে পেমেন্ট করেছেন তার শেষ ৪ ডিজিট</label>
+        <input id="payLast4-${esc(o.orderId)}" maxlength="4" inputmode="numeric" placeholder="১২৩৪">
+      </div>
+      <div class="field">
+        <label>টাকার পরিমাণ</label>
+        <input id="payAmount-${esc(o.orderId)}" type="number" placeholder="যেমন: ৪০০">
+      </div>
+      <div class="form-msg" id="payMsg-${esc(o.orderId)}"></div>
+      <button class="btn btn-primary btn-sm" type="button" onclick="submitPayment('${esc(o.orderId)}','${esc(o.phone)}')">পেমেন্ট ভেরিফাই</button>
+    </div>`;
+}
+
+function humanFileSize(bytes){
+  bytes = Number(bytes||0);
+  if(bytes<1024) return bytes+" B";
+  if(bytes<1024*1024) return (bytes/1024).toFixed(1)+" KB";
+  return (bytes/1024/1024).toFixed(2)+" MB";
+}
+function deliveryFilesHTML(o){
+  if(!o.deliveryFiles) return "";
+  const entries = Object.entries(o.deliveryFiles);
+  if(!entries.length) return "";
+  return `<div class="delivery-files">
+    <h5>ডেলিভারি করা ফাইল</h5>
+    ${entries.map(([key,f])=>`<div class="delivery-file-item">
+      <span class="df-name">📎 ${esc(f.name)}</span>
+      <span class="df-size">${humanFileSize(f.size)}</span>
+      <a class="btn btn-primary btn-sm" href="${esc(f.url)}" target="_blank" rel="noopener" download="${esc(f.name)}">ডাউনলোড</a>
+    </div>`).join("")}
+  </div>`;
+}
+/* ---- cash memo: rendered client-side as a downloadable image so the customer can save it to their device ---- */
+function cashMemoHTML(o){
+  const m = o.cashMemo;
+  if(!m) return "";
+  return `<div class="cashmemo-box">
+    <h5>ক্যাশমেমো</h5>
+    <div class="cashmemo-card">
+      <div class="cashmemo-row"><span>মেমো নম্বর</span><span>${esc(m.memoNo)}</span></div>
+      <div class="cashmemo-row"><span>তারিখ</span><span>${fmt(m.generatedAt)}</span></div>
+      <div class="cashmemo-row"><span>গ্রাহকের নাম</span><span>${esc(m.name)}</span></div>
+      <div class="cashmemo-row"><span>মোবাইল নম্বর</span><span>${esc(m.phone)}</span></div>
+      <div class="cashmemo-row"><span>সেবা</span><span>${esc(m.service)}</span></div>
+      ${m.amount?`<div class="cashmemo-row"><span>মূল্য</span><span>${esc(m.amount)}</span></div>`:""}
+      <div class="cm-btn-wrap"><button class="btn btn-primary btn-sm" type="button" onclick="downloadCashMemo('${esc(o.orderId)}')">ক্যাশমেমো সেভ করুন</button></div>
+    </div>
+  </div>`;
+}
+function wrapCanvasText(ctx, text, maxWidth){
+  const words = String(text||"").split(" ");
+  const lines = []; let cur = "";
+  words.forEach(w=>{
+    const test = cur ? cur+" "+w : w;
+    if(ctx.measureText(test).width > maxWidth && cur){ lines.push(cur); cur = w; }
+    else cur = test;
+  });
+  if(cur) lines.push(cur);
+  return lines;
+}
+function loadImageAsync(src){
+  return new Promise(resolve=>{
+    if(!src){ resolve(null); return; }
+    const img=new Image();
+    img.onload=()=>resolve(img);
+    img.onerror=()=>resolve(null);
+    img.src=src;
+  });
+}
+async function renderCashMemoDataURL(m){
+  try{
+    await document.fonts.load("16px 'Hind Siliguri'");
+    await document.fonts.load("22px 'Tiro Bangla'");
+    await document.fonts.load("700 15px 'Hind Siliguri'");
+  }catch(e){}
+  const logoImg = await loadImageAsync(window.__siteLogo);
+  const siteName = window.__siteName || "Digital Point";
+  const contact = window.__siteContact || {};
+  const contactBits = [contact.phoneDisplay, contact.email].filter(Boolean).join("   ·   ");
+
+  const W = 640, PAD = 36;
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = 900; // resized to actual content height below
+  const ctx = canvas.getContext("2d");
+
+  const rows = [
+    ["মেমো নম্বর", m.memoNo],
+    ["তারিখ", fmt(m.generatedAt)],
+    ["গ্রাহকের নাম", m.name],
+    ["মোবাইল নম্বর", m.phone],
+    ["সেবা", m.service],
+  ];
+  if(m.amount) rows.push(["মূল্য", m.amount]);
+  ctx.font = "15px 'Hind Siliguri'";
+  const detailLines = m.details ? wrapCanvasText(ctx, m.details, W-PAD*2) : [];
+
+  const HEADER_H = 122, ACCENT_H = 4, TOP_PAD = 30, ROW_H = 34;
+  let bodyHeight = rows.length*ROW_H;
+  if(detailLines.length) bodyHeight += 36 + detailLines.length*22;
+  const FOOTER_H = 84 + (contactBits ? 22 : 0);
+  const H = HEADER_H + ACCENT_H + TOP_PAD + bodyHeight + FOOTER_H;
+  canvas.height = H;
+
+  /* base card */
+  ctx.fillStyle = "#FFFDF7"; ctx.fillRect(0,0,W,H);
+
+  /* letterhead-style header band, in the site's brand colours */
+  const headGrad = ctx.createLinearGradient(0,0,W,0);
+  headGrad.addColorStop(0, "#1F4B3B"); headGrad.addColorStop(1, "#3B5B7C");
+  ctx.fillStyle = headGrad;
+  ctx.fillRect(0,0,W,HEADER_H);
+
+  /* logo badge (circular, white backing so any logo shape looks clean) */
+  const logoCX = PAD+30, logoCY = HEADER_H/2, logoR = 30;
+  ctx.save();
+  ctx.beginPath(); ctx.arc(logoCX, logoCY, logoR, 0, Math.PI*2); ctx.closePath();
+  ctx.fillStyle = "#FFFFFF"; ctx.fill();
+  ctx.clip();
+  if(logoImg){
+    const scale = Math.max((logoR*2)/logoImg.width, (logoR*2)/logoImg.height);
+    const dw = logoImg.width*scale, dh = logoImg.height*scale;
+    ctx.drawImage(logoImg, logoCX-dw/2, logoCY-dh/2, dw, dh);
+  }else{
+    ctx.fillStyle = "#1F4B3B";
+    ctx.font = "26px 'Tiro Bangla'";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText((siteName.trim().charAt(0)||"D"), logoCX, logoCY+2);
+    ctx.textBaseline = "alphabetic";
+  }
+  ctx.restore();
+
+  /* site name + memo label inside the header band */
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "25px 'Tiro Bangla'";
+  ctx.fillText(siteName, logoCX+logoR+18, HEADER_H/2-6);
+  ctx.font = "13px 'Hind Siliguri'";
+  ctx.fillStyle = "rgba(255,255,255,.85)";
+  ctx.fillText("অফিসিয়াল ক্যাশমেমো", logoCX+logoR+18, HEADER_H/2+16);
+
+  ctx.textAlign = "right";
+  ctx.font = "700 13px 'Hind Siliguri'";
+  ctx.fillStyle = "rgba(255,255,255,.9)";
+  ctx.fillText("CASH MEMO", W-PAD, HEADER_H/2+5);
+
+  /* multicolour accent strip, matching the site's identity line */
+  const accentGrad = ctx.createLinearGradient(0,0,W,0);
+  accentGrad.addColorStop(0,"#9C2B1B"); accentGrad.addColorStop(.5,"#A9812E"); accentGrad.addColorStop(1,"#6B3FA0");
+  ctx.fillStyle = accentGrad;
+  ctx.fillRect(0,HEADER_H,W,ACCENT_H);
+
+  /* details table, zebra-striped for readability */
+  ctx.textAlign = "left";
+  let y = HEADER_H + ACCENT_H + TOP_PAD;
+  rows.forEach(([label,val],i)=>{
+    if(i%2===0){ ctx.fillStyle = "#F3F1E9"; ctx.fillRect(PAD-14, y-23, W-(PAD-14)*2, ROW_H); }
+    ctx.fillStyle = "#4B5A50"; ctx.font = "15px 'Hind Siliguri'"; ctx.textAlign = "left"; ctx.fillText(label, PAD, y);
+    ctx.fillStyle = "#1B2A22"; ctx.font = "700 15px 'Hind Siliguri'"; ctx.textAlign = "right"; ctx.fillText(String(val??""), W-PAD, y);
+    ctx.textAlign = "left";
+    y += ROW_H;
+  });
+  if(detailLines.length){
+    y += 6;
+    ctx.fillStyle = "#4B5A50"; ctx.font = "15px 'Hind Siliguri'"; ctx.fillText("বিবরণ", PAD, y); y += 24;
+    ctx.fillStyle = "#1B2A22"; ctx.font = "15px 'Hind Siliguri'";
+    detailLines.forEach(line=>{ ctx.fillText(line, PAD, y); y += 22; });
+    y += 6;
+  }
+
+  /* dashed divider before the footer */
+  ctx.strokeStyle = "#D3D3D3"; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(PAD,y+8); ctx.lineTo(W-PAD,y+8); ctx.stroke();
+  ctx.setLineDash([]);
+
+  /* footer */
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#1F4B3B"; ctx.font = "17px 'Tiro Bangla'";
+  ctx.fillText("সেবা গ্রহণের জন্য ধন্যবাদ — " + siteName, W/2, y+38);
+  let fy = y+38;
+  if(contactBits){
+    fy += 22;
+    ctx.fillStyle = "#4B5A50"; ctx.font = "12.5px 'Hind Siliguri'";
+    ctx.fillText(contactBits, W/2, fy);
+  }
+  fy += 22;
+  ctx.fillStyle = "#9C9C9C"; ctx.font = "11px 'Hind Siliguri'";
+  ctx.fillText("এই মেমোটি স্বয়ংক্রিয়ভাবে তৈরি করা হয়েছে", W/2, fy);
+
+  /* outer border, drawn last so it stays crisp over the header */
+  ctx.strokeStyle = "#D3D3D3"; ctx.lineWidth = 1.5;
+  ctx.strokeRect(0.75,0.75,W-1.5,H-1.5);
+
+  return canvas.toDataURL("image/png");
+}
+window.downloadCashMemo = async function(orderId){
+  try{
+    let m = null;
+    if(window.__trackOrdersData){
+      const found = window.__trackOrdersData.find(o=>o.orderId===orderId);
+      if(found) m = found.cashMemo;
+    }
+    if(!m) return;
+    const dataUrl = await renderCashMemoDataURL(m);
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = "cashmemo-"+m.memoNo+".png";
+    document.body.appendChild(a); a.click(); a.remove();
+  }catch(e){ console.error(e); }
+};
+
+function orderCard(o){
+  const hist = o.trackingHistory ? Object.values(o.trackingHistory).sort((a,b)=>a.at-b.at) : [];
+  return `<div class="order-card">
+    <div class="order-card-top">
+      <div>
+        <h4>${esc(o.service)}</h4>
+        <div class="order-meta">অর্ডার নম্বর: DKH-${esc(o.orderId.slice(-6).toUpperCase())} &nbsp;·&nbsp; ${fmt(o.createdAt)}</div>
+      </div>
+      <span class="badge badge-${esc(o.status)}">${esc(STATUS_LABEL[o.status]||o.status)}</span>
+    </div>
+    ${o.details?`<div class="order-details">${esc(o.details)}</div>`:""}
+    <div class="payment-area">${paymentSectionHTML(o)}</div>
+    ${deliveryFilesHTML(o)}
+    ${cashMemoHTML(o)}
+    <div class="timeline">
+      ${hist.map(h=>`<div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-note">${esc(h.note||STATUS_LABEL[h.status]||h.status)}</div>
+          <div class="timeline-time">${fmt(h.at)}</div>
+        </div>
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+
+window.togglePay = function(orderId){
+  const el=$("payform-"+orderId);
+  if(!el) return;
+  el.style.display = (el.style.display==="none"||!el.style.display) ? "block" : "none";
+};
+
+window.submitPayment = async function(orderId, phone){
+  const method = $("payMethod-"+orderId).value;
+  const last4 = $("payLast4-"+orderId).value.trim();
+  const amount = $("payAmount-"+orderId).value.trim();
+  const msgEl = $("payMsg-"+orderId);
+  const showPayMsg=(t,isErr)=>{ if(!msgEl) return; msgEl.textContent=t; msgEl.classList.add("show"); msgEl.classList.toggle("err",!!isErr); };
+  if(!/^\d{4}$/.test(last4)) return showPayMsg("সঠিক ৪ ডিজিট দিন।", true);
+  if(!amount || isNaN(amount) || Number(amount)<=0) return showPayMsg("সঠিক টাকার পরিমাণ দিন।", true);
+  try{
+    const paymentInfo = { method, lastFour:last4, amount:Number(amount), submittedAt:Date.now(), verified:false };
+    const updates={};
+    updates[`dorkhast/orders/${orderId}/paymentInfo`] = paymentInfo;
+    updates[`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfo`] = paymentInfo;
+    await update(ref(db), updates);
+    trackOrders();
+  }catch(e){
+    console.error(e);
+    showPayMsg("দুঃখিত, পাঠানো যায়নি। আবার চেষ্টা করুন।", true);
+  }
+};
+</script>
+
+</body>
+</html>
