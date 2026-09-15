@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Digital Point — সিভি, চাকরির আবেদন ও ভর্তি ফরম সহায়তা</title>
+<title>Dorkhasta — সিভি, চাকরির আবেদন ও ভর্তি ফরম সহায়তা</title>
 <meta name="theme-color" content="#EFEFEF">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Digital Point" id="appTitleMeta">
+<meta name="apple-mobile-web-app-title" content="Dorkhasta">
 <meta name="format-detection" content="telephone=no">
 <meta name="description" content="সিভি, কভার লেটার, চাকরির আবেদন ও ভর্তি ফরম পূরণে সহায়তা — মোবাইল অ্যাপ থেকে সরাসরি অর্ডার ও ট্র্যাক করুন।">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -341,6 +341,26 @@
 
   .payment-area{margin-top:14px;}
   .payment-box{font-size:14px;padding:10px 14px;border-radius:3px;display:inline-block;}
+  .payment-btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+
+  /* bill / cash memo pop-up (admin-authored — shown to the customer via "বিল দেখুন") */
+  .bill-modal-box{background:var(--paper);border-radius:14px;padding:26px 22px;max-width:360px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.28);animation:congrats-pop .38s cubic-bezier(.2,.9,.3,1.2);}
+  @media (prefers-reduced-motion: reduce){ .bill-modal-box{animation:none;} }
+  .bill-empty{text-align:center;color:var(--ink-soft);font-size:14.5px;padding:20px 6px;}
+  .atm-memo{width:100%;font-family:'Courier New',monospace;}
+  .atm-memo-paper{background:#fff;border-left:1px dashed #bbb;border-right:1px dashed #bbb;padding:18px 16px 14px;color:#1a1a1a;box-shadow:0 4px 14px rgba(0,0,0,.10);}
+  .atm-memo-head{text-align:center;}
+  .atm-memo-brand{font-family:'Tiro Bangla',serif;font-weight:700;font-size:19px;letter-spacing:2px;}
+  .atm-memo-sub{font-size:12px;color:#555;margin-top:2px;}
+  .atm-memo-divider{border-top:1px solid #1a1a1a;margin:10px 0;}
+  .atm-memo-divider.dashed{border-top:1px dashed #999;}
+  .atm-memo-row{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:3px 0;}
+  .atm-memo-row span{color:#555;}
+  .atm-memo-row b{font-weight:700;text-align:left;}
+  .atm-memo-amount{font-size:15px;padding:6px 0;}
+  .atm-memo-amount b{color:var(--stamp-dark);}
+  .atm-memo-barcode{height:30px;margin:12px 0 6px;background:repeating-linear-gradient(90deg,#1a1a1a 0,#1a1a1a 2px,transparent 2px,transparent 5px,#1a1a1a 5px,#1a1a1a 6px,transparent 6px,transparent 9px);}
+  .atm-memo-thanks{text-align:center;font-size:12px;color:#555;margin-top:4px;}
 
   .delivery-files{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;}
   .delivery-files h5{font-family:'Tiro Bangla',serif;font-weight:400;font-size:15px;margin:0 0 8px;}
@@ -349,19 +369,13 @@
   .delivery-file-item .df-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .delivery-file-item .df-size{color:var(--ink-soft);font-size:12.5px;flex-shrink:0;}
   .delivery-file-item a{flex-shrink:0;}
-
-  .cashmemo-box{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;}
-  .cashmemo-box h5{font-family:'Tiro Bangla',serif;font-weight:400;font-size:15px;margin:0 0 10px;}
-  .cashmemo-card{background:var(--paper-alt);border:1px solid var(--line);border-radius:6px;padding:14px 16px;font-size:14px;}
-  .cashmemo-row{display:flex;justify-content:space-between;gap:10px;padding:4px 0;}
-  .cashmemo-row span:first-child{color:var(--ink-soft);}
-  .cashmemo-card .cm-btn-wrap{margin-top:10px;}
   .payment-pending{background:var(--paper-alt);color:var(--ink-soft);border:1px dashed var(--line);}
   .payment-verified{background:#e7efe3;color:var(--green);border:1px solid var(--green);font-weight:600;}
   .pay-form{margin-top:14px;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:18px 20px;}
   .pay-numbers{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;margin-bottom:14px;color:var(--ink-soft);}
   .pay-numbers b{color:var(--ink);font-family:'Tiro Bangla',serif;}
   .pay-qr{margin:0 0 16px;}
+  .pay-qr-label{font-size:13px;color:var(--ink-soft);margin:0 0 8px;font-weight:600;}
   .pay-qr-img{width:150px;height:150px;object-fit:contain;border:1px solid var(--line);border-radius:6px;background:#fff;padding:6px;}
 
   /* brand logo */
@@ -419,19 +433,6 @@
   .app-tab.active{color:var(--stamp);}
   .app-tab:active{background:var(--paper-alt);}
 
-  /* live update toast (new notice / new service alerts) */
-  .site-toast{
-    position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;
-    transform:translateX(-50%) translateY(-140%);
-    max-width:calc(100% - 32px);width:max-content;
-    background:var(--green);color:var(--paper);
-    padding:12px 22px;border-radius:30px;font-size:14px;font-weight:600;
-    box-shadow:0 10px 30px rgba(27,42,34,.28);
-    z-index:300;opacity:0;pointer-events:none;
-    transition:transform .35s cubic-bezier(.2,.9,.3,1.2), opacity .35s ease;
-  }
-  .site-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
-
   /* notice board */
   .notice-list{margin-top:24px;display:flex;flex-direction:column;gap:12px;}
   .notice-card{background:var(--paper-alt);border:1px solid var(--line);border-radius:3px;padding:18px 20px;}
@@ -482,7 +483,7 @@
   <div class="nav">
     <div class="brand" id="brandBox">
       <img id="brandLogoImg" class="brand-logo hidden" alt="লোগো">
-      <span><span id="brandName">Digital Point</span><span>.</span></span>
+      <span>Dorkhasta<span>.</span></span>
       <div class="brand-stats">
         <span class="stat-pill" title="মোট ভিজিটর">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -510,7 +511,7 @@
       <a href="#order">অর্ডার করুন</a>
       <a href="#track">অর্ডার ট্র্যাক করুন</a>
     </div>
-    <a class="apk-btn" id="apkDownloadLink" href="https://github.com/ourdestination/dorkhasta/releases/download/v1.0/Digital Pointapk" title="অ্যান্ড্রয়েড অ্যাপ ডাউনলোড করুন (APK)" aria-label="APK ডাউনলোড করুন" onclick="return openApkInfoModal(event)">
+    <a class="apk-btn" id="apkDownloadLink" href="https://github.com/ourdestination/digitalpoint/releases/download/v1.0/digital-point.apk" title="অ্যান্ড্রয়েড অ্যাপ ডাউনলোড করুন (APK)" aria-label="APK ডাউনলোড করুন" onclick="return openApkInfoModal(event)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
       <span>APK</span>
     </a>
@@ -635,7 +636,6 @@
     <div class="field">
       <label for="details">বিস্তারিত লিখুন</label>
       <textarea id="details" placeholder="কোন চাকরি/প্রতিষ্ঠানের জন্য, কবে জমা দিতে হবে ইত্যাদি লিখুন"></textarea>
-      <p style="color:var(--stamp);font-weight:600;font-size:13.5px;margin:8px 0 0;">প্রয়োজনীয় ডকুমেন্ট Whatsapp-এ পাঠান</p>
     </div>
     <div class="order-actions">
       <button id="submitOrderBtn" class="btn btn-primary" onclick="submitOrder()">অর্ডার জমা দিন</button>
@@ -740,10 +740,17 @@
   </div>
 </div>
 
+<div id="billModal" class="congrats-modal hidden" role="dialog" aria-modal="true">
+  <div class="bill-modal-box">
+    <div id="billModalBody"></div>
+    <button class="btn btn-soft btn-wide" type="button" style="margin-top:16px;" onclick="closeBillModal()">বন্ধ করুন</button>
+  </div>
+</div>
+
 <footer>
   <div class="wrap-wide foot-grid">
     <div>
-      <div class="foot-brand"><span id="footBrandName">Digital Point</span><span style="color:#9C2B1B">.</span></div>
+      <div class="foot-brand">Dorkhasta<span style="color:#9C2B1B">.</span></div>
       <p class="foot-note">এটি একটি ব্যক্তিগত ফ্রিল্যান্স সেবা — কোনো সরকারি প্রতিষ্ঠান বা দালাল সংস্থা নয়। আমরা শুধু ফরম পূরণ ও কাগজপত্র প্রস্তুতিতে সহায়তা করি।</p>
       <a class="foot-admin" href="admin.html">ম্যানেজমেন্ট প্যানেল</a>
     </div>
@@ -821,8 +828,6 @@ document.getElementById("apkInfoModal").addEventListener("click", e=>{
 });
 </script>
 
-<div class="site-toast" id="siteToast"></div>
-
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import {getDatabase,ref,push,set,update,get,child,onValue,runTransaction,onDisconnect,remove} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
@@ -858,7 +863,7 @@ const STATUS_LABEL = {
   pending:"অপেক্ষমান", processing:"কাজ চলছে",
   ready:"প্রস্তুত (ডেলিভারির অপেক্ষায়)", delivered:"ডেলিভারি সম্পন্ন", cancelled:"বাতিল"
 };
-const PAYMENT_LABEL = {bkash:"বিকাশ", rocket:"রকেট", nagad:"নগদ"};
+const PAYMENT_LABEL = {bkash:"বিকাশ", rocket:"রকেট", nagad:"নগদ", banglaqr:"বাংলা কিউআর (QR)"};
 
 const $=x=>document.getElementById(x);
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
@@ -877,36 +882,20 @@ async function loadSiteContent(){
   try{
     const snap=await get(ref(db,"dorkhast/site"));
     const site=snap.exists()?snap.val():{};
+    renderServices(site.services?Object.values(site.services).sort((a,b)=>(a.sort||0)-(b.sort||0)):DEFAULT_SERVICES);
     renderContact(site.contact||DEFAULT_CONTACT);
     renderHero(site.hero||DEFAULT_HERO);
     renderLogo(site.logo);
     renderMarquee(site.marquee);
-    renderBrand(site.siteName, site.apkLink);
-    window.__paymentQR = (site.paymentQR||"").trim();
+    window.__paymentQR = site.paymentQR || "";
   }catch(e){
     console.error(e);
+    renderServices(DEFAULT_SERVICES);
     renderContact(DEFAULT_CONTACT);
     renderHero(DEFAULT_HERO);
     renderMarquee(DEFAULT_MARQUEE);
-    renderBrand();
     window.__paymentQR = "";
   }
-}
-const DEFAULT_SITE_NAME = "Digital Point";
-const TITLE_SUFFIX = " — সিভি, চাকরির আবেদন ও ভর্তি ফরম সহায়তা";
-/* ---- website name (brand) and APK download link, both editable from the admin panel ---- */
-function renderBrand(siteName, apkLink){
-  const name = (siteName||"").trim() || DEFAULT_SITE_NAME;
-  window.__siteName = name;
-  document.title = name + TITLE_SUFFIX;
-  const appTitleMeta = $("appTitleMeta");
-  if(appTitleMeta) appTitleMeta.setAttribute("content", name);
-  const brandName = $("brandName");
-  if(brandName) brandName.textContent = name;
-  const footBrandName = $("footBrandName");
-  if(footBrandName) footBrandName.textContent = name;
-  const apkBtn = $("apkDownloadLink");
-  if(apkBtn && apkLink && apkLink.trim()) apkBtn.setAttribute("href", apkLink.trim());
 }
 function renderMarquee(raw){
   const wrap=$("marqueeWrap");
@@ -932,7 +921,6 @@ function renderMarquee(raw){
   });
 }
 function renderLogo(logoUrl){
-  window.__siteLogo = logoUrl || "";
   const img=$("brandLogoImg");
   if(logoUrl){ img.src=logoUrl; img.classList.remove("hidden"); }
   else{ img.classList.add("hidden"); img.removeAttribute("src"); }
@@ -1013,7 +1001,6 @@ function renderContact(c){
   $("directCall").textContent = "অথবা সরাসরি কল করুন: " + (c.phoneDisplay||"");
   window.__waNumber = (c.whatsapp||DEFAULT_CONTACT.whatsapp);
   window.__paymentNumbers = {bkash:c.paymentBkash||"", rocket:c.paymentRocket||"", nagad:c.paymentNagad||""};
-  window.__siteContact = c || {};
   buildWA();
 }
 function renderHero(h){
@@ -1026,79 +1013,6 @@ function renderHero(h){
   p.classList.toggle("hidden", !sub);
 }
 loadSiteContent();
-
-/* ---- live update notifications: banner + 2x chime whenever admin adds a
-   new notice or a new service, so a browsing customer notices immediately ---- */
-let __siteAudioCtx=null;
-function getSiteAudioCtx(){
-  if(!__siteAudioCtx) __siteAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  return __siteAudioCtx;
-}
-document.addEventListener("click", ()=>{ try{ const c=getSiteAudioCtx(); if(c.state==="suspended") c.resume(); }catch(e){} });
-function playSiteNotifSound(){
-  try{
-    const ctx=getSiteAudioCtx();
-    const tone=(freq,start,dur)=>{
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.type="sine"; o.frequency.value=freq;
-      o.connect(g); g.connect(ctx.destination);
-      g.gain.setValueAtTime(0.0001, ctx.currentTime+start);
-      g.gain.exponentialRampToValueAtTime(0.32, ctx.currentTime+start+0.03);
-      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+start+dur);
-      o.start(ctx.currentTime+start); o.stop(ctx.currentTime+start+dur+0.05);
-    };
-    // two-tone chime, played exactly twice per the admin's request
-    const cycleDuration = 0.62;
-    for(let c=0;c<2;c++){
-      const base=c*cycleDuration;
-      tone(880, base, 0.16);
-      tone(1180, base+0.17, 0.22);
-    }
-  }catch(e){ console.error(e); }
-}
-let __siteToastQueue=[], __siteToastShowing=false;
-function notifySiteUpdate(msg){
-  playSiteNotifSound();
-  __siteToastQueue.push(msg);
-  if(!__siteToastShowing) showNextSiteToast();
-}
-function showNextSiteToast(){
-  const box=$("siteToast");
-  if(!box || !__siteToastQueue.length){ __siteToastShowing=false; return; }
-  __siteToastShowing=true;
-  const msg=__siteToastQueue.shift();
-  box.textContent=msg;
-  box.classList.add("show");
-  clearTimeout(window.__siteToastTimer);
-  window.__siteToastTimer=setTimeout(()=>{
-    box.classList.remove("show");
-    setTimeout(showNextSiteToast, 300);
-  }, 4200);
-}
-
-/* ---- services: live listener so new services trigger a notification too ---- */
-let __knownServiceIds=null;
-function loadServicesRealtime(){
-  onValue(ref(db,"dorkhast/site/services"), s=>{
-    const data=s.val()||{};
-    const list=Object.entries(data).map(([id,v])=>({id,...v})).sort((a,b)=>(a.sort||0)-(b.sort||0));
-    renderServices(list.length?list:DEFAULT_SERVICES);
-    const ids=list.map(x=>x.id);
-    if(__knownServiceIds===null){
-      __knownServiceIds=new Set(ids); // first snapshot — don't notify for existing services
-    }else{
-      const added=ids.filter(id=>!__knownServiceIds.has(id));
-      if(added.length){
-        added.forEach(id=>{
-          const svc=list.find(x=>x.id===id);
-          notifySiteUpdate("নতুন সেবা যুক্ত হয়েছে: " + (svc?.title||""));
-        });
-      }
-      __knownServiceIds=new Set(ids);
-    }
-  });
-}
-loadServicesRealtime();
 
 /* ---- header stats: total visitors, live visitors, total orders ---- */
 function trackVisitorStats(){
@@ -1186,7 +1100,6 @@ loadReviews();
 
 /* ---- notice board ---- */
 let noticeCleanupInFlight=new Set();
-let __knownNoticeIds=null;
 function loadNotices(){
   onValue(ref(db,"dorkhast/site/notices"), s=>{
     const data=s.val()||{};
@@ -1201,20 +1114,6 @@ function loadNotices(){
     });
     const active=all.filter(n=>!n.expiresAt || n.expiresAt>now).sort((a,b)=>(b.at||0)-(a.at||0));
     renderNotices(active);
-
-    const ids=all.map(n=>n.id);
-    if(__knownNoticeIds===null){
-      __knownNoticeIds=new Set(ids); // first snapshot — don't notify for existing notices
-    }else{
-      const added=ids.filter(id=>!__knownNoticeIds.has(id));
-      if(added.length){
-        added.forEach(id=>{
-          const n=all.find(x=>x.id===id);
-          if(n && (!n.expiresAt || n.expiresAt>now)) notifySiteUpdate("নতুন নোটিশ: " + (n.title||""));
-        });
-      }
-      __knownNoticeIds=new Set(ids);
-    }
   });
 }
 function renderNotices(list){
@@ -1435,8 +1334,9 @@ window.trackOrders = async function(){
       box.innerHTML = `<div class="track-empty">এই নম্বরে কোনো অর্ডার পাওয়া যায়নি।</div>`;
       return;
     }
-    const orders = Object.values(snap.val()).sort((a,b)=>b.createdAt-a.createdAt);
-    window.__trackOrdersData = orders;
+    const ordersObj = snap.val();
+    window.__trackedOrders = ordersObj;
+    const orders = Object.values(ordersObj).sort((a,b)=>b.createdAt-a.createdAt);
     box.innerHTML = orders.map(orderCard).join("");
   }catch(e){
     console.error(e);
@@ -1458,30 +1358,35 @@ window.trackOrders = async function(){
 
 function paymentSectionHTML(o){
   if(o.status!=='ready') return "";
+  const billBtn = `<button class="btn btn-soft btn-sm" type="button" onclick="viewBill('${esc(o.orderId)}')">বিল দেখুন</button>`;
   const p=o.paymentInfo;
   if(p && p.verified){
-    return `<div class="payment-box payment-verified">✓ পেমেন্ট ভেরিফাইড${p.amount?(" — ৳"+esc(p.amount)):""}</div>`;
+    return `<div class="payment-btn-row"><div class="payment-box payment-verified">✓ পেমেন্ট ভেরিফাইড${p.amount?(" — ৳"+esc(p.amount)):""}</div>${billBtn}</div>`;
   }
   if(p && !p.verified){
-    return `<div class="payment-box payment-pending">পেমেন্ট তথ্য জমা হয়েছে, যাচাইয়ের অপেক্ষায়...</div>`;
+    return `<div class="payment-btn-row"><div class="payment-box payment-pending">পেমেন্ট তথ্য জমা হয়েছে, যাচাইয়ের অপেক্ষায়...</div>${billBtn}</div>`;
   }
   const NUM = window.__paymentNumbers||{};
   const QR = window.__paymentQR||"";
   return `
-    <button class="btn btn-primary btn-sm" type="button" onclick="togglePay('${esc(o.orderId)}')">পেমেন্ট করুন</button>
+    <div class="payment-btn-row">
+      <button class="btn btn-primary btn-sm" type="button" onclick="togglePay('${esc(o.orderId)}')">পেমেন্ট করুন</button>
+      ${billBtn}
+    </div>
     <div class="pay-form" id="payform-${esc(o.orderId)}" style="display:none;">
       <div class="pay-numbers">
         <div>বিকাশ: <b>${esc(NUM.bkash||"—")}</b></div>
         <div>রকেট: <b>${esc(NUM.rocket||"—")}</b></div>
         <div>নগদ: <b>${esc(NUM.nagad||"—")}</b></div>
       </div>
-      ${QR?`<div class="pay-qr"><img src="${QR}" alt="পেমেন্ট QR কোড" class="pay-qr-img" onerror="this.closest('.pay-qr').innerHTML='<div class=&quot;track-empty&quot;>QR ছবি লোড করা যায়নি, অনুগ্রহ করে উপরের নম্বরে সরাসরি পেমেন্ট করুন।</div>'"></div>`:""}
+      ${QR?`<div class="pay-qr"><p class="pay-qr-label">বাংলা কিউআর (QR) স্ক্যান করে পেমেন্ট করুন</p><img src="${QR}" alt="বাংলা কিউআর পেমেন্ট কোড" class="pay-qr-img"></div>`:""}
       <div class="field">
         <label>পেমেন্ট মাধ্যম</label>
         <select id="payMethod-${esc(o.orderId)}">
           <option value="bkash">বিকাশ</option>
           <option value="rocket">রকেট</option>
           <option value="nagad">নগদ</option>
+          <option value="banglaqr">বাংলা কিউআর (QR)</option>
         </select>
       </div>
       <div class="field">
@@ -1516,184 +1421,6 @@ function deliveryFilesHTML(o){
     </div>`).join("")}
   </div>`;
 }
-/* ---- cash memo: rendered client-side as a downloadable image so the customer can save it to their device ---- */
-function cashMemoHTML(o){
-  const m = o.cashMemo;
-  if(!m) return "";
-  return `<div class="cashmemo-box">
-    <h5>ক্যাশমেমো</h5>
-    <div class="cashmemo-card">
-      <div class="cashmemo-row"><span>মেমো নম্বর</span><span>${esc(m.memoNo)}</span></div>
-      <div class="cashmemo-row"><span>তারিখ</span><span>${fmt(m.generatedAt)}</span></div>
-      <div class="cashmemo-row"><span>গ্রাহকের নাম</span><span>${esc(m.name)}</span></div>
-      <div class="cashmemo-row"><span>মোবাইল নম্বর</span><span>${esc(m.phone)}</span></div>
-      <div class="cashmemo-row"><span>সেবা</span><span>${esc(m.service)}</span></div>
-      ${m.amount?`<div class="cashmemo-row"><span>মূল্য</span><span>${esc(m.amount)}</span></div>`:""}
-      <div class="cm-btn-wrap"><button class="btn btn-primary btn-sm" type="button" onclick="downloadCashMemo('${esc(o.orderId)}')">ক্যাশমেমো সেভ করুন</button></div>
-    </div>
-  </div>`;
-}
-function wrapCanvasText(ctx, text, maxWidth){
-  const words = String(text||"").split(" ");
-  const lines = []; let cur = "";
-  words.forEach(w=>{
-    const test = cur ? cur+" "+w : w;
-    if(ctx.measureText(test).width > maxWidth && cur){ lines.push(cur); cur = w; }
-    else cur = test;
-  });
-  if(cur) lines.push(cur);
-  return lines;
-}
-function loadImageAsync(src){
-  return new Promise(resolve=>{
-    if(!src){ resolve(null); return; }
-    const img=new Image();
-    img.onload=()=>resolve(img);
-    img.onerror=()=>resolve(null);
-    img.src=src;
-  });
-}
-async function renderCashMemoDataURL(m){
-  try{
-    await document.fonts.load("16px 'Hind Siliguri'");
-    await document.fonts.load("22px 'Tiro Bangla'");
-    await document.fonts.load("700 15px 'Hind Siliguri'");
-  }catch(e){}
-  const logoImg = await loadImageAsync(window.__siteLogo);
-  const siteName = window.__siteName || "Digital Point";
-  const contact = window.__siteContact || {};
-  const contactBits = [contact.phoneDisplay, contact.email].filter(Boolean).join("   ·   ");
-
-  const W = 640, PAD = 36;
-  const canvas = document.createElement("canvas");
-  canvas.width = W; canvas.height = 900; // resized to actual content height below
-  const ctx = canvas.getContext("2d");
-
-  const rows = [
-    ["মেমো নম্বর", m.memoNo],
-    ["তারিখ", fmt(m.generatedAt)],
-    ["গ্রাহকের নাম", m.name],
-    ["মোবাইল নম্বর", m.phone],
-    ["সেবা", m.service],
-  ];
-  if(m.amount) rows.push(["মূল্য", m.amount]);
-  ctx.font = "15px 'Hind Siliguri'";
-  const detailLines = m.details ? wrapCanvasText(ctx, m.details, W-PAD*2) : [];
-
-  const HEADER_H = 122, ACCENT_H = 4, TOP_PAD = 30, ROW_H = 34;
-  let bodyHeight = rows.length*ROW_H;
-  if(detailLines.length) bodyHeight += 36 + detailLines.length*22;
-  const FOOTER_H = 84 + (contactBits ? 22 : 0);
-  const H = HEADER_H + ACCENT_H + TOP_PAD + bodyHeight + FOOTER_H;
-  canvas.height = H;
-
-  /* base card */
-  ctx.fillStyle = "#FFFDF7"; ctx.fillRect(0,0,W,H);
-
-  /* letterhead-style header band, in the site's brand colours */
-  const headGrad = ctx.createLinearGradient(0,0,W,0);
-  headGrad.addColorStop(0, "#1F4B3B"); headGrad.addColorStop(1, "#3B5B7C");
-  ctx.fillStyle = headGrad;
-  ctx.fillRect(0,0,W,HEADER_H);
-
-  /* logo badge (circular, white backing so any logo shape looks clean) */
-  const logoCX = PAD+30, logoCY = HEADER_H/2, logoR = 30;
-  ctx.save();
-  ctx.beginPath(); ctx.arc(logoCX, logoCY, logoR, 0, Math.PI*2); ctx.closePath();
-  ctx.fillStyle = "#FFFFFF"; ctx.fill();
-  ctx.clip();
-  if(logoImg){
-    const scale = Math.max((logoR*2)/logoImg.width, (logoR*2)/logoImg.height);
-    const dw = logoImg.width*scale, dh = logoImg.height*scale;
-    ctx.drawImage(logoImg, logoCX-dw/2, logoCY-dh/2, dw, dh);
-  }else{
-    ctx.fillStyle = "#1F4B3B";
-    ctx.font = "26px 'Tiro Bangla'";
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText((siteName.trim().charAt(0)||"D"), logoCX, logoCY+2);
-    ctx.textBaseline = "alphabetic";
-  }
-  ctx.restore();
-
-  /* site name + memo label inside the header band */
-  ctx.textAlign = "left";
-  ctx.fillStyle = "#FFFFFF";
-  ctx.font = "25px 'Tiro Bangla'";
-  ctx.fillText(siteName, logoCX+logoR+18, HEADER_H/2-6);
-  ctx.font = "13px 'Hind Siliguri'";
-  ctx.fillStyle = "rgba(255,255,255,.85)";
-  ctx.fillText("অফিসিয়াল ক্যাশমেমো", logoCX+logoR+18, HEADER_H/2+16);
-
-  ctx.textAlign = "right";
-  ctx.font = "700 13px 'Hind Siliguri'";
-  ctx.fillStyle = "rgba(255,255,255,.9)";
-  ctx.fillText("CASH MEMO", W-PAD, HEADER_H/2+5);
-
-  /* multicolour accent strip, matching the site's identity line */
-  const accentGrad = ctx.createLinearGradient(0,0,W,0);
-  accentGrad.addColorStop(0,"#9C2B1B"); accentGrad.addColorStop(.5,"#A9812E"); accentGrad.addColorStop(1,"#6B3FA0");
-  ctx.fillStyle = accentGrad;
-  ctx.fillRect(0,HEADER_H,W,ACCENT_H);
-
-  /* details table, zebra-striped for readability */
-  ctx.textAlign = "left";
-  let y = HEADER_H + ACCENT_H + TOP_PAD;
-  rows.forEach(([label,val],i)=>{
-    if(i%2===0){ ctx.fillStyle = "#F3F1E9"; ctx.fillRect(PAD-14, y-23, W-(PAD-14)*2, ROW_H); }
-    ctx.fillStyle = "#4B5A50"; ctx.font = "15px 'Hind Siliguri'"; ctx.textAlign = "left"; ctx.fillText(label, PAD, y);
-    ctx.fillStyle = "#1B2A22"; ctx.font = "700 15px 'Hind Siliguri'"; ctx.textAlign = "right"; ctx.fillText(String(val??""), W-PAD, y);
-    ctx.textAlign = "left";
-    y += ROW_H;
-  });
-  if(detailLines.length){
-    y += 6;
-    ctx.fillStyle = "#4B5A50"; ctx.font = "15px 'Hind Siliguri'"; ctx.fillText("বিবরণ", PAD, y); y += 24;
-    ctx.fillStyle = "#1B2A22"; ctx.font = "15px 'Hind Siliguri'";
-    detailLines.forEach(line=>{ ctx.fillText(line, PAD, y); y += 22; });
-    y += 6;
-  }
-
-  /* dashed divider before the footer */
-  ctx.strokeStyle = "#D3D3D3"; ctx.setLineDash([4,4]);
-  ctx.beginPath(); ctx.moveTo(PAD,y+8); ctx.lineTo(W-PAD,y+8); ctx.stroke();
-  ctx.setLineDash([]);
-
-  /* footer */
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#1F4B3B"; ctx.font = "17px 'Tiro Bangla'";
-  ctx.fillText("সেবা গ্রহণের জন্য ধন্যবাদ — " + siteName, W/2, y+38);
-  let fy = y+38;
-  if(contactBits){
-    fy += 22;
-    ctx.fillStyle = "#4B5A50"; ctx.font = "12.5px 'Hind Siliguri'";
-    ctx.fillText(contactBits, W/2, fy);
-  }
-  fy += 22;
-  ctx.fillStyle = "#9C9C9C"; ctx.font = "11px 'Hind Siliguri'";
-  ctx.fillText("এই মেমোটি স্বয়ংক্রিয়ভাবে তৈরি করা হয়েছে", W/2, fy);
-
-  /* outer border, drawn last so it stays crisp over the header */
-  ctx.strokeStyle = "#D3D3D3"; ctx.lineWidth = 1.5;
-  ctx.strokeRect(0.75,0.75,W-1.5,H-1.5);
-
-  return canvas.toDataURL("image/png");
-}
-window.downloadCashMemo = async function(orderId){
-  try{
-    let m = null;
-    if(window.__trackOrdersData){
-      const found = window.__trackOrdersData.find(o=>o.orderId===orderId);
-      if(found) m = found.cashMemo;
-    }
-    if(!m) return;
-    const dataUrl = await renderCashMemoDataURL(m);
-    const a = document.createElement("a");
-    a.href = dataUrl;
-    a.download = "cashmemo-"+m.memoNo+".png";
-    document.body.appendChild(a); a.click(); a.remove();
-  }catch(e){ console.error(e); }
-};
-
 function orderCard(o){
   const hist = o.trackingHistory ? Object.values(o.trackingHistory).sort((a,b)=>a.at-b.at) : [];
   return `<div class="order-card">
@@ -1707,7 +1434,6 @@ function orderCard(o){
     ${o.details?`<div class="order-details">${esc(o.details)}</div>`:""}
     <div class="payment-area">${paymentSectionHTML(o)}</div>
     ${deliveryFilesHTML(o)}
-    ${cashMemoHTML(o)}
     <div class="timeline">
       ${hist.map(h=>`<div class="timeline-item">
         <div class="timeline-dot"></div>
@@ -1746,6 +1472,56 @@ window.submitPayment = async function(orderId, phone){
     showPayMsg("দুঃখিত, পাঠানো যায়নি। আবার চেষ্টা করুন।", true);
   }
 };
+
+/* ---- bill / cash memo viewer (the memo is authored by the admin — customers
+       only ever see it, never generate or edit it themselves) ---- */
+function billMemoIdLabel(o){ return "DKH-"+o.orderId.slice(-6).toUpperCase(); }
+window.viewBill=function(orderId){
+  const o = (window.__trackedOrders||{})[orderId];
+  const body=$("billModalBody");
+  if(!o || !body) return;
+  const m=o.memo;
+  if(!m){
+    body.innerHTML = `
+      <div class="bill-empty">
+        এই অর্ডারের জন্য এখনও কোনো বিল / ক্যাশ মেমো তৈরি করা হয়নি।<br>
+        একটু পর আবার চেষ্টা করুন, অথবা আমাদের সাথে যোগাযোগ করুন।
+      </div>`;
+  }else{
+    body.innerHTML = `
+      <div class="atm-memo">
+        <div class="atm-memo-paper">
+          <div class="atm-memo-head">
+            <div class="atm-memo-brand">DORKHASTA</div>
+            <div class="atm-memo-sub">ক্যাশ মেমো / বিল</div>
+          </div>
+          <div class="atm-memo-divider"></div>
+          <div class="atm-memo-row"><span>অর্ডার নং</span><b>${billMemoIdLabel(o)}</b></div>
+          <div class="atm-memo-row"><span>তারিখ</span><b>${fmt(m.generatedAt)}</b></div>
+          <div class="atm-memo-divider dashed"></div>
+          <div class="atm-memo-row"><span>নাম</span><b>${esc(o.name)}</b></div>
+          <div class="atm-memo-row"><span>মোবাইল</span><b>${esc(o.phone)}</b></div>
+          <div class="atm-memo-divider dashed"></div>
+          ${(m.items||[]).map(it=>`<div class="atm-memo-row"><span>${esc(it.label||"আইটেম")}</span><b>৳${esc(it.amount||0)}</b></div>`).join("")}
+          <div class="atm-memo-divider dashed"></div>
+          <div class="atm-memo-row"><span>সাবটোটাল</span><b>৳${esc(m.subtotal)}</b></div>
+          ${m.discount?`<div class="atm-memo-row"><span>ছাড়</span><b>−৳${esc(m.discount)}</b></div>`:""}
+          <div class="atm-memo-row atm-memo-amount"><span>সর্বমোট প্রদেয়</span><b>৳${esc(m.total)}</b></div>
+          ${m.note?`<div class="atm-memo-divider dashed"></div><div class="atm-memo-row" style="display:block;"><span>${esc(m.note)}</span></div>`:""}
+          <div class="atm-memo-divider"></div>
+          <div class="atm-memo-barcode"></div>
+          <div class="atm-memo-thanks">ধন্যবাদান্তে — Dorkhasta</div>
+        </div>
+      </div>`;
+  }
+  $("billModal").classList.remove("hidden");
+};
+window.closeBillModal=function(){
+  $("billModal").classList.add("hidden");
+};
+document.getElementById("billModal").addEventListener("click", e=>{
+  if(e.target.id==="billModal") closeBillModal();
+});
 </script>
 
 </body>
