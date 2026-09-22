@@ -613,6 +613,14 @@
   </div>
 
   <div class="order-box" id="orderBox">
+    <div class="field">
+      <label for="customerId">Customer ID (আগে অর্ডার করে থাকলে)</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input id="customerId" type="text" placeholder="যেমন: DP001" style="flex:1;min-width:180px;text-transform:uppercase;">
+        <button type="button" class="btn btn-ghost" onclick="lookupCustomerId()">তথ্য আনুন</button>
+      </div>
+      <div id="customerIdMsg" style="font-size:13px;margin-top:5px;"></div>
+    </div>
     <div class="row2">
       <div class="field">
         <label for="name">আপনার নাম</label>
@@ -1146,8 +1154,10 @@ loadNotices();
 /* ---- WhatsApp helper (optional, alongside the direct order submission) ---- */
 function buildWA(){
   const name=$("name").value.trim(), phone=$("phone").value.trim();
+  const customerId=$("customerId").value.trim().toUpperCase();
   const service=$("service").value, details=$("details").value.trim();
   let msg="আমি একটি অর্ডার দিতে চাই।\n\n";
+  msg+="Customer ID: "+(customerId||"নতুন")+"\n";
   msg+="নাম: "+(name||"-")+"\n";
   msg+="মোবাইল: "+(phone||"-")+"\n";
   msg+="সেবা: "+service+"\n";
@@ -1167,22 +1177,137 @@ function showMsg(text, isErr){
 /* ---- auto-record the customer under a "customer records" section named after the
    service type, so the admin panel's customer-record list fills in by itself.
    this is independent of the order itself — deleting the order later never removes it. ---- */
-async function recordCustomerForOrder(serviceName, name, phone){
+/* ---- Customer ID system: DP001, DP002, DP003 ... ---- */
+async function nextCustomerId(){
+  const counterRef = ref(db,"dorkhast/site/customerCounter");
+  const result = await runTransaction(counterRef, current => (Number(current)||0) + 1);
+  if(!result.committed) throw new Error("Customer ID তৈরি করা যায়নি");
+  return "DP" + String(result.snapshot.val()).padStart(3,"0");
+}
+
+async function findCustomerByPhone(phone){
+  const idx = await get(ref(db,"dorkhast/site/customerIndexByPhone/"+phone));
+  if(idx.exists()){
+    const id = idx.val();
+    const p = await get(ref(db,"dorkhast/site/customers/"+id));
+    if(p.exists()) return {id, data:p.val()};
+  }
+
+  /* পুরোনো customerRecords থেকে খুঁজে পেলে নতুন global profile-এ migrate করা হবে */
+  const snap = await get(ref(db,"dorkhast/site/customerRecords"));
+  if(snap.exists()){
+    const sections = snap.val() || {};
+    for(const [sectionId, sec] of Object.entries(sections)){
+      for(const [custKey, c] of Object.entries(sec.customers || {})){
+        if(normalizePhone(c.phone) === phone){
+          if(c.customerId){
+            const p = await get(ref(db,"dorkhast/site/customers/"+c.customerId));
+            if(p.exists()) return {id:c.customerId, data:p.val()};
+          }
+          return {legacy:true, sectionId, custKey, data:c};
+        }
+      }
+    }
+  }
+  return null;
+}
+
+async function ensureCustomerProfile(serviceName, name, phone, suppliedId){
+  let existing = null;
+
+  if(suppliedId){
+    const cleanId = String(suppliedId).trim().toUpperCase();
+    const p = await get(ref(db,"dorkhast/site/customers/"+cleanId));
+    if(p.exists()) existing = {id:cleanId, data:p.val()};
+  }
+  if(!existing) existing = await findCustomerByPhone(phone);
+
+  const now = Date.now();
+  let customerId = existing && existing.id ? existing.id : null;
+
+  if(!customerId){
+    customerId = await nextCustomerId();
+  }
+
+  const profile = {
+    customerId,
+    name,
+    phone,
+    service,
+    lastService: serviceName,
+    updatedAt: now,
+    createdAt: existing?.data?.createdAt || now,
+    orderCount: Number(existing?.data?.orderCount || 0) + 1
+  };
+
+  const updates = {};
+  updates["dorkhast/site/customers/"+customerId] = profile;
+  updates["dorkhast/site/customerIndexByPhone/"+phone] = customerId;
+
+  /* Keep the existing service-wise customer records working */
+  const snap = await get(ref(db,"dorkhast/site/customerRecords"));
+  const sections = snap.exists() ? snap.val() : {};
+  let sectionId = Object.keys(sections).find(id => (sections[id].name||"").trim() === String(serviceName||"").trim());
+  if(!sectionId){
+    sectionId = push(ref(db,"dorkhast/site/customerRecords")).key;
+    updates["dorkhast/site/customerRecords/"+sectionId] = {name:serviceName, at:now, customers:{}};
+  }
+
+  let matchedKey = null;
+  const existingCustomers = (sections[sectionId] && sections[sectionId].customers) || {};
+  for(const [k,c] of Object.entries(existingCustomers)){
+    if(normalizePhone(c.phone) === phone || c.customerId === customerId){ matchedKey = k; break; }
+  }
+  if(!matchedKey) matchedKey = push(ref(db,"dorkhast/site/customerRecords/"+sectionId+"/customers")).key;
+
+  updates["dorkhast/site/customerRecords/"+sectionId+"/customers/"+matchedKey] = {
+    customerId, name, phone, at: existingCustomers[matchedKey]?.at || now
+  };
+
+  /* If the customer was found in an older service section, attach the ID there too */
+  if(existing?.legacy){
+    updates["dorkhast/site/customerRecords/"+existing.sectionId+"/customers/"+existing.custKey+"/customerId"] = customerId;
+  }
+
+  await update(ref(db), updates);
+  return customerId;
+}
+
+window.lookupCustomerId = async function(){
+  const input = $("customerId");
+  const msg = $("customerIdMsg");
+  const id = input.value.trim().toUpperCase();
+  input.value = id;
+  if(!id) return msg.textContent = "Customer ID লিখুন।";
+  msg.style.color = "var(--ink-soft)";
+  msg.textContent = "তথ্য খোঁজা হচ্ছে...";
   try{
-    const snap = await get(ref(db,"dorkhast/site/customerRecords"));
-    const sections = snap.exists() ? snap.val() : {};
-    let sectionId = Object.keys(sections).find(id => (sections[id].name||"").trim() === String(serviceName||"").trim());
-    if(!sectionId){
-      sectionId = push(ref(db,"dorkhast/site/customerRecords")).key;
-      await set(ref(db,"dorkhast/site/customerRecords/"+sectionId), {name:serviceName, at:Date.now(), customers:{}});
+    const snap = await get(ref(db,"dorkhast/site/customers/"+id));
+    if(!snap.exists()){
+      msg.style.color = "var(--stamp)";
+      msg.textContent = "এই Customer ID পাওয়া যায়নি।";
+      return;
     }
-    const existingCustomers = (sections[sectionId] && sections[sectionId].customers) || {};
-    const alreadyRecorded = Object.values(existingCustomers).some(c=>normalizePhone(c.phone)===phone);
-    if(!alreadyRecorded){
-      const custKey = push(ref(db,"dorkhast/site/customerRecords/"+sectionId+"/customers")).key;
-      await set(ref(db,"dorkhast/site/customerRecords/"+sectionId+"/customers/"+custKey), {name, phone, at:Date.now()});
-    }
-  }catch(e){ console.error(e); }
+    const c = snap.val();
+    $("name").value = c.name || "";
+    $("phone").value = c.phone || "";
+    msg.style.color = "var(--green)";
+    msg.textContent = "✓ Customer তথ্য অটো-ফিল হয়েছে।";
+    buildWA();
+  }catch(e){
+    console.error(e);
+    msg.style.color = "var(--stamp)";
+    msg.textContent = "তথ্য আনা যায়নি। আবার চেষ্টা করুন।";
+  }
+};
+
+$("customerId").addEventListener("keydown", e=>{
+  if(e.key==="Enter"){ e.preventDefault(); lookupCustomerId(); }
+});
+
+async function recordCustomerForOrder(serviceName, name, phone, customerId){
+  /* Kept as a compatibility wrapper for the old customer-record system. */
+  return ensureCustomerProfile(serviceName, name, phone, customerId);
 }
 
 window.submitOrder = async function(){
@@ -1190,6 +1315,7 @@ window.submitOrder = async function(){
   const phoneRaw=$("phone").value.trim();
   const service=$("service").value;
   const details=$("details").value.trim();
+  const suppliedCustomerId=$("customerId").value.trim().toUpperCase();
   const phone=normalizePhone(phoneRaw);
 
   if(!name) return showMsg("অনুগ্রহ করে আপনার নাম লিখুন।", true);
@@ -1198,10 +1324,11 @@ window.submitOrder = async function(){
   const btn=$("submitOrderBtn");
   btn.disabled=true; btn.textContent="জমা হচ্ছে...";
   try{
+    const customerId = await ensureCustomerProfile(service, name, phone, suppliedCustomerId);
     const orderId = push(ref(db,"dorkhast/orders")).key;
     const now = Date.now();
     const orderData = {
-      orderId, name, phone, service, details,
+      orderId, customerId, name, phone, service, details,
       status:"pending",
       trackingHistory:{
         [push(ref(db,"dorkhast/orders/"+orderId+"/trackingHistory")).key]:{status:"pending", note:"অর্ডার গ্রহণ করা হয়েছে।", at:now}
@@ -1213,16 +1340,17 @@ window.submitOrder = async function(){
     updates["dorkhast/ordersByPhone/"+phone+"/"+orderId] = orderData;
     await update(ref(db), updates);
     runTransaction(ref(db,"dorkhast/stats/totalOrders"), v=>(v||0)+1);
-    recordCustomerForOrder(service, name, phone);
 
     showMsg("");
     $("orderMsg").classList.remove("show");
     $("orderBox").style.display="none";
     $("confirmBox").style.display="block";
-    $("confirmId").textContent = "অর্ডার নম্বর: DKH-" + orderId.slice(-6).toUpperCase();
+    $("confirmId").innerHTML = "অর্ডার নম্বর: DKH-" + orderId.slice(-6).toUpperCase() +
+      '<br><span style="font-size:16px;">আপনার Customer ID: <strong>'+esc(customerId)+'</strong></span>';
     window.__lastPhone = phone;
-    window.__lastOrder = {orderId, name, phone, service, details, createdAt:now};
-    ['name','phone','service','details'].forEach(id=>{ if(id!=='service') $(id).value=""; });
+    window.__lastOrder = {orderId, customerId, name, phone, service, details, createdAt:now};
+    ['customerId','name','phone','details'].forEach(id=>$(id).value="");
+    $("customerIdMsg").textContent="";
     showCongratsModal();
   }catch(e){
     console.error(e);
@@ -1242,6 +1370,8 @@ window.newOrder = function(){
   $("orderMsg").classList.remove("show");
   $("submitOrderBtn").textContent="অর্ডার জমা দিন";
   $("submitOrderBtn").setAttribute("onclick","submitOrder()");
+  $("customerId").value="";
+  $("customerIdMsg").textContent="";
   window.__lastOrder = null;
 };
 
