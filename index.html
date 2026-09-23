@@ -361,6 +361,9 @@
   .atm-memo-amount b{color:var(--stamp-dark);}
   .atm-memo-barcode{height:30px;margin:12px 0 6px;background:repeating-linear-gradient(90deg,#1a1a1a 0,#1a1a1a 2px,transparent 2px,transparent 5px,#1a1a1a 5px,#1a1a1a 6px,transparent 6px,transparent 9px);}
   .atm-memo-thanks{text-align:center;font-size:12px;color:#555;margin-top:4px;}
+  .atm-memo-mgmt{text-align:center;font-size:10.5px;color:#888;margin-top:2px;}
+  .atm-memo-brandrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+  .atm-memo-logo{height:34px;width:34px;object-fit:cover;border-radius:6px;flex-shrink:0;}
 
   .delivery-files{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;}
   .delivery-files h5{font-family:'Tiro Bangla',serif;font-weight:400;font-size:15px;margin:0 0 8px;}
@@ -836,6 +839,7 @@ document.getElementById("apkInfoModal").addEventListener("click", e=>{
 });
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import {getDatabase,ref,push,set,update,get,child,onValue,runTransaction,onDisconnect,remove} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
@@ -896,6 +900,7 @@ async function loadSiteContent(){
     renderLogo(site.logo);
     renderMarquee(site.marquee);
     window.__paymentQR = site.paymentQR || "";
+    window.__siteLogo = site.logo || "";
   }catch(e){
     console.error(e);
     renderServices(DEFAULT_SERVICES);
@@ -903,6 +908,7 @@ async function loadSiteContent(){
     renderHero(DEFAULT_HERO);
     renderMarquee(DEFAULT_MARQUEE);
     window.__paymentQR = "";
+    window.__siteLogo = "";
   }
 }
 function renderMarquee(raw){
@@ -1630,11 +1636,15 @@ window.viewBill=function(orderId){
         একটু পর আবার চেষ্টা করুন, অথবা আমাদের সাথে যোগাযোগ করুন।
       </div>`;
   }else{
+    const logoUrl = window.__siteLogo || "";
     body.innerHTML = `
-      <div class="atm-memo">
+      <div class="atm-memo" id="billMemoPrint">
         <div class="atm-memo-paper">
           <div class="atm-memo-head">
-            <div class="atm-memo-brand">Digital Point</div>
+            <div class="atm-memo-brandrow">
+              ${logoUrl?`<img src="${esc(logoUrl)}" class="atm-memo-logo" alt="লোগো">`:""}
+              <div class="atm-memo-brand">Digital Point</div>
+            </div>
             <div class="atm-memo-sub">ক্যাশ মেমো / বিল</div>
           </div>
           <div class="atm-memo-divider"></div>
@@ -1642,6 +1652,7 @@ window.viewBill=function(orderId){
           <div class="atm-memo-row"><span>তারিখ</span><b>${fmt(m.generatedAt)}</b></div>
           <div class="atm-memo-divider dashed"></div>
           <div class="atm-memo-row"><span>নাম</span><b>${esc(o.name)}</b></div>
+          ${o.customerId?`<div class="atm-memo-row"><span>কাস্টমার আইডি</span><b>${esc(o.customerId)}</b></div>`:""}
           <div class="atm-memo-row"><span>মোবাইল</span><b>${esc(o.phone)}</b></div>
           <div class="atm-memo-divider dashed"></div>
           ${(m.items||[]).map(it=>`<div class="atm-memo-row"><span>${esc(it.label||"আইটেম")}</span><b>৳${esc(it.amount||0)}</b></div>`).join("")}
@@ -1649,17 +1660,34 @@ window.viewBill=function(orderId){
           <div class="atm-memo-row"><span>সাবটোটাল</span><b>৳${esc(m.subtotal)}</b></div>
           ${m.discount?`<div class="atm-memo-row"><span>ছাড়</span><b>−৳${esc(m.discount)}</b></div>`:""}
           <div class="atm-memo-row atm-memo-amount"><span>সর্বমোট প্রদেয়</span><b>৳${esc(m.total)}</b></div>
+          <div class="atm-memo-divider dashed"></div>
+          <div class="atm-memo-row" style="display:block;"><span>পেমেন্ট মাধ্যম: বিকাশ (সেন্ডমানি/ক্যাশইন) - 01518411872</span></div>
           ${m.note?`<div class="atm-memo-divider dashed"></div><div class="atm-memo-row" style="display:block;"><span>${esc(m.note)}</span></div>`:""}
           <div class="atm-memo-divider"></div>
           <div class="atm-memo-barcode"></div>
           <div class="atm-memo-thanks">ধন্যবাদান্তে — Digital Point</div>
+          <div class="atm-memo-mgmt">Management by Hredoy Roy</div>
         </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-wide" type="button" onclick="saveBillAsJPG('${esc(orderId)}')">সেভ করুন</button>
       </div>`;
   }
   $("billModal").classList.remove("hidden");
 };
 window.closeBillModal=function(){
   $("billModal").classList.add("hidden");
+};
+window.saveBillAsJPG=function(orderId){
+  const el=document.getElementById("billMemoPrint");
+  if(!el || typeof html2canvas==="undefined") return;
+  const o=(window.__trackedOrders||{})[orderId];
+  html2canvas(el, {scale:2, backgroundColor:"#ffffff", useCORS:true}).then(canvas=>{
+    const link=document.createElement("a");
+    link.download = "Memo-"+(o?billMemoIdLabel(o):orderId)+".jpg";
+    link.href = canvas.toDataURL("image/jpeg", 0.95);
+    link.click();
+  }).catch(e=>{ console.error(e); });
 };
 document.getElementById("billModal").addEventListener("click", e=>{
   if(e.target.id==="billModal") closeBillModal();
