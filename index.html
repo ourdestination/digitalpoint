@@ -1233,7 +1233,7 @@ async function ensureCustomerProfile(serviceName, name, phone, suppliedId){
     customerId,
     name,
     phone,
-    service,
+    service: serviceName,
     lastService: serviceName,
     updatedAt: now,
     createdAt: existing?.data?.createdAt || now,
@@ -1248,9 +1248,10 @@ async function ensureCustomerProfile(serviceName, name, phone, suppliedId){
   const snap = await get(ref(db,"dorkhast/site/customerRecords"));
   const sections = snap.exists() ? snap.val() : {};
   let sectionId = Object.keys(sections).find(id => (sections[id].name||"").trim() === String(serviceName||"").trim());
+  let isNewSection = false;
   if(!sectionId){
     sectionId = push(ref(db,"dorkhast/site/customerRecords")).key;
-    updates["dorkhast/site/customerRecords/"+sectionId] = {name:serviceName, at:now, customers:{}};
+    isNewSection = true;
   }
 
   let matchedKey = null;
@@ -1260,9 +1261,20 @@ async function ensureCustomerProfile(serviceName, name, phone, suppliedId){
   }
   if(!matchedKey) matchedKey = push(ref(db,"dorkhast/site/customerRecords/"+sectionId+"/customers")).key;
 
-  updates["dorkhast/site/customerRecords/"+sectionId+"/customers/"+matchedKey] = {
+  const customerRecordEntry = {
     customerId, name, phone, at: existingCustomers[matchedKey]?.at || now
   };
+
+  /* When the section itself is brand new, write it as ONE object (section + its
+     first customer together) instead of two separate update-paths — Firebase's
+     update() rejects a call where one path is an ancestor of another path. */
+  if(isNewSection){
+    updates["dorkhast/site/customerRecords/"+sectionId] = {
+      name:serviceName, at:now, customers:{ [matchedKey]: customerRecordEntry }
+    };
+  }else{
+    updates["dorkhast/site/customerRecords/"+sectionId+"/customers/"+matchedKey] = customerRecordEntry;
+  }
 
   /* If the customer was found in an older service section, attach the ID there too */
   if(existing?.legacy){
