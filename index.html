@@ -396,6 +396,82 @@
   @media (prefers-reduced-motion: reduce){ .stat-dot{animation:none;} }
   .brand-stats{display:none;}
 
+  /* account (login / profile) */
+  .account-area{position:relative;flex-shrink:0;}
+  .login-btn{
+    display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;
+    border:1px solid var(--ink);color:var(--ink);text-decoration:none;background:none;
+    font-family:'Hind Siliguri',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;
+  }
+  .login-btn:hover{background:var(--ink);color:var(--paper);}
+  .login-btn svg{width:15px;height:15px;flex-shrink:0;}
+  .login-btn.hidden{display:none;}
+  .account-chip{
+    display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:20px;
+    background:var(--paper-alt);border:1px solid var(--line);cursor:pointer;white-space:nowrap;
+  }
+  .account-chip.hidden{display:none;}
+  .account-avatar{width:28px;height:28px;border-radius:50%;overflow:hidden;background:var(--steel);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Tiro Bangla',serif;font-size:14px;flex-shrink:0;}
+  .account-chip .account-name{font-size:13.5px;font-weight:600;color:var(--ink);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .account-dropdown{
+    position:absolute;top:calc(100% + 8px);right:0;background:var(--paper);border:1px solid var(--line);
+    border-radius:8px;box-shadow:0 10px 28px rgba(0,0,0,.14);min-width:170px;z-index:80;overflow:hidden;display:none;
+  }
+  .account-dropdown.open{display:block;}
+  .account-dropdown a,.account-dropdown button{
+    display:flex;align-items:center;gap:9px;width:100%;padding:11px 15px;font-size:14px;color:var(--ink);
+    text-decoration:none;background:none;border:0;text-align:left;font-family:'Hind Siliguri',sans-serif;cursor:pointer;
+  }
+  .account-dropdown a:hover,.account-dropdown button:hover{background:var(--paper-alt);}
+  .account-dropdown svg{width:16px;height:16px;flex-shrink:0;color:var(--ink-soft);}
+  .account-dropdown .dd-sep{height:1px;background:var(--line);margin:2px 0;padding:0;}
+
+  /* login / profile modal (reuse .congrats-modal backdrop + .field styles) */
+  .auth-modal-box{position:relative;background:var(--paper);border-radius:14px;padding:30px 26px;max-width:360px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.28);animation:congrats-pop .34s cubic-bezier(.2,.9,.3,1.2);}
+  @media (prefers-reduced-motion: reduce){ .auth-modal-box{animation:none;} }
+  .auth-modal-box h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:21px;text-align:center;}
+  .auth-modal-box .sub{color:var(--ink-soft);font-size:13.5px;text-align:center;margin-top:6px;line-height:1.6;}
+  .auth-modal-box .field{margin-top:18px;margin-bottom:0;}
+  .auth-modal-box .btn{width:100%;margin-top:18px;}
+  .auth-modal-close{position:absolute;top:12px;right:14px;background:none;border:0;font-size:22px;color:var(--ink-soft);cursor:pointer;line-height:1;padding:4px;}
+
+  .profile-photo-row{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:4px;}
+  .profile-photo-lg{width:88px;height:88px;border-radius:50%;overflow:hidden;background:var(--steel);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:'Tiro Bangla',serif;font-size:32px;}
+  .profile-meta{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:4px;}
+  .profile-meta b{color:var(--ink);}
+
+  /* live chat */
+  .chat-fab{
+    position:fixed;right:18px;bottom:24px;z-index:90;width:54px;height:54px;border-radius:50%;
+    background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 22px rgba(31,75,59,.4);border:0;cursor:pointer;
+  }
+  .chat-fab svg{width:24px;height:24px;}
+  .chat-fab .chat-dot{position:absolute;top:5px;right:5px;width:11px;height:11px;border-radius:50%;background:var(--stamp);border:2px solid var(--paper);display:none;}
+  .chat-fab .chat-dot.show{display:block;}
+  @media (max-width:760px){ .chat-fab{bottom:calc(74px + env(safe-area-inset-bottom));} }
+
+  .chat-modal-box{background:var(--paper);border-radius:14px;max-width:420px;width:100%;height:min(600px,80vh);
+    display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,.28);overflow:hidden;
+    animation:congrats-pop .28s cubic-bezier(.2,.9,.3,1.2);}
+  @media (prefers-reduced-motion: reduce){ .chat-modal-box{animation:none;} }
+  .chat-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line);background:var(--paper-alt);flex-shrink:0;}
+  .chat-head h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:18px;}
+  .chat-head button{background:none;border:0;font-size:22px;color:var(--ink-soft);cursor:pointer;}
+  .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--paper);}
+  .chat-empty{color:var(--ink-soft);font-size:14px;text-align:center;margin:auto;}
+  .chat-bubble{max-width:78%;padding:9px 13px;border-radius:14px;font-size:14.5px;line-height:1.5;word-break:break-word;}
+  .chat-bubble.me{align-self:flex-end;background:var(--green);color:#fff;border-bottom-right-radius:3px;}
+  .chat-bubble.them{align-self:flex-start;background:var(--paper-alt);color:var(--ink);border:1px solid var(--line);border-bottom-left-radius:3px;}
+  .chat-bubble .chat-time{display:block;font-size:10.5px;opacity:.7;margin-top:4px;}
+  .chat-input-row{display:flex;gap:10px;padding:12px 14px;border-top:1px solid var(--line);background:var(--paper-alt);flex-shrink:0;}
+  .chat-input-row input{flex:1;padding:10px 13px;border:1px solid var(--line);border-radius:20px;font-family:'Hind Siliguri',sans-serif;font-size:15px;background:var(--paper);}
+  .chat-input-row input:focus{outline:2px solid var(--green);outline-offset:1px;}
+  .chat-input-row button{background:var(--green);color:#fff;border:0;border-radius:50%;width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .chat-input-row button svg{width:18px;height:18px;}
+
   /* reviews */
   .reviews-list{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
   .review-card{background:var(--paper-alt);border:1px solid var(--line);border-radius:3px;padding:20px;}
@@ -477,7 +553,41 @@
     /* keep 16px on form fields so iOS doesn't auto-zoom on focus — buttons already meet a comfortable tap size at their normal (desktop) padding, so they're left as-is instead of being inflated further */
     .field input,.field select,.field textarea{font-size:16px;}
     .track-search input{font-size:16px;}
+    .chat-input-row input{font-size:16px;}
+    .chat-modal-box{height:min(560px,74vh);}
   }
+
+  /* ===== Customer Panel (separate login tab) ===== */
+  body.customer-panel-mode > *:not(#customerPanelView):not(.congrats-modal){display:none !important;}
+  .customer-panel-view{min-height:100vh;background:var(--paper);color:var(--ink);padding:24px 16px 50px;}
+  .customer-panel-view.hidden{display:none;}
+  .cp-wrap{max-width:1100px;margin:0 auto;}
+  .cp-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:12px 0 22px;border-bottom:1px solid var(--line);}
+  .cp-brand{font-family:'Tiro Bangla',serif;font-size:25px;color:var(--green);}
+  .cp-user{display:flex;align-items:center;gap:10px;min-width:0;}
+  .cp-avatar{width:42px;height:42px;border-radius:50%;background:var(--green);color:var(--paper);display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:700;}
+  .cp-user-name{font-weight:700}.cp-user-id{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .cp-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .cp-nav{display:flex;gap:7px;overflow:auto;padding:16px 0 4px;scrollbar-width:thin;}
+  .cp-tab{border:1px solid var(--line);background:var(--paper-alt);padding:9px 13px;border-radius:22px;white-space:nowrap;font-family:'Hind Siliguri',sans-serif;cursor:pointer;color:var(--ink);}
+  .cp-tab.active{background:var(--green);border-color:var(--green);color:var(--paper);}
+  .cp-section{display:none;padding-top:22px}.cp-section.active{display:block;}
+  .cp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .cp-stat,.cp-card{background:var(--paper-alt);border:1px solid var(--line);border-radius:8px;padding:18px;}
+  .cp-stat b{display:block;font-size:25px;color:var(--green);margin-top:4px}.cp-stat span{font-size:13px;color:var(--ink-soft);}
+  .cp-title{font-family:'Tiro Bangla',serif;font-size:21px;margin:0 0 14px;color:var(--green);}
+  .cp-muted{color:var(--ink-soft);font-size:14px;line-height:1.7;}
+  .cp-orders{display:flex;flex-direction:column;gap:13px;}
+  .cp-order{background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:16px;}
+  .cp-order-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}.cp-order h4{margin:0;font-size:17px}.cp-order-meta{font-size:12.5px;color:var(--ink-soft);margin-top:4px;}
+  .cp-badge{display:inline-block;padding:5px 10px;border-radius:16px;font-size:12px;color:var(--paper);white-space:nowrap;background:var(--steel);}.cp-badge.pending{background:var(--gold)}.cp-badge.processing{background:var(--steel)}.cp-badge.ready{background:#5C7A3A}.cp-badge.delivered{background:var(--green)}.cp-badge.cancelled{background:var(--stamp)}
+  .cp-order-details{margin-top:10px;font-size:14px;white-space:pre-wrap;color:var(--ink-soft)}
+  .cp-timeline{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}.cp-timeline-item{display:flex;gap:9px;padding:5px 0;font-size:13px}.cp-dot{width:8px;height:8px;border-radius:50%;background:var(--green);margin-top:6px;flex:0 0 auto}
+  .cp-form .field{margin-bottom:14px}.cp-form .btn{margin-top:4px}.cp-msg{font-size:13.5px;margin-top:10px}.cp-msg.err{color:var(--stamp)}
+  .cp-note-list{display:flex;flex-direction:column;gap:10px}.cp-note{padding:13px;border-left:3px solid var(--green);background:var(--paper-alt);border-radius:5px}.cp-note small{display:block;color:var(--ink-soft);margin-top:3px}
+  .cp-empty{padding:25px;text-align:center;color:var(--ink-soft);border:1px dashed var(--line);border-radius:7px;background:var(--paper-alt)}
+  @media(max-width:760px){.cp-grid{grid-template-columns:1fr}.customer-panel-view{padding:15px 12px 35px}.cp-head{align-items:flex-start}.cp-brand{font-size:22px}}
+
 </style>
 </head>
 <body>
@@ -518,6 +628,31 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
       <span>APK</span>
     </a>
+    <div class="account-area" id="accountArea">
+      <button type="button" class="login-btn" id="loginBtn" onclick="openLoginModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>লগইন</span>
+      </button>
+      <div class="account-chip hidden" id="accountChip" onclick="toggleAccountDropdown()">
+        <span class="account-avatar" id="accountAvatarWrap"></span>
+        <span class="account-name" id="accountNameLabel"></span>
+      </div>
+      <div class="account-dropdown" id="accountDropdown">
+        <button type="button" onclick="openProfileModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          প্রোফাইল
+        </button>
+        <button type="button" onclick="goToCustomerPanel()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          অ্যাকাউন্ট প্যানেল
+        </button>
+        <div class="dd-sep"></div>
+        <button type="button" onclick="logoutAccount()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          লগআউট
+        </button>
+      </div>
+    </div>
     <div class="nav-stats">
       <span class="stat-pill" title="মোট ভিজিটর">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -755,6 +890,101 @@
   <div class="bill-modal-box">
     <div id="billModalBody"></div>
     <button class="btn btn-soft btn-wide" type="button" style="margin-top:16px;" onclick="closeBillModal()">বন্ধ করুন</button>
+  </div>
+</div>
+
+<div id="loginModal" class="congrats-modal hidden" role="dialog" aria-modal="true">
+  <div class="auth-modal-box">
+    <button class="auth-modal-close" type="button" onclick="closeLoginModal()" aria-label="বন্ধ করুন">×</button>
+    <h3>লগইন করুন</h3>
+    <p class="sub">আগে অর্ডার করে থাকলে শুধু আপনার মোবাইল নম্বর দিয়ে লগইন করুন — নতুন করে তথ্য দিতে হবে না, সব সেবা সরাসরি নিতে পারবেন।</p>
+    <div class="field">
+      <label for="loginPhone">মোবাইল নম্বর</label>
+      <input id="loginPhone" type="tel" placeholder="01XXXXXXXXX" inputmode="numeric">
+    </div>
+    <div class="form-msg" id="loginMsg"></div>
+    <button class="btn btn-primary" type="button" id="loginSubmitBtn" onclick="doLogin()">লগইন করুন</button>
+    <p class="sub" style="margin-top:14px;">এখনো অর্ডার করেননি? <a href="#order" onclick="closeLoginModal()" style="color:var(--steel);">প্রথমে একটি অর্ডার করুন</a>, প্রথম অর্ডারের পরই স্বয়ংক্রিয়ভাবে লগইন হয়ে যাবে।</p>
+  </div>
+</div>
+
+<div id="profileModal" class="congrats-modal hidden" role="dialog" aria-modal="true">
+  <div class="auth-modal-box">
+    <button class="auth-modal-close" type="button" onclick="closeProfileModal()" aria-label="বন্ধ করুন">×</button>
+    <h3>আমার প্রোফাইল</h3>
+    <div class="profile-photo-row">
+      <span class="profile-photo-lg" id="profilePhotoWrap"></span>
+      <input type="file" id="profilePhotoFile" accept="image/*" style="display:none;" onchange="uploadProfilePhoto()">
+      <button class="btn btn-ghost btn-sm" type="button" onclick="document.getElementById('profilePhotoFile').click()">ছবি পরিবর্তন করুন</button>
+      <div class="profile-meta">
+        Customer ID: <b id="profileCustomerId"></b><br>
+        মোবাইল: <b id="profilePhone"></b>
+      </div>
+    </div>
+    <div class="field" style="margin-top:20px;">
+      <label for="profileName">নাম</label>
+      <input id="profileName" type="text">
+    </div>
+    <div class="form-msg" id="profileMsg"></div>
+    <button class="btn btn-primary" type="button" onclick="saveProfileName()">সংরক্ষণ করুন</button>
+    <button class="btn btn-ghost" type="button" style="width:100%;margin-top:10px;" onclick="logoutAccount()">লগআউট</button>
+  </div>
+</div>
+
+<button class="chat-fab" id="chatFab" type="button" onclick="openChatModal()" title="লাইভ চ্যাট" aria-label="লাইভ চ্যাট">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  <span class="chat-dot" id="chatDot"></span>
+</button>
+
+<div id="chatModal" class="congrats-modal hidden" role="dialog" aria-modal="true">
+  <div class="chat-modal-box">
+    <div class="chat-head">
+      <h3>লাইভ চ্যাট — সাপোর্ট</h3>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button type="button" onclick="deleteMyChat()" aria-label="চ্যাট মুছুন" title="চ্যাট মুছুন" style="font-size:16px;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+        <button type="button" onclick="closeChatModal()" aria-label="বন্ধ করুন">×</button>
+      </div>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-input-row">
+      <input id="chatInput" type="text" placeholder="মেসেজ লিখুন..." onkeydown="if(event.key==='Enter')sendChatMessage()">
+      <button type="button" onclick="sendChatMessage()" aria-label="পাঠান">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div id="customerPanelView" class="customer-panel-view hidden">
+  <div class="cp-wrap">
+    <div class="cp-head">
+      <div class="cp-user">
+        <span class="cp-avatar" id="cpAvatar"></span>
+        <div><div class="cp-user-name" id="cpName">কাস্টমার</div><div class="cp-user-id" id="cpId">Customer ID: -</div></div>
+      </div>
+      <div class="cp-actions"><button class="btn btn-ghost btn-sm" type="button" onclick="closeCustomerPanel()">শপে ফিরে যান</button><button class="btn btn-primary btn-sm" type="button" onclick="logoutFromCustomerPanel()">লগআউট</button></div>
+    </div>
+    <div class="cp-nav">
+      <button class="cp-tab active" data-cp="overview" onclick="cpTab('overview')">ওভারভিউ</button>
+      <button class="cp-tab" data-cp="orders" onclick="cpTab('orders')">অর্ডার হিস্টোরি</button>
+      <button class="cp-tab" data-cp="manual" onclick="cpTab('manual')">ম্যানুয়াল অর্ডার</button>
+      <button class="cp-tab" data-cp="track" onclick="cpTab('track')">ট্র্যাক</button>
+      <button class="cp-tab" data-cp="chat" onclick="cpTab('chat')">চ্যাট</button>
+      <button class="cp-tab" data-cp="notifications" onclick="cpTab('notifications')">নোটিফিকেশন</button>
+    </div>
+    <section class="cp-section active" id="cp-overview">
+      <h2 class="cp-title">আমার অ্যাকাউন্ট</h2>
+      <div class="cp-grid"><div class="cp-stat"><span>Customer ID</span><b id="cpStatId">-</b></div><div class="cp-stat"><span>মোট অর্ডার</span><b id="cpStatOrders">0</b></div><div class="cp-stat"><span>সর্বশেষ অর্ডার</span><b id="cpStatLast" style="font-size:16px">-</b></div></div>
+      <div class="cp-card" style="margin-top:14px"><div class="cp-muted">এই প্যানেল থেকে আপনার অর্ডারের সম্পূর্ণ ইতিহাস, নতুন অর্ডার, লাইভ চ্যাট, ট্র্যাকিং এবং অর্ডার-সংক্রান্ত নোটিফিকেশন এক জায়গায় দেখা যাবে।</div></div>
+    </section>
+    <section class="cp-section" id="cp-orders"><h2 class="cp-title">সব অর্ডার হিস্টোরি</h2><div id="cpOrders" class="cp-orders"><div class="cp-empty">অর্ডার লোড হচ্ছে...</div></div></section>
+    <section class="cp-section" id="cp-manual"><h2 class="cp-title">ম্যানুয়াল অর্ডার করুন</h2><div class="cp-card cp-form"><div class="row2"><div class="field"><label>নাম</label><input id="cpOrderName" type="text"></div><div class="field"><label>মোবাইল নম্বর</label><input id="cpOrderPhone" type="tel" readonly></div></div><div class="field"><label>কোন সেবা প্রয়োজন</label><select id="cpOrderService"><option>সিভি তৈরি / সংশোধন</option><option>কভার লেটার</option><option>চাকরির আবেদন পূরণ</option><option>ভর্তি ফরম পূরণ</option><option>অন্যান্য</option></select></div><div class="field"><label>বিস্তারিত</label><textarea id="cpOrderDetails" placeholder="আপনার কাজের বিস্তারিত লিখুন"></textarea></div><button id="cpOrderBtn" class="btn btn-primary" type="button" onclick="cpSubmitOrder()">অর্ডার জমা দিন</button><div id="cpOrderMsg" class="cp-msg"></div></div></section>
+    <section class="cp-section" id="cp-track"><h2 class="cp-title">আমার অর্ডার ট্র্যাকিং</h2><div id="cpTrackResults" class="cp-orders"><div class="cp-empty">ট্র্যাকিং লোড হচ্ছে...</div></div></section>
+    <section class="cp-section" id="cp-chat"><h2 class="cp-title">অ্যাডমিনের সাথে চ্যাট</h2><div class="cp-card"><p class="cp-muted">আপনার আগের চ্যাট একই অ্যাকাউন্টের সাথে সংযুক্ত থাকবে।</p><button class="btn btn-primary" type="button" onclick="openChatModal()">লাইভ চ্যাট খুলুন</button></div></section>
+    <section class="cp-section" id="cp-notifications"><h2 class="cp-title">নোটিফিকেশন ও আপডেট</h2><div id="cpNotifications" class="cp-note-list"><div class="cp-empty">নোটিফিকেশন লোড হচ্ছে...</div></div></section>
   </div>
 </div>
 
@@ -1369,6 +1599,10 @@ window.submitOrder = async function(){
     window.__lastOrder = {orderId, customerId, name, phone, service, details, createdAt:now};
     ['customerId','name','phone','details'].forEach(id=>$(id).value="");
     $("customerIdMsg").textContent="";
+    /* the very first order creates the account — log the customer in right away so
+       next time they only need their phone number, per "next time just phone login" */
+    const prevSession = getSession();
+    setSession({customerId, phone, name, photo:(prevSession&&prevSession.phone===phone)?prevSession.photo:""});
     showCongratsModal();
   }catch(e){
     console.error(e);
@@ -1692,6 +1926,341 @@ window.saveBillAsJPG=function(orderId){
 document.getElementById("billModal").addEventListener("click", e=>{
   if(e.target.id==="billModal") closeBillModal();
 });
+
+/* ========================================================================
+   Account (phone login), Profile (name + photo), and Live Chat with admin
+   ======================================================================== */
+const SESSION_KEY = "dp_session";
+function getSession(){
+  try{ return JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); }catch(e){ return null; }
+}
+function setSession(data){
+  try{ localStorage.setItem(SESSION_KEY, JSON.stringify(data)); }catch(e){}
+  renderAccountUI();
+}
+function clearSession(){
+  try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
+  stopChatMetaListener();
+  renderAccountUI();
+}
+function avatarHTML(name, photo){
+  if(photo) return `<img src="${esc(photo)}" style="width:100%;height:100%;object-fit:cover;">`;
+  const ch = (name||"?").trim().charAt(0).toUpperCase() || "?";
+  return esc(ch);
+}
+function renderAccountUI(){
+  const s = getSession();
+  const loginBtn=$("loginBtn"), chip=$("accountChip");
+  if(s && s.phone){
+    loginBtn.classList.add("hidden");
+    chip.classList.remove("hidden");
+    $("accountAvatarWrap").innerHTML = avatarHTML(s.name, s.photo);
+    $("accountNameLabel").textContent = s.name || s.phone;
+    applySessionToForms(s);
+    startChatMetaListener(s.phone);
+  }else{
+    loginBtn.classList.remove("hidden");
+    chip.classList.add("hidden");
+    $("accountDropdown").classList.remove("open");
+  }
+}
+function applySessionToForms(s){
+  if($("name") && !$("name").value) $("name").value = s.name || "";
+  if($("phone") && !$("phone").value) $("phone").value = s.phone || "";
+  if($("customerId") && !$("customerId").value) $("customerId").value = s.customerId || "";
+  if($("trackPhone") && !$("trackPhone").value) $("trackPhone").value = s.phone || "";
+  if(typeof buildWA==="function") buildWA();
+}
+window.toggleAccountDropdown = function(){
+  $("accountDropdown").classList.toggle("open");
+};
+document.addEventListener("click", e=>{
+  const area=$("accountArea");
+  if(area && !area.contains(e.target)) $("accountDropdown").classList.remove("open");
+});
+
+/* ---- login modal ---- */
+window.openLoginModal = function(){
+  $("loginMsg").classList.remove("show");
+  $("loginPhone").value="";
+  $("loginModal").classList.remove("hidden");
+};
+window.closeLoginModal = function(){ $("loginModal").classList.add("hidden"); };
+document.getElementById("loginModal").addEventListener("click", e=>{
+  if(e.target.id==="loginModal") closeLoginModal();
+});
+
+window.doLogin = async function(){
+  const raw = $("loginPhone").value.trim();
+  const phone = normalizePhone(raw);
+  const msg = $("loginMsg");
+  const show=(t,isErr)=>{ msg.textContent=t; msg.classList.add("show"); msg.classList.toggle("err",!!isErr); };
+  if(!/^0\d{9,10}$/.test(phone)) return show("সঠিক মোবাইল নম্বর দিন।", true);
+  const btn=$("loginSubmitBtn");
+  btn.disabled=true; btn.textContent="খোঁজা হচ্ছে...";
+  try{
+    const idx = await get(ref(db,"dorkhast/site/customerIndexByPhone/"+phone));
+    if(!idx.exists()){
+      show("এই নম্বরে কোনো অর্ডার পাওয়া যায়নি। প্রথমে একটি অর্ডার করুন।", true);
+      return;
+    }
+    const customerId = idx.val();
+    const p = await get(ref(db,"dorkhast/site/customers/"+customerId));
+    const data = p.exists() ? p.val() : {};
+    setSession({customerId, phone, name:data.name||"", photo:data.photo||""});
+    closeLoginModal();
+    const panelTab = window.open("about:blank", "_blank");
+    const target = cpPanelUrl();
+    if(panelTab) panelTab.location.href = target; else window.location.href = target;
+  }catch(e){
+    console.error(e);
+    show("লগইন করা যায়নি। আবার চেষ্টা করুন।", true);
+  }finally{
+    btn.disabled=false; btn.textContent="লগইন করুন";
+  }
+};
+
+window.logoutAccount = function(){
+  clearSession();
+  closeProfileModal();
+  $("accountDropdown").classList.remove("open");
+};
+
+/* ---- profile modal ---- */
+window.openProfileModal = function(){
+  const s = getSession();
+  if(!s) return openLoginModal();
+  $("accountDropdown").classList.remove("open");
+  $("profilePhotoWrap").innerHTML = avatarHTML(s.name, s.photo);
+  $("profileCustomerId").textContent = s.customerId || "-";
+  $("profilePhone").textContent = s.phone || "-";
+  $("profileName").value = s.name || "";
+  $("profileMsg").classList.remove("show");
+  $("profileModal").classList.remove("hidden");
+};
+window.closeProfileModal = function(){ $("profileModal").classList.add("hidden"); };
+document.getElementById("profileModal").addEventListener("click", e=>{
+  if(e.target.id==="profileModal") closeProfileModal();
+});
+
+window.saveProfileName = async function(){
+  const s = getSession();
+  if(!s) return;
+  const name = $("profileName").value.trim();
+  const msg=$("profileMsg");
+  if(!name){ msg.textContent="নাম লিখুন।"; msg.classList.add("show","err"); return; }
+  try{
+    await update(ref(db,"dorkhast/site/customers/"+s.customerId), {name});
+    setSession({...s, name});
+    $("accountNameLabel").textContent = name;
+    msg.textContent="✓ সংরক্ষণ হয়েছে।"; msg.classList.remove("err"); msg.classList.add("show");
+  }catch(e){
+    console.error(e);
+    msg.textContent="সংরক্ষণ ব্যর্থ, আবার চেষ্টা করুন।"; msg.classList.add("show","err");
+  }
+};
+
+function resizeImageToDataURL(file, maxHeight){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let h=img.height, w=img.width;
+        if(h>maxHeight){ w=Math.round(w*(maxHeight/h)); h=maxHeight; }
+        const canvas=document.createElement("canvas");
+        canvas.width=w; canvas.height=h;
+        const ctx=canvas.getContext("2d");
+        ctx.drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL("image/jpeg",0.86));
+      };
+      img.onerror=()=>reject(new Error("ছবি পড়া যায়নি"));
+      img.src=e.target.result;
+    };
+    reader.onerror=()=>reject(new Error("ফাইল পড়া যায়নি"));
+    reader.readAsDataURL(file);
+  });
+}
+window.uploadProfilePhoto = async function(){
+  const s = getSession();
+  if(!s) return;
+  const input=$("profilePhotoFile");
+  const file=input.files && input.files[0];
+  if(!file) return;
+  const msg=$("profileMsg");
+  if(!file.type.startsWith("image/")){ msg.textContent="শুধু ছবি ফাইল দিন।"; msg.classList.add("show","err"); return; }
+  if(file.size > 4*1024*1024){ msg.textContent="ছবির আকার ৪MB এর কম হতে হবে।"; msg.classList.add("show","err"); return; }
+  try{
+    const dataUrl = await resizeImageToDataURL(file, 240);
+    await update(ref(db,"dorkhast/site/customers/"+s.customerId), {photo:dataUrl});
+    const ns = {...s, photo:dataUrl};
+    setSession(ns);
+    $("profilePhotoWrap").innerHTML = avatarHTML(ns.name, ns.photo);
+    msg.textContent="✓ প্রোফাইল ছবি সংরক্ষণ হয়েছে।"; msg.classList.remove("err"); msg.classList.add("show");
+  }catch(e){
+    console.error(e);
+    msg.textContent="ছবি সংরক্ষণ ব্যর্থ, আবার চেষ্টা করুন।"; msg.classList.add("show","err");
+  }finally{
+    input.value="";
+  }
+};
+
+/* ---- live chat with admin (one conversation thread per phone number) ---- */
+let __chatMetaUnsub = null;
+let __chatMetaPhone = null;
+let __chatMsgsUnsub = null;
+function chatMsgHTML(m){
+  const mine = m.sender === "customer";
+  return `<div class="chat-bubble ${mine?"me":"them"}">${esc(m.text)}<span class="chat-time">${fmt(m.at)}</span></div>`;
+}
+function startChatMetaListener(phone){
+  if(__chatMetaPhone === phone && __chatMetaUnsub) return;
+  stopChatMetaListener();
+  __chatMetaPhone = phone;
+  __chatMetaUnsub = onValue(ref(db,"dorkhast/chats/"+phone+"/meta"), snap=>{
+    const meta = snap.exists() ? snap.val() : {};
+    const dot=$("chatDot");
+    if(dot) dot.classList.toggle("show", !!meta.unreadForCustomer);
+  });
+}
+function stopChatMetaListener(){
+  __chatMetaUnsub = null;
+  __chatMetaPhone = null;
+}
+window.openChatModal = function(){
+  const s = getSession();
+  if(!s || !s.phone){
+    openLoginModal();
+    $("loginMsg").textContent = "চ্যাট করতে আগে লগইন করুন।";
+    $("loginMsg").classList.add("show");
+    return;
+  }
+  $("chatModal").classList.remove("hidden");
+  $("chatBody").innerHTML = `<div class="chat-empty">মেসেজ লোড হচ্ছে...</div>`;
+  if(__chatMsgsUnsub){ __chatMsgsUnsub(); __chatMsgsUnsub=null; }
+  __chatMsgsUnsub = onValue(ref(db,"dorkhast/chats/"+s.phone+"/messages"), snap=>{
+    const body = $("chatBody");
+    if(!snap.exists()){
+      body.innerHTML = `<div class="chat-empty">এখনো কোনো মেসেজ নেই। নিচে লিখে শুরু করুন।</div>`;
+      return;
+    }
+    const list = Object.values(snap.val()).sort((a,b)=>a.at-b.at);
+    body.innerHTML = list.map(chatMsgHTML).join("");
+    body.scrollTop = body.scrollHeight;
+  });
+  update(ref(db,"dorkhast/chats/"+s.phone+"/meta"), {unreadForCustomer:false}).catch(()=>{});
+};
+window.closeChatModal = function(){
+  $("chatModal").classList.add("hidden");
+  if(__chatMsgsUnsub){ __chatMsgsUnsub(); __chatMsgsUnsub=null; }
+};
+window.deleteMyChat = async function(){
+  const s = getSession();
+  if(!s || !s.phone) return;
+  if(!confirm("আপনার এই চ্যাটের সব মেসেজ স্থায়ীভাবে মুছে যাবে। আপনি কি নিশ্চিত?")) return;
+  try{
+    await remove(ref(db,"dorkhast/chats/"+s.phone));
+    $("chatBody").innerHTML = `<div class="chat-empty">এখনো কোনো মেসেজ নেই। নিচে লিখে শুরু করুন।</div>`;
+  }catch(e){
+    console.error(e);
+    alert("চ্যাট মুছতে সমস্যা হয়েছে, আবার চেষ্টা করুন।");
+  }
+};
+document.getElementById("chatModal").addEventListener("click", e=>{
+  if(e.target.id==="chatModal") closeChatModal();
+});
+
+window.sendChatMessage = async function(){
+  const s = getSession();
+  if(!s) return;
+  const input = $("chatInput");
+  const text = input.value.trim();
+  if(!text) return;
+  input.value="";
+  const now = Date.now();
+  const msgKey = push(ref(db,"dorkhast/chats/"+s.phone+"/messages")).key;
+  const updates = {};
+  updates["dorkhast/chats/"+s.phone+"/messages/"+msgKey] = {sender:"customer", text, at:now};
+  updates["dorkhast/chats/"+s.phone+"/meta"] = {
+    name:s.name||"", customerId:s.customerId||"", phone:s.phone,
+    lastMessage:text, lastMessageAt:now, unreadForAdmin:true, unreadForCustomer:false
+  };
+  try{
+    await update(ref(db), updates);
+  }catch(e){
+    console.error(e);
+    input.value = text;
+  }
+};
+
+
+/* ===== Separate customer account panel ===== */
+let __cpOrders = [];
+let __cpUnsub = null;
+function cpPanelUrl(){ return window.location.href.split('#')[0].split('?')[0]+'?customerPanel=1'; }
+window.cpTab = function(name){
+  document.querySelectorAll('.cp-tab').forEach(b=>b.classList.toggle('active',b.dataset.cp===name));
+  document.querySelectorAll('.cp-section').forEach(x=>x.classList.toggle('active',x.id==='cp-'+name));
+  if(name==='orders'||name==='track'||name==='notifications') loadCustomerPanelData();
+}
+window.goToCustomerPanel=function(){
+  const s = getSession();
+  if(!s || !s.phone){ openLoginModal(); return; }
+  document.getElementById("accountDropdown").classList.remove("open");
+  window.location.href = cpPanelUrl();
+};
+window.closeCustomerPanel=function(){ window.location.href=window.location.href.split('?')[0].split('#')[0]; };
+window.logoutFromCustomerPanel=function(){ clearSession(); window.location.href=window.location.href.split('?')[0].split('#')[0]; };
+function cpOrderHTML(o){
+  const status=o.status||'pending'; const hist=Object.values(o.trackingHistory||{}).sort((a,b)=>(a.at||0)-(b.at||0));
+  return `<div class="cp-order"><div class="cp-order-top"><div><h4>${esc(o.service||'অর্ডার')}</h4><div class="cp-order-meta">অর্ডার: DKH-${esc(String(o.orderId||'').slice(-6).toUpperCase())} · ${esc(fmt(o.createdAt))}</div></div><span class="cp-badge ${esc(status)}">${esc(STATUS_LABEL[status]||status)}</span></div><div class="cp-order-details">${esc(o.details||'')}</div><div class="cp-timeline">${hist.length?hist.map(h=>`<div class="cp-timeline-item"><span class="cp-dot"></span><div><b>${esc(STATUS_LABEL[h.status]||h.status||'আপডেট')}</b> — ${esc(h.note||'')}<br><small>${esc(fmt(h.at))}</small></div></div>`).join(''):'<span class="cp-muted">কোনো ট্র্যাকিং আপডেট নেই।</span>'}</div></div>`;
+}
+function cpRenderOrders(){
+  const box=$('cpOrders'), track=$('cpTrackResults');
+  if(!__cpOrders.length){ box.innerHTML='<div class="cp-empty">আপনার কোনো অর্ডার পাওয়া যায়নি।</div>'; track.innerHTML='<div class="cp-empty">আপনার কোনো অর্ডার পাওয়া যায়নি।</div>'; return; }
+  const html=__cpOrders.map(cpOrderHTML).join(''); box.innerHTML=html; track.innerHTML=html;
+  $('cpStatOrders').textContent=__cpOrders.length; $('cpStatLast').textContent=fmt(__cpOrders[0]?.createdAt)||'-';
+  const notes=[]; __cpOrders.forEach(o=>Object.values(o.trackingHistory||{}).forEach(h=>notes.push({text:`${o.service||'অর্ডার'}: ${STATUS_LABEL[h.status]||h.status||'আপডেট'}${h.note?' — '+h.note:''}`,at:h.at||0})));
+  notes.sort((a,b)=>b.at-a.at); $('cpNotifications').innerHTML=notes.length?notes.slice(0,30).map(n=>`<div class="cp-note">${esc(n.text)}<small>${esc(fmt(n.at))}</small></div>`).join(''):'<div class="cp-empty">এখনো কোনো নোটিফিকেশন নেই।</div>';
+}
+async function loadCustomerPanelData(){
+  const s=getSession(); if(!s||!s.phone) return;
+  try{
+    const snap=await get(ref(db,'dorkhast/ordersByPhone/'+s.phone));
+    __cpOrders=snap.exists()?Object.values(snap.val()).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)):[];
+    cpRenderOrders();
+  }catch(e){ console.error(e); $('cpOrders').innerHTML='<div class="cp-empty">ডাটা লোড করা যায়নি।</div>'; }
+}
+window.cpSubmitOrder=async function(){
+  const s=getSession(); if(!s||!s.phone) return;
+  const name=$('cpOrderName').value.trim(), service=$('cpOrderService').value, details=$('cpOrderDetails').value.trim();
+  const msg=$('cpOrderMsg'), btn=$('cpOrderBtn');
+  if(!name){msg.textContent='নাম লিখুন।';msg.className='cp-msg err';return;}
+  btn.disabled=true;btn.textContent='জমা হচ্ছে...';msg.textContent='';
+  try{
+    const customerId=await ensureCustomerProfile(service,name,s.phone,s.customerId);
+    const orderId=push(ref(db,'dorkhast/orders')).key, now=Date.now(), hk=push(ref(db,'dorkhast/orders/'+orderId+'/trackingHistory')).key;
+    const hist={[hk]:{status:'pending',note:'কাস্টমার প্যানেল থেকে অর্ডার গ্রহণ করা হয়েছে।',at:now}};
+    const orderData={orderId,customerId,name,phone:s.phone,service,details,status:'pending',trackingHistory:hist,createdAt:now,updatedAt:now};
+    await update(ref(db),{['dorkhast/orders/'+orderId]:orderData,['dorkhast/ordersByPhone/'+s.phone+'/'+orderId]:orderData});
+    $('cpOrderDetails').value=''; $('cpOrderName').value=name; msg.textContent='✓ অর্ডার সফলভাবে জমা হয়েছে।';msg.className='cp-msg';
+    await loadCustomerPanelData(); cpTab('orders');
+  }catch(e){console.error(e);msg.textContent='অর্ডার জমা দেওয়া যায়নি। আবার চেষ্টা করুন।';msg.className='cp-msg err';}
+  finally{btn.disabled=false;btn.textContent='অর্ডার জমা দিন';}
+};
+function initCustomerPanel(){
+  const isPanel=new URLSearchParams(location.search).get('customerPanel')==='1';
+  if(!isPanel) return;
+  const s=getSession();
+  if(!s||!s.phone){ window.location.href=location.href.split('?')[0].split('#')[0]; return; }
+  document.body.classList.add('customer-panel-mode'); $('customerPanelView').classList.remove('hidden');
+  $('cpName').textContent=s.name||s.phone; $('cpId').textContent='Customer ID: '+(s.customerId||'-'); $('cpStatId').textContent=s.customerId||'-'; $('cpOrderName').value=s.name||''; $('cpOrderPhone').value=s.phone||''; $('cpAvatar').innerHTML=avatarHTML(s.name,s.photo);
+  loadCustomerPanelData();
+}
+
+/* ---- restore session on load ---- */
+renderAccountUI();
+initCustomerPanel();
 </script>
 
 </body>
