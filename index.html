@@ -185,7 +185,20 @@
   .ticket{position:relative;background:#fff;color:var(--ink);border-radius:var(--r-lg);padding:22px 24px 0;box-shadow:0 26px 60px rgba(4,20,15,.45);}
   .ticket-top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13.5px;color:var(--ink-soft);}
   .ticket-tag{background:var(--gold-tint);color:var(--gold);font-weight:600;padding:2px 11px;border-radius:999px;}
-  .ticket-title{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.4;margin:14px 0 20px;padding-right:100px;color:var(--ink);}
+  .ticket-title{
+    font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.4;margin:14px 0 20px;
+    padding-right:100px;color:var(--ink);transform-origin:left center;
+  }
+  .ticket-title.service-changing{animation:ticketServiceChange .65s cubic-bezier(.22,.61,.36,1) both;}
+  @keyframes ticketServiceChange{
+    0%{opacity:1;transform:translateY(0) scale(1);}
+    35%{opacity:0;transform:translateY(-7px) scale(.97);}
+    65%{opacity:0;transform:translateY(7px) scale(.97);}
+    100%{opacity:1;transform:translateY(0) scale(1);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .ticket-title.service-changing{animation:none;}
+  }
   .ticket-steps{list-style:none;margin:0;padding:0;}
   .ticket-steps li{position:relative;padding:0 0 18px 36px;font-size:15.5px;line-height:1.55;color:var(--ink-soft);}
   .ticket-steps li:last-child{padding-bottom:22px;}
@@ -257,6 +270,27 @@
   .service-card{
     display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);
     border-radius:16px;padding:22px 22px 18px;
+    position:relative;overflow:hidden;
+    transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+  }
+  .service-card::before{
+    content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--accent);
+    opacity:.35;transition:opacity .25s ease,height .25s ease;
+  }
+  .service-card:hover,.service-card.highlighted{
+    transform:translateY(-3px);
+    border-color:var(--accent);
+    box-shadow:0 12px 28px rgba(31,75,59,.14),0 0 0 3px var(--tint);
+  }
+  .service-card:hover::before,.service-card.highlighted::before{
+    opacity:1;height:6px;
+  }
+  .service-card.highlighted{
+    animation:serviceHighlightPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes serviceHighlightPulse{
+    0%,100%{box-shadow:0 12px 28px rgba(31,75,59,.12),0 0 0 3px var(--tint);}
+    50%{box-shadow:0 14px 34px rgba(31,75,59,.22),0 0 0 5px var(--tint);}
   }
   .service-card h3{font-size:18px;line-height:1.45;}
   .service-card .service-price{font-family:var(--serif);font-weight:700;font-size:27px;line-height:1.3;color:var(--green);margin-top:10px;}
@@ -567,7 +601,8 @@
     .section{padding:52px 0;}
     .wrap{padding:0 20px;}
     .section-head{margin-bottom:26px;}
-    .service-grid,.reviews-list{grid-template-columns:1fr;}
+    .service-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+    .reviews-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
     .steps{grid-template-columns:1fr;row-gap:0;}
     .step{display:grid;grid-template-columns:44px 1fr;column-gap:16px;padding-bottom:26px;}
     .step:last-child{padding-bottom:0;}
@@ -658,6 +693,193 @@
     .cp-head{padding:16px;align-items:flex-start;}
     .cp-title{font-size:20px;}
   }
+
+  /* ---------- compact phone layout (smaller type, tighter spacing, taps stay >=38px) ---------- */
+  .hero{overflow:hidden;}
+  @media (max-width:760px){
+    body{font-size:15px;line-height:1.65;}
+    section[id]{scroll-margin-top:64px;}
+    .wrap{padding:0 16px;}
+
+    /* buttons */
+    .btn{min-height:42px;padding:8px 16px;font-size:15px;}
+    .btn-lg{min-height:46px;padding:9px 20px;font-size:15.5px;}
+    .btn-sm{min-height:36px;padding:5px 13px;font-size:13.5px;}
+
+    /* header */
+    .nav{padding:6px 14px;gap:8px;}
+    .brand{gap:8px;}
+    .brand-logo{height:30px;}
+    .brand-name{font-size:18px;}
+    .apk-btn{padding:5px 11px;font-size:12.5px;gap:5px;}
+    .apk-btn svg{width:13px;height:13px;}
+    .login-btn{padding:5px 11px;font-size:12.5px;}
+    .login-btn svg{width:14px;height:14px;}
+    .account-avatar{width:28px;height:28px;font-size:13px;}
+    .marquee-wrap{padding:5px 0;}
+    .marquee-item{font-size:12.5px;padding:0 18px;}
+
+    /* hero + ticket */
+    .hero{padding:26px 0 38px;}
+    .hero-inner{padding:0 16px;gap:30px;}
+    .hero h1{font-size:25px;line-height:1.35;}
+    .hero-copy p{font-size:15px;line-height:1.7;margin-top:12px;}
+    .hero-ctas{margin-top:20px;gap:10px;}
+    .hero-tags{margin-top:20px;font-size:13px;}
+    .hero-tags li{padding:0 10px;}
+    .ticket-wrap{max-width:350px;}
+    .ticket{padding:16px 18px 0;border-radius:16px;}
+    .ticket-wrap::before{border-radius:16px;}
+    .ticket-top{font-size:12.5px;}
+    .ticket-title{font-size:18px;margin:10px 0 14px;padding-right:76px;}
+    .ticket-steps li{padding:0 0 13px 30px;font-size:14px;}
+    .ticket-steps li:last-child{padding-bottom:16px;}
+    .ticket-steps li::before{width:18px;height:18px;top:2px;}
+    .ticket-steps li.done::before{font-size:10px;line-height:14px;}
+    .ticket-steps li:not(:last-child)::after{left:8px;top:22px;}
+    .ticket-stub{margin:0 -18px;padding:12px 18px 14px;font-size:12.5px;}
+    .seal{width:66px;height:66px;top:38px;right:14px;font-size:13.5px;border-width:2.5px;}
+
+    /* stats */
+    .stats{padding:0 16px;}
+    .stat{padding:10px 12px;}
+    .stat b{font-size:18px;}
+    .stat span{font-size:12px;}
+
+    /* sections */
+    .section{padding:34px 0;}
+    .section-head{margin-bottom:18px;}
+    .section-head h2{font-size:22px;}
+    .section-sub{font-size:14px;margin-top:6px;}
+    .rnote{margin-top:18px;font-size:13px;padding-left:12px;}
+    .track-empty{font-size:14px;padding:14px 16px;}
+
+    /* services — 2-up compact cards */
+    .service-card{padding:12px 12px 10px;border-radius:12px;}
+    .service-card h3{font-size:13.5px;line-height:1.4;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;}
+    .service-card .service-price{font-size:17px;margin-top:5px;}
+    .service-card .service-desc{font-size:11.5px;line-height:1.5;margin-top:5px;-webkit-line-clamp:2;}
+    .service-actions{flex-direction:column;margin-top:10px;padding-top:10px;gap:6px;}
+    .service-actions button{min-height:32px;font-size:12px;padding:5px 6px;}
+
+    /* steps */
+    .step{grid-template-columns:38px 1fr;column-gap:14px;padding-bottom:20px;}
+    .step-num{width:38px;height:38px;font-size:16px;}
+    .step:not(:last-child)::after,.step:nth-child(2)::after{top:42px;bottom:2px;left:18px;}
+    .step h4{font-size:16px;margin:0 0 1px;}
+    .step p{font-size:14px;line-height:1.6;}
+
+    /* notices */
+    .notice-list{border-radius:14px;}
+    .notice-card{padding:12px 16px;}
+    .notice-top h4{font-size:15.5px;}
+    .notice-badge-new{font-size:11px;padding:0 8px;}
+    .notice-date{font-size:12px;}
+    .notice-body{font-size:14.5px;margin-top:10px;padding-top:10px;}
+
+    /* order form */
+    .order-layout{gap:20px;}
+    .order-side .section-head{margin-bottom:16px;}
+    .checklist-panel{padding:16px 16px 12px;border-radius:14px;}
+    .checklist-panel h3{font-size:16px;}
+    .checklist-panel ul{margin-top:12px;}
+    .checklist-panel li{font-size:14px;padding:0 0 9px 24px;line-height:1.6;}
+    .checklist-pay{font-size:13.5px;padding-top:12px;}
+    .checklist-pay b{font-size:15px;}
+    .order-box{padding:18px 16px;border-radius:14px;}
+    .confirm-box{padding:20px 16px;border-radius:14px;}
+    .confirm-box h3{font-size:18px;}
+    .confirm-id{font-size:18px;}
+    .field{margin-bottom:14px;}
+    .field label{font-size:13.5px;margin-bottom:5px;}
+    .field input,.field select,.field textarea,.track-search input,.chat-input-row input{padding:10px 12px;font-size:16px;}
+    .field textarea{min-height:88px;}
+    .form-msg{font-size:13.5px;padding:8px 12px;}
+    .order-actions{gap:10px;}
+    .direct-call{font-size:13.5px;}
+
+    /* tracking + order cards */
+    .track-box{padding:16px 14px;border-radius:14px;}
+    .track-results{margin-top:18px;gap:14px;}
+    .order-card{padding:14px;border-radius:12px;}
+    .order-card h4{font-size:16px;}
+    .order-meta{font-size:12.5px;}
+    .order-details{font-size:14px;}
+    .badge,.cp-badge{font-size:12px;padding:3px 10px;}
+    .timeline-note{font-size:14px;}
+    .timeline-time{font-size:12px;}
+    .pay-form{padding:14px;}
+    .delivery-file-item{font-size:13.5px;}
+
+    /* reviews — 2-up compact cards */
+    .review-card{padding:12px;border-radius:12px;}
+    .review-stars{font-size:13px;letter-spacing:1px;}
+    .review-name{font-size:13px;margin-top:5px;-webkit-line-clamp:1;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;}
+    .review-comment{font-size:11.5px;line-height:1.55;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .review-date{font-size:10.5px;margin-top:8px;}
+    .review-form-box{margin-top:26px;padding:18px 16px;border-radius:14px;}
+    .review-form-box h4{font-size:17px;margin-bottom:14px;}
+
+    /* footer + bottom bar */
+    .site-footer{padding:32px 0 28px;}
+    .foot-brand{font-size:20px;}
+    .foot-note{font-size:13px;}
+    .foot-contact{font-size:14px;}
+    .app-tabbar{padding:4px 4px calc(4px + env(safe-area-inset-bottom));}
+    .app-tab{font-size:11px;min-width:52px;padding:3px 6px;gap:2px;}
+    .app-tab svg{width:20px;height:20px;}
+    body{padding-bottom:calc(58px + env(safe-area-inset-bottom));}
+    .chat-fab{width:48px;height:48px;right:14px;bottom:calc(68px + env(safe-area-inset-bottom));}
+    .chat-fab svg{width:22px;height:22px;}
+
+    /* pop-ups */
+    .congrats-modal{padding:14px;}
+    .congrats-box{padding:28px 22px 24px;}
+    .congrats-check{width:60px;height:60px;margin-bottom:16px;}
+    .congrats-check svg{width:30px;height:30px;}
+    .congrats-box h3{font-size:21px;}
+    .apk-modal-box{padding:24px 20px 20px;}
+    .apk-modal-box h3{font-size:19px;}
+    .apk-modal-box p{font-size:14px;}
+    .auth-modal-box{padding:26px 20px 22px;}
+    .auth-modal-box h3{font-size:20px;}
+    .auth-modal-box .sub{font-size:13.5px;}
+    .bill-modal-box{padding:20px 16px;}
+    .chat-head{padding:12px 14px;}
+    .chat-head h3{font-size:16px;}
+    .chat-bubble{font-size:14.5px;padding:8px 12px;}
+
+    /* customer panel */
+    .customer-panel-view{padding:10px 10px 32px;}
+    .cp-head{padding:14px;border-radius:16px;gap:10px;}
+    .cp-avatar{width:40px;height:40px;font-size:17px;}
+    .cp-user-name{font-size:17px;}
+    .cp-user-id{font-size:12px;}
+    .cp-nav{margin-top:12px;padding:4px;}
+    .cp-tab{padding:8px 13px;font-size:14px;}
+    .cp-section{padding-top:18px;}
+    .cp-title{font-size:19px;margin-bottom:12px;}
+    .cp-grid{gap:10px;}
+    .cp-stat,.cp-card{padding:14px;}
+    .cp-stat b{font-size:22px;}
+    .cp-muted{font-size:14px;}
+    .cp-order{padding:14px;}
+    .cp-order h4{font-size:15.5px;}
+    .cp-order-details{font-size:14px;}
+    .cp-note{padding:12px 14px;font-size:14px;}
+    .cp-empty{padding:20px;font-size:14px;}
+  }
+  @media (max-width:360px){
+    .hero h1{font-size:23px;}
+    .brand-name{font-size:17px;}
+    .hero-ctas .btn{padding:8px 12px;}
+    .service-grid,.reviews-list{gap:8px;}
+    .service-card{padding:10px 10px 9px;}
+    .service-card h3{font-size:12.5px;}
+    .service-card .service-price{font-size:15px;}
+    .service-card .service-desc{font-size:11px;-webkit-line-clamp:2;}
+    .review-card{padding:10px;}
+  }
 </style>
 </head>
 <body>
@@ -736,7 +958,7 @@
           <span class="ticket-tag">নমুনা</span>
           <span>অর্ডার: DKH-7K2Q9A</span>
         </div>
-        <div class="ticket-title">সিভি তৈরি (নতুন)</div>
+        <div class="ticket-title">সেবা অর্ডার</div>
         <ol class="ticket-steps">
           <li class="done">অর্ডার গ্রহণ</li>
           <li class="done">কাজ চলছে</li>
@@ -1173,7 +1395,6 @@ const db = getDatabase(app);
 
 /* ---- defaults (used until admin sets real content in the management panel) ---- */
 const DEFAULT_SERVICES = [
-  {title:"সিভি তৈরি (নতুন)", price:"৳৪০০", desc:"নতুন সিভি তৈরি, প্রফেশনাল ফরম্যাটে সাজিয়ে দেওয়া।", category:"সিভি ও কভার লেটার"},
   {title:"সিভি সংশোধন", price:"৳৩০০", desc:"পুরনো সিভি হালনাগাদ ও উন্নত করে দেওয়া।", category:"সিভি ও কভার লেটার"},
   {title:"কভার লেটার", price:"৳২০০", desc:"নির্দিষ্ট চাকরির বিজ্ঞপ্তি অনুযায়ী মানানসই কভার লেটার লিখে দেওয়া।", category:"সিভি ও কভার লেটার"},
   {title:"চাকরির আবেদন পূরণ (প্রতি আবেদন)", price:"৳২৫০", desc:"সরকারি ও বেসরকারি চাকরির অনলাইন ফরম পূরণ, ছবি-স্বাক্ষর রিসাইজ, আবেদন জমা।", category:"চাকরির আবেদন"},
@@ -1181,7 +1402,7 @@ const DEFAULT_SERVICES = [
   {title:"জরুরি ডেলিভারি (একই দিন)", price:"+৳১০০", desc:"একই দিনে কাজ সম্পন্ন করার জন্য বাড়তি চার্জ।", category:"অন্যান্য"}
 ];
 const DEFAULT_CONTACT = {whatsapp:"8801XXXXXXXXX", phoneDisplay:"01XXX-XXXXXX", email:"hello@example.com", address:"ঢাকা, বাংলাদেশ", paymentBkash:"", paymentRocket:"", paymentNagad:""};
-const DEFAULT_HERO = {title:"সিভি, চাকরির আবেদন ও ভর্তি ফরম — নির্ভুলভাবে করে দিই আমরা", subtitle:"অর্ডার দিন, মোবাইল নম্বর দিয়ে কাজের অবস্থা দেখুন, আর কাজ শেষ হলে ফাইল এখান থেকেই ডাউনলোড করুন।"};
+const DEFAULT_HERO = {title:"চাকরির আবেদন, ভিসা, পাসপোর্ট, আয়কর রিটার্ন — সব সেবা নির্ভুলভাবে করে দিই আমরা।", subtitle:"অর্ডার দিন, মোবাইল নম্বর দিয়ে কাজের অবস্থা দেখুন, আর কাজ শেষ হলে ফাইল এখান থেকেই ডাউনলোড করুন।"};
 const DEFAULT_MARQUEE = [];
 
 const STATUS_LABEL = {
@@ -1207,7 +1428,7 @@ async function loadSiteContent(){
   try{
     const snap=await get(ref(db,"dorkhast/site"));
     const site=snap.exists()?snap.val():{};
-    renderServices(site.services?Object.values(site.services).sort((a,b)=>(a.sort||0)-(b.sort||0)):DEFAULT_SERVICES);
+    renderServices((site.services?Object.values(site.services).sort((a,b)=>(a.sort||0)-(b.sort||0)):DEFAULT_SERVICES).filter(s=>String(s.title||"").trim()!=="সিভি তৈরি (নতুন)"));
     renderContact(site.contact||DEFAULT_CONTACT);
     renderHero(site.hero||DEFAULT_HERO);
     renderLogo(site.logo);
@@ -1284,6 +1505,14 @@ function renderServiceSelectOptions(){
 }
 /* services are shown as a colour-accented card grid — 2 columns on mobile/app
    mode, 3 on wider screens — in the admin's chosen order ("sort" position) */
+function highlightServiceCard(){
+  const cards=[...document.querySelectorAll("#serviceGrid .service-card")];
+  if(!cards.length) return;
+  cards.forEach(c=>c.classList.remove("highlighted"));
+  const idx=Math.floor(Math.random()*cards.length);
+  cards[idx].classList.add("highlighted");
+}
+
 function renderServiceCards(){
   const grid = $("serviceGrid");
   if(!grid) return;
@@ -1343,7 +1572,25 @@ function renderHero(h){
   h1.classList.toggle("hidden", !title);
   p.classList.toggle("hidden", !sub);
 }
+function rotateTicketService(){
+  const titleEl=document.querySelector(".ticket-title");
+  if(!titleEl || !__allServices.length) return;
+  const current=titleEl.textContent.trim();
+  const choices=__allServices.filter(s=>String(s.title||"").trim()!==current);
+  const pool=choices.length ? choices : __allServices;
+  const service=pool[Math.floor(Math.random()*pool.length)];
+
+  titleEl.classList.remove("service-changing");
+  void titleEl.offsetWidth;
+  titleEl.textContent=service.title;
+  titleEl.classList.add("service-changing");
+
+  window.setTimeout(()=>titleEl.classList.remove("service-changing"),700);
+}
 loadSiteContent();
+setInterval(rotateTicketService, 3000);
+setInterval(highlightServiceCard, 3000);
+setTimeout(highlightServiceCard, 800);
 
 /* ---- header stats: total visitors, live visitors, total orders ---- */
 const setStat=(id,n)=>{ const el=$(id); if(el) el.textContent=n; };
