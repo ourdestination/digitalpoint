@@ -766,6 +766,14 @@
   .cp-note{padding:14px 16px;border-left:3px solid var(--green);background:#fff;border-radius:0 var(--r-sm) var(--r-sm) 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:15px;}
   .cp-note small{display:block;color:var(--ink-soft);margin-top:3px;font-size:13px;}
   .cp-empty{padding:28px;text-align:center;color:var(--ink-soft);border:1.5px dashed var(--line-strong);border-radius:var(--r-md);background:#fff;font-size:15px;}
+
+  /* special service cards — shown on the customer overview tab, managed from the admin panel.
+     Reuses the same "price ticket" card look as the main services grid (.service-card),
+     so cp-special-grid only adds spacing/heading tweaks on top of .service-grid. */
+  .cp-special-title{font-family:var(--serif);font-weight:700;font-size:17px;margin:22px 0 12px;color:var(--ink);}
+  .cp-special-grid{margin-top:2px;}
+  .cp-special-card-icon{width:30px;height:30px;object-fit:contain;border-radius:7px;flex-shrink:0;}
+  .cp-special-empty{grid-column:1/-1;padding:22px;text-align:center;color:var(--ink-soft);border:1.5px dashed var(--line-strong);border-radius:var(--r-md);background:#fff;font-size:14.5px;}
   @media (max-width:760px){
     .cp-grid{grid-template-columns:1fr;}
     .customer-panel-view{padding:14px 12px 40px;}
@@ -946,6 +954,8 @@
     .cp-stat,.cp-card{padding:14px;}
     .cp-stat b{font-size:22px;}
     .cp-muted{font-size:14px;}
+    .cp-special-title{font-size:16px;margin:18px 0 10px;}
+    .cp-special-card-icon{width:24px;height:24px;vertical-align:-5px;}
     .cp-order{padding:14px;}
     .cp-order h4{font-size:15.5px;}
     .cp-order-details{font-size:14px;}
@@ -1291,14 +1301,27 @@
   <div class="auth-modal-box">
     <button class="auth-modal-close" type="button" onclick="closeLoginModal()" aria-label="বন্ধ করুন">×</button>
     <h3>লগইন করুন</h3>
-    <p class="sub">আগে অর্ডার করে থাকলে শুধু আপনার মোবাইল নম্বর দিয়ে লগইন করুন — নতুন করে তথ্য দিতে হবে না, সব সেবা সরাসরি নিতে পারবেন।</p>
-    <div class="field">
-      <label for="loginPhone">মোবাইল নম্বর</label>
-      <input id="loginPhone" type="tel" placeholder="01XXXXXXXXX" inputmode="numeric">
+    <p class="sub" id="loginIntroText">আগে অর্ডার করে থাকলে শুধু আপনার মোবাইল নম্বর দিয়ে লগইন করুন — নতুন করে তথ্য দিতে হবে না, সব সেবা সরাসরি নিতে পারবেন।</p>
+    <div id="loginPhoneWrap">
+      <div class="field">
+        <label for="loginPhone">মোবাইল নম্বর</label>
+        <input id="loginPhone" type="tel" placeholder="01XXXXXXXXX" inputmode="numeric">
+      </div>
+    </div>
+    <div id="loginPasswordWrap" class="hidden">
+      <div class="field">
+        <label for="loginPassword">পাসওয়ার্ড</label>
+        <input id="loginPassword" type="password" placeholder="আপনার পাসওয়ার্ড" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <p class="sub" style="margin-top:8px;text-align:left;">
+        <a href="#" id="loginBackLink" onclick="event.preventDefault();resetLoginModalStage();" style="color:var(--steel);">‹ নম্বর পরিবর্তন করুন</a>
+        &nbsp;·&nbsp;
+        <a href="#" id="loginForgotLink" onclick="event.preventDefault();showForgotPasswordNote();" style="color:var(--steel);">পাসওয়ার্ড ভুলে গেছেন?</a>
+      </p>
     </div>
     <div class="form-msg" id="loginMsg"></div>
     <button class="btn btn-primary" type="button" id="loginSubmitBtn" onclick="doLogin()">লগইন করুন</button>
-    <p class="sub" style="margin-top:14px;">এখনো অর্ডার করেননি? <a href="#order" onclick="closeLoginModal()" style="color:var(--steel);">প্রথমে একটি অর্ডার করুন</a>, প্রথম অর্ডারের পরই স্বয়ংক্রিয়ভাবে লগইন হয়ে যাবে।</p>
+    <p class="sub" id="loginSignupHint" style="margin-top:14px;">এখনো অর্ডার করেননি? <a href="#order" onclick="closeLoginModal()" style="color:var(--steel);">প্রথমে একটি অর্ডার করুন</a>, প্রথম অর্ডারের পরই স্বয়ংক্রিয়ভাবে লগইন হয়ে যাবে।</p>
   </div>
 </div>
 
@@ -1321,6 +1344,28 @@
     </div>
     <div class="form-msg" id="profileMsg"></div>
     <button class="btn btn-primary" type="button" onclick="saveProfileName()">সংরক্ষণ করুন</button>
+
+    <div style="margin:24px 0 0;padding-top:18px;border-top:1px solid var(--line,#e5e0d8);">
+      <h3 style="font-size:16px;margin:0 0 4px;">লগইন পাসওয়ার্ড</h3>
+      <p class="sub" style="text-align:left;margin:0 0 4px;font-size:13px;" id="pwStatusNote">লোড হচ্ছে...</p>
+      <div class="field" id="pwCurrentWrap" style="display:none;">
+        <label for="pwCurrent">বর্তমান পাসওয়ার্ড</label>
+        <input id="pwCurrent" type="password" placeholder="বর্তমান পাসওয়ার্ড">
+      </div>
+      <div class="field">
+        <label for="pwNew" id="pwNewLabel">নতুন পাসওয়ার্ড</label>
+        <input id="pwNew" type="password" placeholder="কমপক্ষে ৪ অক্ষর">
+      </div>
+      <div class="field">
+        <label for="pwConfirm">পাসওয়ার্ড আবার লিখুন</label>
+        <input id="pwConfirm" type="password">
+      </div>
+      <div class="form-msg" id="pwMsg"></div>
+      <button class="btn btn-primary" type="button" id="pwSaveBtn" onclick="savePassword()">পাসওয়ার্ড সেট করুন</button>
+      <button class="btn btn-ghost" type="button" id="pwDeleteBtn" style="display:none;width:100%;margin-top:10px;" onclick="deletePassword()">পাসওয়ার্ড মুছে ফেলুন</button>
+      <p class="sub" style="margin-top:12px;font-size:12.5px;text-align:left;">পাসওয়ার্ড সেট করা থাকলে পরের বার লগইনের সময় মোবাইল নম্বরের সাথে পাসওয়ার্ডও চাওয়া হবে। পাসওয়ার্ড ভুলে গেলে নতুন পাসওয়ার্ড সেট করার জন্য এডমিনের অনুমতি প্রয়োজন হবে — এডমিনের সাথে (হটলাইনে) যোগাযোগ করুন।</p>
+    </div>
+
     <button class="btn btn-ghost" type="button" style="width:100%;margin-top:10px;" onclick="logoutAccount()">লগআউট</button>
   </div>
 </div>
@@ -1373,6 +1418,8 @@
       <h2 class="cp-title">আমার অ্যাকাউন্ট</h2>
       <div class="cp-grid"><div class="cp-stat"><span>Customer ID</span><b id="cpStatId">-</b></div><div class="cp-stat"><span>মোট অর্ডার</span><b id="cpStatOrders">0</b></div><div class="cp-stat"><span>সর্বশেষ অর্ডার</span><b id="cpStatLast" style="font-size:16px">-</b></div></div>
       <div class="cp-card" style="margin-top:14px"><div class="cp-muted">এই প্যানেল থেকে আপনার অর্ডারের সম্পূর্ণ ইতিহাস, নতুন অর্ডার, লাইভ চ্যাট, ট্র্যাকিং এবং অর্ডার-সংক্রান্ত নোটিফিকেশন এক জায়গায় দেখা যাবে।</div></div>
+      <h3 class="cp-special-title">স্পেশাল সেবা</h3>
+      <div id="cpSpecialGrid" class="service-grid cp-special-grid"><div class="cp-special-empty">লোড হচ্ছে...</div></div>
     </section>
     <section class="cp-section" id="cp-orders"><h2 class="cp-title">সব অর্ডার হিস্টোরি</h2><div id="cpOrders" class="cp-orders"><div class="cp-empty">অর্ডার লোড হচ্ছে...</div></div></section>
     <section class="cp-section" id="cp-manual"><h2 class="cp-title">ম্যানুয়াল অর্ডার করুন</h2><div class="cp-card cp-form"><div class="row2"><div class="field"><label>নাম</label><input id="cpOrderName" type="text"></div><div class="field"><label>মোবাইল নম্বর</label><input id="cpOrderPhone" type="tel" readonly></div></div><div class="field"><label>কোন সেবা প্রয়োজন</label><select id="cpOrderService"><option value="">সেবার তালিকা লোড হচ্ছে...</option></select></div><div class="field"><label>বিস্তারিত</label><textarea id="cpOrderDetails" placeholder="আপনার কাজের বিস্তারিত লিখুন"></textarea></div><button id="cpOrderBtn" class="btn btn-primary" type="button" onclick="cpSubmitOrder()">অর্ডার জমা দিন</button><div id="cpOrderMsg" class="cp-msg"></div></div></section>
@@ -1525,6 +1572,7 @@ async function loadSiteContent(){
     renderHero(site.hero||DEFAULT_HERO);
     renderLogo(site.logo);
     renderMarquee(site.marquee);
+    renderSpecialCards(site.specialCards?Object.values(site.specialCards).sort((a,b)=>(a.sort||0)-(b.sort||0)):[]);
     window.__paymentQR = site.paymentQR || "";
     window.__siteLogo = site.logo || "";
   }catch(e){
@@ -1533,6 +1581,7 @@ async function loadSiteContent(){
     renderContact(DEFAULT_CONTACT);
     renderHero(DEFAULT_HERO);
     renderMarquee(DEFAULT_MARQUEE);
+    renderSpecialCards([]);
     window.__paymentQR = "";
     window.__siteLogo = "";
   }
@@ -1649,6 +1698,61 @@ window.orderNow = function(title){
   buildWA();
   document.getElementById("order").scrollIntoView({behavior:"smooth"});
 };
+/* ===== special service cards (customer overview panel) =====
+   Rendered as the exact same "price ticket" card used in the main services
+   grid (accent stripe, discount ribbon, price, description, dashed tear
+   line, বিস্তারিত/অর্ডার করুন buttons) — just fed from D.site.specialCards
+   instead of D.site.services. */
+let __allSpecialCards = [];
+function renderSpecialCards(list){
+  __allSpecialCards = list||[];
+  const grid = $("cpSpecialGrid");
+  if(!grid) return;
+  if(!__allSpecialCards.length){
+    grid.innerHTML = `<div class="cp-special-empty">এখনও কোনো বিশেষ সেবা যুক্ত করা হয়নি।</div>`;
+    return;
+  }
+  grid.innerHTML = __allSpecialCards.map((c,i)=>{
+    const acc = SERVICE_ACCENTS[i % SERVICE_ACCENTS.length];
+    const hasDesc = !!(c.desc && c.desc.trim());
+    const hasPrice = !!(c.price && c.price.trim());
+    return `<div class="service-card" style="--accent:${acc.accent};--tint:${acc.tint}">
+      ${c.discount?`<div class="service-discount-badge">${discountRibbonHTML(c.discount)}</div>`:""}
+      <div class="service-card-inner">
+        <h3>${c.image?`<img class="cp-special-card-icon" src="${esc(c.image)}" alt="" style="display:inline-block;vertical-align:-7px;margin-right:8px;">`:""}${esc(c.title)}</h3>
+        ${hasPrice?`<div class="service-price">${c.discountPrice?`<span class="price-old">${esc(c.price)}</span><span class="price-new">${esc(c.discountPrice)}</span>`:esc(c.price)}</div>`:""}
+        ${hasDesc?`<p class="service-desc" id="spcDesc-${i}">${esc(c.desc)}</p>`:""}
+        <div class="service-actions">
+          ${hasDesc?`<button type="button" class="btn-detail" data-spc-detail-idx="${i}">বিস্তারিত</button>`:""}
+          <button type="button" class="btn-order" data-spc-title="${esc(c.title)}" data-spc-link="${esc(c.link||"")}">অর্ডার করুন</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+window.cpOrderSpecial = function(title, link){
+  if(link){ window.open(link, "_blank", "noopener"); return; }
+  if(typeof cpTab==="function") cpTab("manual");
+  const sel = $("cpOrderService");
+  if(sel){
+    const match = [...sel.options].some(o=>o.value===title);
+    sel.value = match ? title : "অন্যান্য";
+  }
+  const details = $("cpOrderDetails");
+  if(details && !details.value.trim()) details.value = "বিশেষ সেবা: "+title;
+};
+document.getElementById("cpSpecialGrid").addEventListener("click", e=>{
+  const orderBtn = e.target.closest("[data-spc-title]");
+  if(orderBtn){ window.cpOrderSpecial(orderBtn.dataset.spcTitle, orderBtn.dataset.spcLink); return; }
+  const detailBtn = e.target.closest("[data-spc-detail-idx]");
+  if(detailBtn){
+    const desc = $("spcDesc-"+detailBtn.dataset.spcDetailIdx);
+    if(!desc) return;
+    const expanded = desc.classList.toggle("expanded");
+    detailBtn.textContent = expanded ? "সংক্ষেপে" : "বিস্তারিত";
+  }
+});
+
 $("serviceGrid").addEventListener("click", e=>{
   const orderBtn = e.target.closest("[data-order-service]");
   if(orderBtn){ window.orderNow(orderBtn.dataset.orderService); return; }
@@ -2369,6 +2473,13 @@ document.getElementById("billModal").addEventListener("click", e=>{
 /* ========================================================================
    Account (phone login), Profile (name + photo), and Live Chat with admin
    ======================================================================== */
+/* ---- password hashing (SHA-256, client-side) for customer login passwords ---- */
+async function sha256Hex(str){
+  const enc = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
 const SESSION_KEY = "dp_session";
 function getSession(){
   try{ return JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); }catch(e){ return null; }
@@ -2425,9 +2536,26 @@ document.addEventListener("click", e=>{
   if(area && !area.contains(e.target)) $("hotlineDropdown").classList.remove("open");
 });
 
-/* ---- login modal ---- */
-window.openLoginModal = function(){
+/* ---- login modal (two stages: phone number, then password if the account has one set) ---- */
+function resetLoginModalStage(){
+  window.__loginStage="phone";
+  window.__loginPending=null;
+  $("loginPhoneWrap").classList.remove("hidden");
+  $("loginPasswordWrap").classList.add("hidden");
+  $("loginIntroText").classList.remove("hidden");
+  $("loginSignupHint").classList.remove("hidden");
+  $("loginPassword").value="";
   $("loginMsg").classList.remove("show");
+  $("loginSubmitBtn").textContent="লগইন করুন";
+}
+window.resetLoginModalStage = resetLoginModalStage;
+window.showForgotPasswordNote = function(){
+  const msg=$("loginMsg");
+  msg.textContent="পাসওয়ার্ড ভুলে গেলে নতুন পাসওয়ার্ড সেট করতে এডমিনের অনুমতি প্রয়োজন — অনুগ্রহ করে আমাদের হটলাইনে যোগাযোগ করুন।";
+  msg.classList.remove("err"); msg.classList.add("show");
+};
+window.openLoginModal = function(){
+  resetLoginModalStage();
   $("loginPhone").value="";
   $("loginModal").classList.remove("hidden");
 };
@@ -2436,13 +2564,41 @@ document.getElementById("loginModal").addEventListener("click", e=>{
   if(e.target.id==="loginModal") closeLoginModal();
 });
 
+async function completeLogin(data){
+  setSession(data);
+  closeLoginModal();
+  const panelTab = window.open("about:blank", "_blank");
+  const target = cpPanelUrl();
+  if(panelTab) panelTab.location.href = target; else window.location.href = target;
+}
+
 window.doLogin = async function(){
-  const raw = $("loginPhone").value.trim();
-  const phone = normalizePhone(raw);
   const msg = $("loginMsg");
   const show=(t,isErr)=>{ msg.textContent=t; msg.classList.add("show"); msg.classList.toggle("err",!!isErr); };
-  if(!/^0\d{9,10}$/.test(phone)) return show("সঠিক মোবাইল নম্বর দিন।", true);
   const btn=$("loginSubmitBtn");
+
+  if((window.__loginStage||"phone")==="password"){
+    const pending = window.__loginPending;
+    if(!pending) return resetLoginModalStage();
+    const pass = $("loginPassword").value;
+    if(!pass) return show("পাসওয়ার্ড দিন।", true);
+    btn.disabled=true; btn.textContent="যাচাই হচ্ছে...";
+    try{
+      const hash = await sha256Hex(pass);
+      if(hash !== pending.passwordHash){ show("পাসওয়ার্ড সঠিক নয়।", true); return; }
+      await completeLogin({customerId:pending.customerId, phone:pending.phone, name:pending.name, photo:pending.photo});
+    }catch(e){
+      console.error(e);
+      show("লগইন করা যায়নি। আবার চেষ্টা করুন।", true);
+    }finally{
+      btn.disabled=false; btn.textContent="লগইন করুন";
+    }
+    return;
+  }
+
+  const raw = $("loginPhone").value.trim();
+  const phone = normalizePhone(raw);
+  if(!/^0\d{9,10}$/.test(phone)) return show("সঠিক মোবাইল নম্বর দিন।", true);
   btn.disabled=true; btn.textContent="খোঁজা হচ্ছে...";
   try{
     const idx = await get(ref(db,"dorkhast/site/customerIndexByPhone/"+phone));
@@ -2453,16 +2609,24 @@ window.doLogin = async function(){
     const customerId = idx.val();
     const p = await get(ref(db,"dorkhast/site/customers/"+customerId));
     const data = p.exists() ? p.val() : {};
-    setSession({customerId, phone, name:data.name||"", photo:data.photo||""});
-    closeLoginModal();
-    const panelTab = window.open("about:blank", "_blank");
-    const target = cpPanelUrl();
-    if(panelTab) panelTab.location.href = target; else window.location.href = target;
+    if(data.passwordHash){
+      window.__loginStage="password";
+      window.__loginPending={customerId, phone, name:data.name||"", photo:data.photo||"", passwordHash:data.passwordHash};
+      $("loginPhoneWrap").classList.add("hidden");
+      $("loginIntroText").classList.add("hidden");
+      $("loginSignupHint").classList.add("hidden");
+      $("loginPasswordWrap").classList.remove("hidden");
+      msg.classList.remove("show");
+      $("loginPassword").focus();
+      return;
+    }
+    await completeLogin({customerId, phone, name:data.name||"", photo:data.photo||""});
   }catch(e){
     console.error(e);
     show("লগইন করা যায়নি। আবার চেষ্টা করুন।", true);
   }finally{
-    btn.disabled=false; btn.textContent="লগইন করুন";
+    btn.disabled=false;
+    if((window.__loginStage||"phone")==="phone") btn.textContent="লগইন করুন";
   }
 };
 
@@ -2483,6 +2647,7 @@ window.openProfileModal = function(){
   $("profileName").value = s.name || "";
   $("profileMsg").classList.remove("show");
   $("profileModal").classList.remove("hidden");
+  refreshPasswordUI();
 };
 window.closeProfileModal = function(){ $("profileModal").classList.add("hidden"); };
 document.getElementById("profileModal").addEventListener("click", e=>{
@@ -2548,6 +2713,96 @@ window.uploadProfilePhoto = async function(){
     msg.textContent="ছবি সংরক্ষণ ব্যর্থ, আবার চেষ্টা করুন।"; msg.classList.add("show","err");
   }finally{
     input.value="";
+  }
+};
+
+/* ---- customer login password: set / change / delete, from the profile modal ---- */
+async function refreshPasswordUI(){
+  const s = getSession();
+  if(!s) return;
+  window.__pwHash = null;
+  $("pwStatusNote").textContent = "লোড হচ্ছে...";
+  $("pwCurrent").value=""; $("pwNew").value=""; $("pwConfirm").value="";
+  $("pwMsg").classList.remove("show");
+  try{
+    const p = await get(ref(db,"dorkhast/site/customers/"+s.customerId));
+    const data = p.exists() ? p.val() : {};
+    const hasPassword = !!data.passwordHash;
+    window.__pwHash = data.passwordHash || null;
+    if(hasPassword){
+      $("pwStatusNote").textContent = "পাসওয়ার্ড সেট করা আছে। লগইনের সময় এটি চাওয়া হবে।";
+      $("pwCurrentWrap").style.display = "";
+      $("pwNewLabel").textContent = "নতুন পাসওয়ার্ড";
+      $("pwSaveBtn").textContent = "পাসওয়ার্ড পরিবর্তন করুন";
+      $("pwDeleteBtn").style.display = "";
+    }else{
+      $("pwStatusNote").textContent = "এখনো কোনো পাসওয়ার্ড সেট করা হয়নি। পাসওয়ার্ড ছাড়াই শুধু মোবাইল নম্বর দিয়ে লগইন করা যাচ্ছে।";
+      $("pwCurrentWrap").style.display = "none";
+      $("pwNewLabel").textContent = "নতুন পাসওয়ার্ড সেট করুন";
+      $("pwSaveBtn").textContent = "পাসওয়ার্ড সেট করুন";
+      $("pwDeleteBtn").style.display = "none";
+    }
+  }catch(e){
+    console.error(e);
+    $("pwStatusNote").textContent = "পাসওয়ার্ডের তথ্য লোড করা যায়নি।";
+  }
+}
+
+window.savePassword = async function(){
+  const s = getSession();
+  if(!s) return;
+  const msg = $("pwMsg");
+  const show=(t,isErr)=>{ msg.textContent=t; msg.classList.add("show"); msg.classList.toggle("err",!!isErr); };
+  const hasPassword = !!window.__pwHash;
+  const current = $("pwCurrent").value;
+  const next = $("pwNew").value;
+  const confirmVal = $("pwConfirm").value;
+  if(hasPassword && !current) return show("বর্তমান পাসওয়ার্ড দিন।", true);
+  if(next.length < 4) return show("পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে।", true);
+  if(next !== confirmVal) return show("দুটি পাসওয়ার্ড মিলছে না।", true);
+  const btn=$("pwSaveBtn");
+  btn.disabled=true;
+  try{
+    if(hasPassword){
+      const currentHash = await sha256Hex(current);
+      if(currentHash !== window.__pwHash) return show("বর্তমান পাসওয়ার্ড সঠিক নয়।", true);
+    }
+    const newHash = await sha256Hex(next);
+    await update(ref(db,"dorkhast/site/customers/"+s.customerId), {passwordHash:newHash});
+    show(hasPassword ? "✓ পাসওয়ার্ড পরিবর্তন হয়েছে।" : "✓ পাসওয়ার্ড সেট হয়েছে।", false);
+    await refreshPasswordUI();
+    $("pwMsg").classList.add("show");
+  }catch(e){
+    console.error(e);
+    show("সংরক্ষণ ব্যর্থ, আবার চেষ্টা করুন।", true);
+  }finally{
+    btn.disabled=false;
+  }
+};
+
+window.deletePassword = async function(){
+  const s = getSession();
+  if(!s) return;
+  const msg = $("pwMsg");
+  const show=(t,isErr)=>{ msg.textContent=t; msg.classList.add("show"); msg.classList.toggle("err",!!isErr); };
+  const current = $("pwCurrent").value;
+  if(!current) return show("পাসওয়ার্ড মুছতে বর্তমান পাসওয়ার্ড দিন।", true);
+  try{
+    const currentHash = await sha256Hex(current);
+    if(currentHash !== window.__pwHash) return show("বর্তমান পাসওয়ার্ড সঠিক নয়।", true);
+  }catch(e){
+    console.error(e);
+    return show("যাচাই করা যায়নি, আবার চেষ্টা করুন।", true);
+  }
+  if(!confirm("পাসওয়ার্ড মুছে ফেলবেন? এরপর শুধু মোবাইল নম্বর দিয়েই লগইন করা যাবে।")) return;
+  try{
+    await update(ref(db,"dorkhast/site/customers/"+s.customerId), {passwordHash:null});
+    show("✓ পাসওয়ার্ড মুছে ফেলা হয়েছে।", false);
+    await refreshPasswordUI();
+    $("pwMsg").classList.add("show");
+  }catch(e){
+    console.error(e);
+    show("মুছতে সমস্যা হয়েছে, আবার চেষ্টা করুন।", true);
   }
 };
 
