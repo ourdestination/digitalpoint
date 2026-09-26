@@ -1192,6 +1192,11 @@
       <label for="details">বিস্তারিত লিখুন</label>
       <textarea id="details" placeholder="কোন চাকরি/প্রতিষ্ঠানের জন্য, কবে জমা দিতে হবে ইত্যাদি লিখুন"></textarea>
     </div>
+    <div class="field">
+      <label for="orderFile">ফাইল সংযুক্ত করুন (ঐচ্ছিক, সর্বোচ্চ ১MB)</label>
+      <input id="orderFile" type="file">
+      <div id="orderFileMsg" style="font-size:12.5px;margin-top:5px;color:var(--ink-soft);"></div>
+    </div>
     <div class="order-actions">
       <button id="submitOrderBtn" class="btn btn-primary" onclick="submitOrder()">অর্ডার জমা দিন</button>
       <a id="waBtn" class="btn btn-ghost" href="#" target="_blank" rel="noopener">WhatsApp-এ পাঠান</a>
@@ -1539,6 +1544,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const MAX_ORDER_FILE_SIZE = 1*1024*1024; // 1MB
 
 /* ---- defaults (used until admin sets real content in the management panel) ---- */
 const DEFAULT_SERVICES = [
@@ -2182,6 +2188,35 @@ $("promoCode").addEventListener("input", ()=>{
 $("promoCode").addEventListener("keydown", e=>{
   if(e.key==="Enter"){ e.preventDefault(); checkPromoCode(); }
 });
+$("orderFile").addEventListener("change", ()=>{
+  const f=$("orderFile").files[0];
+  const msgEl=$("orderFileMsg");
+  if(!f){ msgEl.textContent=""; msgEl.style.color="var(--ink-soft)"; return; }
+  if(f.size>MAX_ORDER_FILE_SIZE){
+    msgEl.textContent="ফাইলের আকার ১MB এর বেশি — অনুগ্রহ করে ছোট ফাইল দিন।";
+    msgEl.style.color="var(--stamp-dark)";
+    $("orderFile").value="";
+  }else{
+    msgEl.textContent="✓ "+f.name+" ("+humanFileSize(f.size)+")";
+    msgEl.style.color="var(--green)";
+  }
+});
+
+function readFileAsDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=()=>reject(new Error("FILE_READ_FAILED"));
+    reader.readAsDataURL(file);
+  });
+}
+async function uploadOrderFile(orderId){
+  const f=$("orderFile").files[0];
+  if(!f) return null;
+  if(f.size>MAX_ORDER_FILE_SIZE) throw new Error("FILE_TOO_LARGE");
+  const url=await readFileAsDataURL(f);
+  return {name:f.name, url, size:f.size};
+}
 
 window.submitOrder = async function(){
   const name=$("name").value.trim();
@@ -2193,6 +2228,8 @@ window.submitOrder = async function(){
 
   if(!name) return showMsg("অনুগ্রহ করে আপনার নাম লিখুন।", true);
   if(!/^0\d{9,10}$/.test(phone)) return showMsg("সঠিক মোবাইল নম্বর দিন (যেমন: 01712345678)।", true);
+  const orderFileEl=$("orderFile").files[0];
+  if(orderFileEl && orderFileEl.size>MAX_ORDER_FILE_SIZE) return showMsg("ফাইলের আকার ১MB এর বেশি — অনুগ্রহ করে ছোট ফাইল দিন।", true);
 
   const btn=$("submitOrderBtn");
   btn.disabled=true; btn.textContent="জমা হচ্ছে...";
@@ -2201,10 +2238,12 @@ window.submitOrder = async function(){
     const orderId = push(ref(db,"dorkhast/orders")).key;
     const now = Date.now();
     const promoCodeVal = ($("promoCode").value.trim().toUpperCase()===__appliedPromo && __appliedPromo) ? __appliedPromo : null;
+    const customerFile = await uploadOrderFile(orderId);
     const orderData = {
       orderId, customerId, name, phone, service, details,
       status:"pending",
       ...(promoCodeVal?{promoCode:promoCodeVal}:{}),
+      ...(customerFile?{customerFile}:{}),
       trackingHistory:{
         [push(ref(db,"dorkhast/orders/"+orderId+"/trackingHistory")).key]:{status:"pending", note:"অর্ডার গ্রহণ করা হয়েছে।", at:now}
       },
@@ -2227,6 +2266,8 @@ window.submitOrder = async function(){
     ['customerId','name','phone','details'].forEach(id=>$(id).value="");
     $("service").selectedIndex = 0;
     $("customerIdMsg").textContent="";
+    $("orderFile").value="";
+    $("orderFileMsg").textContent="";
     unlockIdentityFields();
     resetPromoField();
     buildWA();
@@ -2236,7 +2277,8 @@ window.submitOrder = async function(){
     showCongratsModal();
   }catch(e){
     console.error(e);
-    showMsg("দুঃখিত, অর্ডার জমা দেওয়া যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।", true);
+    if(e.message==="FILE_TOO_LARGE") showMsg("ফাইলের আকার ১MB এর বেশি — অনুগ্রহ করে ছোট ফাইল দিন।", true);
+    else showMsg("দুঃখিত, অর্ডার জমা দেওয়া যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।", true);
   }finally{
     btn.disabled=false; btn.textContent="অর্ডার জমা দিন";
   }
@@ -2421,6 +2463,7 @@ function humanFileSize(bytes){
   return (bytes/1024/1024).toFixed(2)+" MB";
 }
 function deliveryFilesHTML(o){
+  if(!(o.paymentInfo && o.paymentInfo.verified)) return "";
   if(!o.deliveryFiles) return "";
   const entries = Object.entries(o.deliveryFiles);
   if(!entries.length) return "";
@@ -3001,7 +3044,7 @@ window.closeCustomerPanel=function(){ window.location.href=window.location.href.
 window.logoutFromCustomerPanel=function(){ clearSession(); window.location.href=window.location.href.split('?')[0].split('#')[0]; };
 function cpOrderHTML(o){
   const status=o.status||'pending'; const hist=Object.values(o.trackingHistory||{}).sort((a,b)=>(a.at||0)-(b.at||0));
-  return `<div class="cp-order"><div class="cp-order-top"><div><h4>${esc(o.service||'অর্ডার')}</h4><div class="cp-order-meta">অর্ডার: DKH-${esc(String(o.orderId||'').slice(-6).toUpperCase())} · ${esc(fmt(o.createdAt))}</div></div><span class="cp-badge ${esc(status)}">${esc(STATUS_LABEL[status]||status)}</span></div><div class="cp-order-details">${esc(o.details||'')}</div><div class="cp-timeline">${hist.length?hist.map(h=>`<div class="cp-timeline-item"><span class="cp-dot"></span><div><b>${esc(STATUS_LABEL[h.status]||h.status||'আপডেট')}</b> — ${esc(h.note||'')}<br><small>${esc(fmt(h.at))}</small></div></div>`).join(''):'<span class="cp-muted">কোনো ট্র্যাকিং আপডেট নেই।</span>'}</div></div>`;
+  return `<div class="cp-order"><div class="cp-order-top"><div><h4>${esc(o.service||'অর্ডার')}</h4><div class="cp-order-meta">অর্ডার: DKH-${esc(String(o.orderId||'').slice(-6).toUpperCase())} · ${esc(fmt(o.createdAt))}</div></div><span class="cp-badge ${esc(status)}">${esc(STATUS_LABEL[status]||status)}</span></div><div class="cp-order-details">${esc(o.details||'')}</div>${deliveryFilesHTML(o)}<div class="cp-timeline">${hist.length?hist.map(h=>`<div class="cp-timeline-item"><span class="cp-dot"></span><div><b>${esc(STATUS_LABEL[h.status]||h.status||'আপডেট')}</b> — ${esc(h.note||'')}<br><small>${esc(fmt(h.at))}</small></div></div>`).join(''):'<span class="cp-muted">কোনো ট্র্যাকিং আপডেট নেই।</span>'}</div></div>`;
 }
 function cpRenderOrders(){
   const box=$('cpOrders'), track=$('cpTrackResults');
