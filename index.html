@@ -1181,6 +1181,14 @@
       </select>
     </div>
     <div class="field">
+      <label for="promoCode">প্রোমো কোড (যদি থাকে)</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input id="promoCode" type="text" placeholder="যেমন: SUMMER10" style="flex:1;min-width:180px;text-transform:uppercase;">
+        <button type="button" class="btn btn-ghost" onclick="checkPromoCode()">চেক করুন</button>
+      </div>
+      <div id="promoCodeMsg" style="font-size:13px;margin-top:5px;"></div>
+    </div>
+    <div class="field">
       <label for="details">বিস্তারিত লিখুন</label>
       <textarea id="details" placeholder="কোন চাকরি/প্রতিষ্ঠানের জন্য, কবে জমা দিতে হবে ইত্যাদি লিখুন"></textarea>
     </div>
@@ -2069,7 +2077,7 @@ window.lookupCustomerId = async function(){
   const msg = $("customerIdMsg");
   const id = input.value.trim().toUpperCase();
   input.value = id;
-  if(!id) return msg.textContent = "Customer ID লিখুন।";
+  if(!id){ unlockIdentityFields(); return msg.textContent = "Customer ID লিখুন।"; }
   msg.style.color = "var(--ink-soft)";
   msg.textContent = "তথ্য খোঁজা হচ্ছে...";
   try{
@@ -2077,20 +2085,50 @@ window.lookupCustomerId = async function(){
     if(!snap.exists()){
       msg.style.color = "var(--stamp)";
       msg.textContent = "এই Customer ID পাওয়া যায়নি।";
+      unlockIdentityFields();
       return;
     }
     const c = snap.val();
     $("name").value = c.name || "";
     $("phone").value = c.phone || "";
     msg.style.color = "var(--green)";
-    msg.textContent = "✓ Customer তথ্য অটো-ফিল হয়েছে।";
+    msg.textContent = "✓ Customer তথ্য অটো-ফিল হয়েছে। (পরিবর্তন করতে চাইলে আইডি মুছে দিন)";
+    lockIdentityFields();
     buildWA();
   }catch(e){
     console.error(e);
     msg.style.color = "var(--stamp)";
     msg.textContent = "তথ্য আনা যায়নি। আবার চেষ্টা করুন।";
+    unlockIdentityFields();
   }
 };
+
+/* ---- once a Customer ID successfully auto-fills name & mobile, lock those two
+   fields so the identity can't be accidentally changed while an ID is applied;
+   editing/clearing the ID field unlocks them again. And the reverse: if someone
+   fills the form by hand (name/phone) while an ID is still sitting in the box,
+   that leftover ID is cleared so it doesn't get attached to different info. ---- */
+function lockIdentityFields(){
+  $("name").readOnly = true;
+  $("phone").readOnly = true;
+}
+function unlockIdentityFields(){
+  $("name").readOnly = false;
+  $("phone").readOnly = false;
+}
+$("customerId").addEventListener("input", ()=>{
+  unlockIdentityFields();
+  $("customerIdMsg").textContent = "";
+});
+['name','phone'].forEach(id=>{
+  $(id).addEventListener("input", ()=>{
+    if($("customerId").value){
+      $("customerId").value = "";
+      $("customerIdMsg").textContent = "";
+      unlockIdentityFields();
+    }
+  });
+});
 
 $("customerId").addEventListener("keydown", e=>{
   if(e.key==="Enter"){ e.preventDefault(); lookupCustomerId(); }
@@ -2100,6 +2138,50 @@ async function recordCustomerForOrder(serviceName, name, phone, customerId){
   /* Kept as a compatibility wrapper for the old customer-record system. */
   return ensureCustomerProfile(serviceName, name, phone, customerId);
 }
+
+/* ---- promo code: purely informational — shows what discount/commission a code
+   carries, defined by the admin under dorkhast/site/promoCodes/{CODE}. It does
+   not compute or apply any price, since the order form has no cart total. ---- */
+let __appliedPromo = null;
+window.checkPromoCode = async function(){
+  const input = $("promoCode");
+  const msg = $("promoCodeMsg");
+  const code = input.value.trim().toUpperCase();
+  input.value = code;
+  __appliedPromo = null;
+  if(!code) return msg.textContent = "";
+  msg.style.color = "var(--ink-soft)";
+  msg.textContent = "যাচাই হচ্ছে...";
+  try{
+    const snap = await get(ref(db,"dorkhast/site/promoCodes/"+code));
+    if(!snap.exists() || snap.val().active===false){
+      msg.style.color = "var(--stamp)";
+      msg.textContent = "✗ এই প্রোমো কোডটি সঠিক নয়।";
+      return;
+    }
+    const p = snap.val();
+    const discountText = p.discountType==="percent" ? (Number(p.discountValue)+"% ছাড়") : ("৳"+Number(p.discountValue)+" ছাড়");
+    msg.style.color = "var(--green)";
+    msg.textContent = "✓ প্রোমো কোড প্রযোজ্য — "+discountText;
+    __appliedPromo = code;
+  }catch(e){
+    console.error(e);
+    msg.style.color = "var(--stamp)";
+    msg.textContent = "কোড যাচাই করা যায়নি। আবার চেষ্টা করুন।";
+  }
+};
+function resetPromoField(){
+  __appliedPromo = null;
+  $("promoCode").value = "";
+  $("promoCodeMsg").textContent = "";
+}
+$("promoCode").addEventListener("input", ()=>{
+  __appliedPromo = null;
+  $("promoCodeMsg").textContent = "";
+});
+$("promoCode").addEventListener("keydown", e=>{
+  if(e.key==="Enter"){ e.preventDefault(); checkPromoCode(); }
+});
 
 window.submitOrder = async function(){
   const name=$("name").value.trim();
@@ -2118,9 +2200,11 @@ window.submitOrder = async function(){
     const customerId = await ensureCustomerProfile(service, name, phone, suppliedCustomerId);
     const orderId = push(ref(db,"dorkhast/orders")).key;
     const now = Date.now();
+    const promoCodeVal = ($("promoCode").value.trim().toUpperCase()===__appliedPromo && __appliedPromo) ? __appliedPromo : null;
     const orderData = {
       orderId, customerId, name, phone, service, details,
       status:"pending",
+      ...(promoCodeVal?{promoCode:promoCodeVal}:{}),
       trackingHistory:{
         [push(ref(db,"dorkhast/orders/"+orderId+"/trackingHistory")).key]:{status:"pending", note:"অর্ডার গ্রহণ করা হয়েছে।", at:now}
       },
@@ -2141,11 +2225,14 @@ window.submitOrder = async function(){
     window.__lastPhone = phone;
     window.__lastOrder = {orderId, customerId, name, phone, service, details, createdAt:now};
     ['customerId','name','phone','details'].forEach(id=>$(id).value="");
+    $("service").selectedIndex = 0;
     $("customerIdMsg").textContent="";
-    /* the very first order creates the account — log the customer in right away so
-       next time they only need their phone number, per "next time just phone login" */
-    const prevSession = getSession();
-    setSession({customerId, phone, name, photo:(prevSession&&prevSession.phone===phone)?prevSession.photo:""});
+    unlockIdentityFields();
+    resetPromoField();
+    buildWA();
+    /* account is created (or reused) above via ensureCustomerProfile, but the
+       customer is NOT logged in automatically — they must log in manually
+       (phone, then password if set) next time via the login button. */
     showCongratsModal();
   }catch(e){
     console.error(e);
