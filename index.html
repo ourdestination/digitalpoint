@@ -1641,6 +1641,10 @@ const STATUS_LABEL = {
 const PAYMENT_LABEL = {bkash:"বিকাশ", rocket:"রকেট", nagad:"নগদ", banglaqr:"বাংলা কিউআর (QR)"};
 
 const $=x=>document.getElementById(x);
+// অর্ডার কার্ড একাধিক ট্যাব কন্টেইনারে (ওভারভিউ + ট্র্যাক) রেন্ডার হয়, তাই id ডুপ্লিকেট হতে পারে —
+// getElementById শুধু প্রথমটা পায় বলেই "পেমেন্ট করুন" বাটনে ক্লিক করলে অনেক সময় ভুল (লুকানো) ফর্ম টগল হতো।
+const $$=id=>Array.from(document.querySelectorAll('[id="'+id+'"]'));
+const $visible=id=>{ const els=$$(id); return els.find(el=>el.offsetParent!==null)||els[0]||null; };
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 // বাংলা সংখ্যা (০-৯) গুলো আলাদা, স্পষ্ট ফন্টে (Noto Sans Bengali) দেখানোর জন্য span দিয়ে wrap করে
 const bnDigits=s=>String(s).replace(/[০-৯]+/g,m=>`<span class="bn-digit">${m}</span>`);
@@ -1648,6 +1652,7 @@ const bnDigits=s=>String(s).replace(/[০-৯]+/g,m=>`<span class="bn-digit">${m
 // শেষ ২ ডিজিট ও Transaction ID অবশ্যই ইংলিশ সংখ্যায় সেভ হতে হবে, কারণ auto-verify এই ডেটা
 // SMS-forwarder থেকে আসা Firebase ডেটার (ইংলিশ সংখ্যা) সাথে হুবহু মিলিয়ে দেখে।
 const toEnDigits=s=>String(s).replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d));
+window.toEnDigits=toEnDigits;
 const fmt=x=>x?bnDigits(new Date(x).toLocaleString("bn-BD",{dateStyle:"medium",timeStyle:"short"})):"";
 
 /* ---- phone normalization: this is the customer's unique ID ---- */
@@ -2567,25 +2572,23 @@ function paymentSectionHTML(o){
     </div>
     <div class="pay-form" id="payform-${esc(o.orderId)}" style="display:none;">
       <div class="pay-numbers">
-        <div>বিকাশ: <b>${esc(NUM.bkash||"—")}</b></div>
-        <div>রকেট: <b>${esc(NUM.rocket||"—")}</b></div>
-        <div>নগদ: <b>${esc(NUM.nagad||"—")}</b></div>
+        <div>bKash: <b>${esc(NUM.bkash||"—")}</b></div>
       </div>
       ${QR?`<div class="pay-qr"><p class="pay-qr-label">বাংলা কিউআর (QR) স্ক্যান করে পেমেন্ট করুন</p><img src="${QR}" alt="বাংলা কিউআর পেমেন্ট কোড" class="pay-qr-img"></div>`:""}
       <div class="field">
         <label>পেমেন্ট মাধ্যম</label>
         <select id="payMethod-${esc(o.orderId)}">
-          <option value="bkash">বিকাশ</option>
-          <option value="rocket">রকেট</option>
+          <option value="bkash">bKash</option>
+          <option value="banglaqr">Bangla QR</option>
         </select>
       </div>
       <div class="field">
         <label>যে নম্বর থেকে পেমেন্ট করেছেন তার শেষ ২ ডিজিট</label>
-        <input id="payLast2-${esc(o.orderId)}" maxlength="2" inputmode="numeric" placeholder="৪৫">
+        <input id="payLast2-${esc(o.orderId)}" maxlength="2" inputmode="numeric" placeholder="45" oninput="this.value=toEnDigits(this.value)">
       </div>
       <div class="field">
-        <label>টাকার পরিমাণ <small style="font-weight:400;color:#667085">(বিল অনুযায়ী নির্ধারিত, পরিবর্তনযোগ্য নয়)</small></label>
-        <input id="payAmount-${esc(o.orderId)}" type="number" value="${esc(m.total)}" readonly disabled style="background:#F3F4F6;cursor:not-allowed;">
+        <label>টাকার পরিমাণ (Amount) <small style="font-weight:400;color:#667085">(বিল অনুযায়ী নির্ধারিত, পরিবর্তনযোগ্য নয়)</small></label>
+        <input id="payAmount-${esc(o.orderId)}" type="text" value="${esc(m.total)}" readonly disabled style="background:#F3F4F6;cursor:not-allowed;">
       </div>
       <div class="field">
         <label>Transaction ID <span style="color:#d00">*</span> (SMS-এ থাকা TrxID/TxnID)</label>
@@ -2643,17 +2646,19 @@ function orderCard(o){
 }
 
 window.togglePay = function(orderId){
-  const el=$("payform-"+orderId);
-  if(!el) return;
-  el.style.display = (el.style.display==="none"||!el.style.display) ? "block" : "none";
+  const els=$$("payform-"+orderId);
+  if(!els.length) return;
+  const show = els[0].style.display==="none" || !els[0].style.display;
+  els.forEach(el=>{ el.style.display = show ? "block" : "none"; });
 };
 
 window.submitPayment = async function(orderId, phone){
-  const method = $("payMethod-"+orderId).value;
-  const last2 = toEnDigits($("payLast2-"+orderId).value.trim());
-  const transactionId = toEnDigits($("payTxn-"+orderId).value.trim());
-  const msgEl = $("payMsg-"+orderId);
-  const showPayMsg=(t,isErr)=>{ if(!msgEl) return; msgEl.textContent=t; msgEl.classList.add("show"); msgEl.classList.toggle("err",!!isErr); };
+  const methodEl=$visible("payMethod-"+orderId), last2El=$visible("payLast2-"+orderId), txnEl=$visible("payTxn-"+orderId);
+  const method = methodEl.value;
+  const last2 = toEnDigits(last2El.value.trim());
+  const transactionId = toEnDigits(txnEl.value.trim());
+  const msgEls = $$("payMsg-"+orderId);
+  const showPayMsg=(t,isErr)=>{ msgEls.forEach(msgEl=>{ msgEl.textContent=t; msgEl.classList.add("show"); msgEl.classList.toggle("err",!!isErr); }); };
   const ord = window.__trackedOrders && window.__trackedOrders[orderId] ? window.__trackedOrders[orderId] : null;
   if(!ord || !ord.memo) return showPayMsg("মেমো তৈরি না হওয়া পর্যন্ত পেমেন্ট করা যাবে না।", true);
   const amount = ord.memo.total; // amount is always taken from the admin-authored memo total — never from the (uneditable) field
@@ -3211,15 +3216,15 @@ window.closeCustomerPanel=function(){ window.location.href=window.location.href.
 window.logoutFromCustomerPanel=function(){ clearSession(); window.location.href=window.location.href.split('?')[0].split('#')[0]; };
 function cpOrderHTML(o){
   const status=o.status||'pending'; const hist=Object.values(o.trackingHistory||{}).sort((a,b)=>(a.at||0)-(b.at||0));
-  return `<div class="cp-order"><div class="cp-order-top"><div><h4>${esc(o.service||'অর্ডার')}</h4><div class="cp-order-meta">অর্ডার: DKH-${esc(String(o.orderId||'').slice(-6).toUpperCase())} · ${esc(fmt(o.createdAt))}</div></div><span class="cp-badge ${esc(status)}">${esc(STATUS_LABEL[status]||status)}</span></div><div class="cp-order-details">${esc(o.details||'')}</div><div class="payment-area">${paymentSectionHTML(o)}</div>${deliveryFilesHTML(o)}<div class="cp-timeline">${hist.length?hist.map(h=>`<div class="cp-timeline-item"><span class="cp-dot"></span><div><b>${esc(STATUS_LABEL[h.status]||h.status||'আপডেট')}</b> — ${esc(h.note||'')}<br><small>${esc(fmt(h.at))}</small></div></div>`).join(''):'<span class="cp-muted">কোনো ট্র্যাকিং আপডেট নেই।</span>'}</div></div>`;
+  return `<div class="cp-order"><div class="cp-order-top"><div><h4>${esc(o.service||'অর্ডার')}</h4><div class="cp-order-meta">অর্ডার: DKH-${esc(String(o.orderId||'').slice(-6).toUpperCase())} · ${fmt(o.createdAt)}</div></div><span class="cp-badge ${esc(status)}">${esc(STATUS_LABEL[status]||status)}</span></div><div class="cp-order-details">${esc(o.details||'')}</div><div class="payment-area">${paymentSectionHTML(o)}</div>${deliveryFilesHTML(o)}<div class="cp-timeline">${hist.length?hist.map(h=>`<div class="cp-timeline-item"><span class="cp-dot"></span><div><b>${esc(STATUS_LABEL[h.status]||h.status||'আপডেট')}</b> — ${esc(h.note||'')}<br><small>${fmt(h.at)}</small></div></div>`).join(''):'<span class="cp-muted">কোনো ট্র্যাকিং আপডেট নেই।</span>'}</div></div>`;
 }
 function cpRenderOrders(){
   const box=$('cpOrders'), track=$('cpTrackResults');
   if(!__cpOrders.length){ box.innerHTML='<div class="cp-empty">আপনার কোনো অর্ডার পাওয়া যায়নি।</div>'; track.innerHTML='<div class="cp-empty">আপনার কোনো অর্ডার পাওয়া যায়নি।</div>'; return; }
   const html=__cpOrders.map(cpOrderHTML).join(''); box.innerHTML=html; track.innerHTML=html;
-  $('cpStatOrders').textContent=__cpOrders.length; $('cpStatLast').textContent=fmt(__cpOrders[0]?.createdAt)||'-';
+  $('cpStatOrders').textContent=__cpOrders.length; $('cpStatLast').innerHTML=fmt(__cpOrders[0]?.createdAt)||'-';
   const notes=[]; __cpOrders.forEach(o=>Object.values(o.trackingHistory||{}).forEach(h=>notes.push({text:`${o.service||'অর্ডার'}: ${STATUS_LABEL[h.status]||h.status||'আপডেট'}${h.note?' — '+h.note:''}`,at:h.at||0})));
-  notes.sort((a,b)=>b.at-a.at); $('cpNotifications').innerHTML=notes.length?notes.slice(0,30).map(n=>`<div class="cp-note">${esc(n.text)}<small>${esc(fmt(n.at))}</small></div>`).join(''):'<div class="cp-empty">এখনো কোনো নোটিফিকেশন নেই।</div>';
+  notes.sort((a,b)=>b.at-a.at); $('cpNotifications').innerHTML=notes.length?notes.slice(0,30).map(n=>`<div class="cp-note">${esc(n.text)}<small>${fmt(n.at)}</small></div>`).join(''):'<div class="cp-empty">এখনো কোনো নোটিফিকেশন নেই।</div>';
 }
 async function loadCustomerPanelData(){
   const s=getSession(); if(!s||!s.phone) return;
