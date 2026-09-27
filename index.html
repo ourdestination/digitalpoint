@@ -2556,20 +2556,31 @@ function paymentSectionHTML(o){
   if(p && p.verified){
     return `<div class="payment-btn-row"><div class="payment-box payment-verified">✓ পেমেন্ট ভেরিফাইড${p.amount?(" — ৳"+esc(p.amount)):""}</div>${billBtn}</div>`;
   }
-  if(p && !p.verified){
-    return `<div class="payment-btn-row"><div class="payment-box payment-pending">পেমেন্ট তথ্য জমা হয়েছে, যাচাইয়ের অপেক্ষায়...</div>${billBtn}</div>`;
-  }
   const m = o.memo;
   if(!m){
     return `<div class="payment-btn-row"><div class="payment-box payment-pending">মেমো তৈরি না হওয়া পর্যন্ত পেমেন্ট করা যাবে না। একটু পর আবার চেষ্টা করুন।</div>${billBtn}</div>`;
   }
   const NUM = window.__paymentNumbers||{};
   const QR = window.__paymentQR||"";
+  // পেমেন্ট তথ্য জমা হয়ে থাকলেও এখনো ভেরিফাই না হওয়া পর্যন্ত (verificationPending) গ্রাহক
+  // ভুল সংশোধন করে আবার জমা দিতে পারবেন — শুধু ভেরিফাইড হয়ে গেলে আর এডিট করা যাবে না
+  const pending = !!(p && !p.verified);
+  const toggleBtn = pending
+    ? `<button class="btn btn-soft btn-sm" type="button" onclick="togglePay('${esc(o.orderId)}')">তথ্য সংশোধন করুন</button>`
+    : `<button class="btn btn-primary btn-sm" type="button" onclick="togglePay('${esc(o.orderId)}')">পেমেন্ট করুন</button>`;
+  const pendingNotice = pending
+    ? `<div class="payment-box payment-pending">
+        পেমেন্ট তথ্য জমা হয়েছে, যাচাইয়ের অপেক্ষায়...<br>
+        <span style="font-size:12.5px;">আপনার দেওয়া তথ্য — মাধ্যম: <b>${esc(PAYMENT_LABEL[p.method]||p.method||"—")}</b> · পরিমাণ: <b>৳${esc(p.amount||0)}</b> · শেষ ২ ডিজিট: <b>${esc(p.lastTwo||"—")}</b> · Transaction ID: <b>${esc(p.transactionId||"—")}</b></span><br>
+        ভুল হয়ে থাকলে "তথ্য সংশোধন করুন" বাটনে চেপে ঠিক করে দিন।
+      </div>`
+    : "";
   return `
     <div class="payment-btn-row">
-      <button class="btn btn-primary btn-sm" type="button" onclick="togglePay('${esc(o.orderId)}')">পেমেন্ট করুন</button>
+      ${toggleBtn}
       ${billBtn}
     </div>
+    ${pendingNotice}
     <div class="pay-form" id="payform-${esc(o.orderId)}" style="display:none;">
       <div class="pay-numbers">
         <div>bKash: <b>${esc(NUM.bkash||"—")}</b></div>
@@ -2578,13 +2589,13 @@ function paymentSectionHTML(o){
       <div class="field">
         <label>পেমেন্ট মাধ্যম</label>
         <select id="payMethod-${esc(o.orderId)}">
-          <option value="bkash">bKash</option>
-          <option value="banglaqr">Bangla QR</option>
+          <option value="bkash" ${p&&p.method==='bkash'?'selected':''}>bKash</option>
+          <option value="banglaqr" ${p&&p.method==='banglaqr'?'selected':''}>Bangla QR</option>
         </select>
       </div>
       <div class="field">
         <label>যে নম্বর থেকে পেমেন্ট করেছেন তার শেষ ২ ডিজিট</label>
-        <input id="payLast2-${esc(o.orderId)}" maxlength="2" inputmode="numeric" placeholder="45" oninput="this.value=toEnDigits(this.value)">
+        <input id="payLast2-${esc(o.orderId)}" maxlength="2" inputmode="numeric" placeholder="45" value="${p?esc(p.lastTwo||""):""}" oninput="this.value=toEnDigits(this.value)">
       </div>
       <div class="field">
         <label>টাকার পরিমাণ (Amount) <small style="font-weight:400;color:#667085">(বিল অনুযায়ী নির্ধারিত, পরিবর্তনযোগ্য নয়)</small></label>
@@ -2592,11 +2603,11 @@ function paymentSectionHTML(o){
       </div>
       <div class="field">
         <label>Transaction ID <span style="color:#d00">*</span> (SMS-এ থাকা TrxID/TxnID)</label>
-        <input id="payTxn-${esc(o.orderId)}" maxlength="40" autocomplete="off" required placeholder="যেমন: 8ABC123XYZ">
+        <input id="payTxn-${esc(o.orderId)}" maxlength="40" autocomplete="off" required placeholder="যেমন: 8ABC123XYZ" value="${p?esc(p.transactionId||""):""}">
         <small style="display:block;margin-top:5px;color:#667085">Transaction ID অবশ্যই SMS-এর সঙ্গে হুবহু মিলতে হবে।</small>
       </div>
       <div class="form-msg" id="payMsg-${esc(o.orderId)}"></div>
-      <button class="btn btn-primary btn-sm" type="button" onclick="submitPayment('${esc(o.orderId)}','${esc(o.phone)}')">পেমেন্ট ভেরিফাই</button>
+      <button class="btn btn-primary btn-sm" type="button" onclick="submitPayment('${esc(o.orderId)}','${esc(o.phone)}')">${pending?"তথ্য আপডেট করুন":"পেমেন্ট ভেরিফাই"}</button>
     </div>`;
 }
 
@@ -2666,7 +2677,8 @@ window.submitPayment = async function(orderId, phone){
   if(!amount || isNaN(amount) || Number(amount)<=0) return showPayMsg("বিলে সঠিক পরিমাণ পাওয়া যায়নি, আমাদের সাথে যোগাযোগ করুন।", true);
   if(!transactionId || transactionId.length < 4) return showPayMsg("SMS-এ থাকা সঠিক Transaction ID দিন।", true);
   const existingPayment = window.__trackedOrders && window.__trackedOrders[orderId] ? window.__trackedOrders[orderId].paymentInfo : null;
-  if(existingPayment && (existingPayment.verified || existingPayment.verificationPending)) return showPayMsg(existingPayment.verified ? "এই অর্ডারের পেমেন্ট ইতিমধ্যে ভেরিফাইড।" : "এই অর্ডারের পেমেন্ট যাচাইয়ের জন্য ইতিমধ্যে পাঠানো হয়েছে।", true);
+  if(existingPayment && existingPayment.verified) return showPayMsg("এই অর্ডারের পেমেন্ট ইতিমধ্যে ভেরিফাইড।", true);
+  const isEdit = !!(existingPayment && existingPayment.verificationPending);
   try{
     const now=Date.now();
     const requestRef=push(ref(db,"dorkhast/paymentVerificationRequests"));
@@ -2677,8 +2689,20 @@ window.submitPayment = async function(orderId, phone){
     updates[`dorkhast/orders/${orderId}/paymentInfo`] = paymentInfo;
     updates[`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfo`] = paymentInfo;
     updates[`dorkhast/paymentVerificationRequests/${requestId}`] = requestData;
+    // এডিট হলে আগের (সংশোধনের আগের) তথ্যটা হিস্টরি হিসেবে রেখে দেওয়া হয়, যাতে admin panel-এ
+    // দেখা যায় গ্রাহক আগে কী জমা দিয়েছিলেন
+    if(isEdit){
+      const histKey = push(ref(db,`dorkhast/orders/${orderId}/paymentInfoHistory`)).key;
+      const historyEntry = { method: existingPayment.method, lastTwo: existingPayment.lastTwo, amount: existingPayment.amount, transactionId: existingPayment.transactionId, submittedAt: existingPayment.submittedAt, replacedAt: now };
+      updates[`dorkhast/orders/${orderId}/paymentInfoHistory/${histKey}`] = historyEntry;
+      updates[`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfoHistory/${histKey}`] = historyEntry;
+    }
+    // আগের (ভুল) সাবমিশনের request-টা superseded হিসেবে মার্ক করে রাখা — admin side-এর কিছু ভাঙে না, শুধু ট্র্যাকিংয়ের জন্য
+    if(isEdit && existingPayment.requestId && existingPayment.requestId!==requestId){
+      updates[`dorkhast/paymentVerificationRequests/${existingPayment.requestId}/status`] = "superseded";
+    }
     await update(ref(db), updates);
-    showPayMsg("পেমেন্ট তথ্য গ্রহণ করা হয়েছে। SMS-এর সঙ্গে মিললে স্বয়ংক্রিয়ভাবে ভেরিফাই হবে।", false);
+    showPayMsg(isEdit ? "পেমেন্ট তথ্য আপডেট করা হয়েছে। SMS-এর সঙ্গে মিললে স্বয়ংক্রিয়ভাবে ভেরিফাই হবে।" : "পেমেন্ট তথ্য গ্রহণ করা হয়েছে। SMS-এর সঙ্গে মিললে স্বয়ংক্রিয়ভাবে ভেরিফাই হবে।", false);
     trackOrders();
   }catch(e){
     console.error(e);
