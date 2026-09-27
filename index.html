@@ -2787,7 +2787,20 @@ function renderAccountUI(){
     loginBtn.classList.remove("hidden");
     chip.classList.add("hidden");
     $("accountDropdown").classList.remove("open");
+    clearCustomerFormData();
   }
+}
+/* লগআউটের পর অর্ডার ফর্ম ও ট্র্যাক ট্যাব থেকে আগের কাস্টমারের তথ্য মুছে ফেলা হয়,
+   যাতে পরবর্তী ব্যবহারকারী ভুলবশত আগের কাস্টমারের ডেটা নিয়ে অর্ডার/ট্র্যাক না করে ফেলেন */
+function clearCustomerFormData(){
+  ['name','phone','customerId','details'].forEach(id=>{ if($(id)) $(id).value=""; });
+  if($("customerIdMsg")) $("customerIdMsg").textContent="";
+  if(typeof unlockIdentityFields==="function") unlockIdentityFields();
+  if($("trackPhone")) $("trackPhone").value="";
+  if($("trackResults")) $("trackResults").innerHTML="";
+  window.__trackedOrders = {};
+  window.__lastPhone = null;
+  window.__lastOrder = null;
 }
 function applySessionToForms(s){
   if($("name") && !$("name").value) $("name").value = s.name || "";
