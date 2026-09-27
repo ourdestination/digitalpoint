@@ -780,6 +780,10 @@
   .cp-form .field{margin-bottom:16px;}
   .cp-form .btn{margin-top:4px;}
   .cp-msg{font-size:14.5px;margin-top:12px;color:var(--green-deep);}
+  .service-required-info{min-height:92px;resize:vertical;background:var(--paper);color:var(--ink-soft);border:1px solid var(--line-strong);line-height:1.65;}
+  .service-required-info:focus{outline:none;border-color:var(--line-strong);box-shadow:none;}
+  .cp-manual-extra{margin-top:2px;}
+  .cp-form .field input[readonly]{background:var(--paper);}
   .cp-msg.err{color:var(--stamp-dark);}
   .cp-note-list{display:flex;flex-direction:column;gap:10px;}
   .cp-note{padding:14px 16px;border-left:3px solid var(--green);background:#fff;border-radius:0 var(--r-sm) var(--r-sm) 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:15px;}
@@ -1205,6 +1209,10 @@
       </select>
     </div>
     <div class="field">
+      <label for="serviceRequiredInfo">প্রয়োজনীয় তথ্য</label>
+      <textarea id="serviceRequiredInfo" class="service-required-info" readonly placeholder="সেবা নির্বাচন করলে প্রয়োজনীয় তথ্য এখানে দেখাবে"></textarea>
+    </div>
+    <div class="field">
       <label for="promoCode">প্রোমো কোড (যদি থাকে)</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <input id="promoCode" type="text" placeholder="যেমন: SUMMER10" style="flex:1;min-width:180px;text-transform:uppercase;">
@@ -1459,7 +1467,49 @@
       <div id="cpSpecialGrid" class="service-grid cp-special-grid"><div class="cp-special-empty">লোড হচ্ছে...</div></div>
     </section>
     <section class="cp-section" id="cp-orders"><h2 class="cp-title">সব অর্ডার হিস্টোরি</h2><div id="cpOrders" class="cp-orders"><div class="cp-empty">অর্ডার লোড হচ্ছে...</div></div></section>
-    <section class="cp-section" id="cp-manual"><h2 class="cp-title">ম্যানুয়াল অর্ডার করুন</h2><div class="cp-card cp-form"><div class="row2"><div class="field"><label>নাম</label><input id="cpOrderName" type="text"></div><div class="field"><label>মোবাইল নম্বর</label><input id="cpOrderPhone" type="tel" readonly></div></div><div class="field"><label>কোন সেবা প্রয়োজন</label><select id="cpOrderService"><option value="">সেবার তালিকা লোড হচ্ছে...</option></select></div><div class="field"><label>বিস্তারিত</label><textarea id="cpOrderDetails" placeholder="আপনার কাজের বিস্তারিত লিখুন"></textarea></div><button id="cpOrderBtn" class="btn btn-primary" type="button" onclick="cpSubmitOrder()">অর্ডার জমা দিন</button><div id="cpOrderMsg" class="cp-msg"></div></div></section>
+    <section class="cp-section" id="cp-manual">
+      <h2 class="cp-title">ম্যানুয়াল অর্ডার করুন</h2>
+      <div class="cp-card cp-form">
+        <div class="field">
+          <label>Customer ID</label>
+          <input id="cpOrderCustomerId" type="text" readonly placeholder="DP001">
+        </div>
+        <div class="row2">
+          <div class="field"><label>নাম</label><input id="cpOrderName" type="text" placeholder="আপনার নাম"></div>
+          <div class="field"><label>মোবাইল নম্বর (Whatsapp)</label><input id="cpOrderPhone" type="tel" readonly></div>
+        </div>
+        <div class="field">
+          <label>কোন সেবা প্রয়োজন</label>
+          <select id="cpOrderService"><option value="">সেবার তালিকা লোড হচ্ছে...</option></select>
+        </div>
+        <div class="field">
+          <label for="cpServiceRequiredInfo">প্রয়োজনীয় তথ্য</label>
+          <textarea id="cpServiceRequiredInfo" class="service-required-info" readonly placeholder="সেবা নির্বাচন করলে প্রয়োজনীয় তথ্য এখানে দেখাবে"></textarea>
+        </div>
+        <div class="field">
+          <label>প্রোমো কোড (যদি থাকে)</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input id="cpOrderPromoCode" type="text" placeholder="যেমন: SUMMER10" style="flex:1;min-width:180px;text-transform:uppercase;">
+            <button type="button" class="btn btn-ghost" onclick="checkCpPromoCode()">চেক করুন</button>
+          </div>
+          <div id="cpOrderPromoMsg" style="font-size:13px;margin-top:5px;"></div>
+        </div>
+        <div class="field">
+          <label>বিস্তারিত লিখুন</label>
+          <textarea id="cpOrderDetails" placeholder="কোন চাকরি/প্রতিষ্ঠানের জন্য, কবে জমা দিতে হবে ইত্যাদি লিখুন"></textarea>
+        </div>
+        <div class="field">
+          <label>ফাইল সংযুক্ত করুন (ঐচ্ছিক, সর্বোচ্চ ১MB)</label>
+          <input id="cpOrderFile" type="file">
+          <div id="cpOrderFileMsg" style="font-size:12.5px;margin-top:5px;color:var(--ink-soft);"></div>
+        </div>
+        <div class="order-actions">
+          <button id="cpOrderBtn" class="btn btn-primary" type="button" onclick="cpSubmitOrder()">অর্ডার জমা দিন</button>
+          <a id="cpWaBtn" class="btn btn-ghost" href="#" target="_blank" rel="noopener">WhatsApp-এ পাঠান</a>
+        </div>
+        <div id="cpOrderMsg" class="cp-msg"></div>
+      </div>
+    </section>
     <section class="cp-section" id="cp-track"><h2 class="cp-title">আমার অর্ডার ট্র্যাকিং</h2><div id="cpTrackResults" class="cp-orders"><div class="cp-empty">ট্র্যাকিং লোড হচ্ছে...</div></div></section>
     <section class="cp-section" id="cp-chat"><h2 class="cp-title">অ্যাডমিনের সাথে চ্যাট</h2><div class="cp-card"><p class="cp-muted">আপনার আগের চ্যাট একই অ্যাকাউন্টের সাথে সংযুক্ত থাকবে।</p><button class="btn btn-primary" type="button" onclick="openChatModal()">লাইভ চ্যাট খুলুন</button></div></section>
     <section class="cp-section" id="cp-notifications"><h2 class="cp-title">নোটিফিকেশন ও আপডেট</h2><div id="cpNotifications" class="cp-note-list"><div class="cp-empty">নোটিফিকেশন লোড হচ্ছে...</div></div></section>
@@ -1670,6 +1720,7 @@ function renderServices(list){
   renderServiceCards();
   renderServiceSelectOptions();
   renderHeroTags();
+  updateAllServiceRequiredInfo();
 }
 function renderServiceSelectOptions(){
   /* main order form + customer-panel "ম্যানুয়াল অর্ডার" tab both use the same live list */
@@ -1682,6 +1733,24 @@ function renderServiceSelectOptions(){
     sel.innerHTML = optionsHTML;
     if([...sel.options].some(o=>o.value===current)) sel.value=current;
   });
+}
+function serviceDescriptionFor(title){
+  const key=String(title||"").trim();
+  if(!key) return "";
+  const normal=__allServices.find(s=>String(s.title||"").trim()===key);
+  if(normal && String(normal.desc||"").trim()) return String(normal.desc).trim();
+  const special=__allSpecialCards.find(s=>String(s.title||"").trim()===key);
+  return special && String(special.desc||"").trim() ? String(special.desc).trim() : "";
+}
+function updateServiceRequiredInfo(selectId, infoId){
+  const sel=$(selectId), info=$(infoId);
+  if(!sel || !info) return;
+  const desc=serviceDescriptionFor(sel.value);
+  info.value=desc || "এই সেবার জন্য আলাদা কোনো প্রয়োজনীয় তথ্য দেওয়া হয়নি।";
+}
+function updateAllServiceRequiredInfo(){
+  updateServiceRequiredInfo("service","serviceRequiredInfo");
+  updateServiceRequiredInfo("cpOrderService","cpServiceRequiredInfo");
 }
 /* services are shown as a colour-accented card grid — 2 columns on mobile/app
    mode, 3 on wider screens — in the admin's chosen order ("sort" position) */
@@ -1732,6 +1801,7 @@ window.orderNow = function(title){
   if(sel){
     const match=[...sel.options].some(o=>o.value===title);
     if(match) sel.value=title;
+    updateServiceRequiredInfo("service","serviceRequiredInfo");
   }
   buildWA();
   document.getElementById("order").scrollIntoView({behavior:"smooth"});
@@ -1767,6 +1837,7 @@ function renderSpecialCards(list){
       </div>
     </div>`;
   }).join("");
+  updateAllServiceRequiredInfo();
 }
 window.cpOrderSpecial = function(title, link){
   if(link){ window.open(link, "_blank", "noopener"); return; }
@@ -1778,6 +1849,8 @@ window.cpOrderSpecial = function(title, link){
   }
   const details = $("cpOrderDetails");
   if(details && !details.value.trim()) details.value = "বিশেষ সেবা: "+title;
+  updateServiceRequiredInfo("cpOrderService","cpServiceRequiredInfo");
+  buildCpWA();
 };
 document.getElementById("cpSpecialGrid").addEventListener("click", e=>{
   const orderBtn = e.target.closest("[data-spc-title]");
@@ -1983,6 +2056,8 @@ function buildWA(){
   $("waBtn").setAttribute("href","https://wa.me/"+waNumber+"?text="+encodeURIComponent(msg));
 }
 ['name','phone','service','details'].forEach(id=>$(id).addEventListener('input', buildWA));
+$("service").addEventListener("change",()=>{updateServiceRequiredInfo("service","serviceRequiredInfo");buildWA();});
+updateServiceRequiredInfo("service","serviceRequiredInfo");
 
 /* ---- order submission -> Firebase ---- */
 function showMsg(text, isErr){
@@ -2397,11 +2472,39 @@ window.updateExistingOrder = async function(){
   }
 };
 
-/* ---- order tracking by phone (the customer's unique ID) ---- */
+/* ---- order tracking by phone (real-time; no refresh/search needed after first lookup) ---- */
+let __trackUnsub = null;
+let __trackedPhone = "";
+function renderTrackedOrders(ordersObj){
+  const box=$("trackResults");
+  if(!ordersObj || !Object.keys(ordersObj).length){
+    box.innerHTML = `<div class="track-empty">এই নম্বরে কোনো অর্ডার পাওয়া যায়নি।</div>`;
+    window.__trackedOrders = {};
+    return;
+  }
+  window.__trackedOrders = ordersObj;
+  const orders = Object.values(ordersObj).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  box.innerHTML = orders.map(orderCard).join("");
+}
+function subscribeTrackOrders(phone){
+  if(__trackUnsub){ __trackUnsub(); __trackUnsub=null; }
+  __trackedPhone=phone;
+  const box=$("trackResults");
+  __trackUnsub = onValue(ref(db,"dorkhast/ordersByPhone/"+phone), snap=>{
+    if(__trackedPhone!==phone) return;
+    if(!snap.exists()){ renderTrackedOrders(null); return; }
+    renderTrackedOrders(snap.val());
+  }, err=>{
+    console.error(err);
+    box.innerHTML = `<div class="track-empty">দুঃখিত, তথ্য আপডেট করা যায়নি।</div>`;
+  });
+}
 window.trackOrders = async function(){
   const phone = normalizePhone($("trackPhone").value.trim());
   const box=$("trackResults");
   if(!/^0\d{9,10}$/.test(phone)){
+    if(__trackUnsub){__trackUnsub();__trackUnsub=null;}
+    __trackedPhone="";
     box.innerHTML = `<div class="track-empty">সঠিক মোবাইল নম্বর দিন।</div>`;
     return;
   }
@@ -2409,13 +2512,12 @@ window.trackOrders = async function(){
   try{
     const snap = await get(ref(db,"dorkhast/ordersByPhone/"+phone));
     if(!snap.exists()){
-      box.innerHTML = `<div class="track-empty">এই নম্বরে কোনো অর্ডার পাওয়া যায়নি।</div>`;
+      if(__trackUnsub){__trackUnsub();__trackUnsub=null;}
+      renderTrackedOrders(null);
       return;
     }
-    const ordersObj = snap.val();
-    window.__trackedOrders = ordersObj;
-    const orders = Object.values(ordersObj).sort((a,b)=>b.createdAt-a.createdAt);
-    box.innerHTML = orders.map(orderCard).join("");
+    renderTrackedOrders(snap.val());
+    subscribeTrackOrders(phone);
   }catch(e){
     console.error(e);
     box.innerHTML = `<div class="track-empty">দুঃখিত, তথ্য আনা যায়নি। আবার চেষ্টা করুন।</div>`;
@@ -2463,17 +2565,20 @@ function paymentSectionHTML(o){
         <select id="payMethod-${esc(o.orderId)}">
           <option value="bkash">বিকাশ</option>
           <option value="rocket">রকেট</option>
-          <option value="nagad">নগদ</option>
-          <option value="banglaqr">বাংলা কিউআর (QR)</option>
         </select>
       </div>
       <div class="field">
-        <label>যে নম্বর থেকে পেমেন্ট করেছেন তার শেষ ৪ ডিজিট</label>
-        <input id="payLast4-${esc(o.orderId)}" maxlength="4" inputmode="numeric" placeholder="১২৩৪">
+        <label>যে নম্বর থেকে পেমেন্ট করেছেন তার শেষ ২ ডিজিট</label>
+        <input id="payLast2-${esc(o.orderId)}" maxlength="2" inputmode="numeric" placeholder="৪৫">
       </div>
       <div class="field">
         <label>টাকার পরিমাণ</label>
         <input id="payAmount-${esc(o.orderId)}" type="number" placeholder="যেমন: ৪০০">
+      </div>
+      <div class="field">
+        <label>Transaction ID <span style="color:#d00">*</span> (SMS-এ থাকা TrxID/TxnID)</label>
+        <input id="payTxn-${esc(o.orderId)}" maxlength="40" autocomplete="off" required placeholder="যেমন: 8ABC123XYZ">
+        <small style="display:block;margin-top:5px;color:#667085">Transaction ID অবশ্যই SMS-এর সঙ্গে হুবহু মিলতে হবে।</small>
       </div>
       <div class="form-msg" id="payMsg-${esc(o.orderId)}"></div>
       <button class="btn btn-primary btn-sm" type="button" onclick="submitPayment('${esc(o.orderId)}','${esc(o.phone)}')">পেমেন্ট ভেরিফাই</button>
@@ -2533,18 +2638,28 @@ window.togglePay = function(orderId){
 
 window.submitPayment = async function(orderId, phone){
   const method = $("payMethod-"+orderId).value;
-  const last4 = $("payLast4-"+orderId).value.trim();
+  const last2 = $("payLast2-"+orderId).value.trim();
   const amount = $("payAmount-"+orderId).value.trim();
+  const transactionId = $("payTxn-"+orderId).value.trim();
   const msgEl = $("payMsg-"+orderId);
   const showPayMsg=(t,isErr)=>{ if(!msgEl) return; msgEl.textContent=t; msgEl.classList.add("show"); msgEl.classList.toggle("err",!!isErr); };
-  if(!/^\d{4}$/.test(last4)) return showPayMsg("সঠিক ৪ ডিজিট দিন।", true);
+  if(!/^\d{2}$/.test(last2)) return showPayMsg("পেমেন্ট করা নম্বরের সঠিক শেষ ২ ডিজিট দিন।", true);
   if(!amount || isNaN(amount) || Number(amount)<=0) return showPayMsg("সঠিক টাকার পরিমাণ দিন।", true);
+  if(!transactionId || transactionId.length < 4) return showPayMsg("SMS-এ থাকা সঠিক Transaction ID দিন।", true);
+  const existingPayment = window.__trackedOrders && window.__trackedOrders[orderId] ? window.__trackedOrders[orderId].paymentInfo : null;
+  if(existingPayment && (existingPayment.verified || existingPayment.verificationPending)) return showPayMsg(existingPayment.verified ? "এই অর্ডারের পেমেন্ট ইতিমধ্যে ভেরিফাইড।" : "এই অর্ডারের পেমেন্ট যাচাইয়ের জন্য ইতিমধ্যে পাঠানো হয়েছে।", true);
   try{
-    const paymentInfo = { method, lastFour:last4, amount:Number(amount), submittedAt:Date.now(), verified:false };
+    const now=Date.now();
+    const requestRef=push(ref(db,"dorkhast/paymentVerificationRequests"));
+    const requestId=requestRef.key;
+    const paymentInfo = { method, lastTwo:last2, amount:Number(amount), transactionId, submittedAt:now, verified:false, verificationPending:true, requestId };
+    const requestData = { orderId, phone, method, senderLast2:last2, amount:Number(amount), transactionId, createdAt:now, status:"pending", requestId };
     const updates={};
     updates[`dorkhast/orders/${orderId}/paymentInfo`] = paymentInfo;
     updates[`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfo`] = paymentInfo;
+    updates[`dorkhast/paymentVerificationRequests/${requestId}`] = requestData;
     await update(ref(db), updates);
+    showPayMsg("পেমেন্ট তথ্য গ্রহণ করা হয়েছে। SMS-এর সঙ্গে মিললে স্বয়ংক্রিয়ভাবে ভেরিফাই হবে।", false);
     trackOrders();
   }catch(e){
     console.error(e);
@@ -3081,35 +3196,93 @@ function cpRenderOrders(){
 async function loadCustomerPanelData(){
   const s=getSession(); if(!s||!s.phone) return;
   try{
-    const snap=await get(ref(db,'dorkhast/ordersByPhone/'+s.phone));
-    __cpOrders=snap.exists()?Object.values(snap.val()).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)):[];
-    cpRenderOrders();
+    if(__cpUnsub){ __cpUnsub(); __cpUnsub=null; }
+    __cpUnsub=onValue(ref(db,'dorkhast/ordersByPhone/'+s.phone), snap=>{
+      __cpOrders=snap.exists()?Object.values(snap.val()).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)):[];
+      cpRenderOrders();
+    }, err=>{ console.error(err); $('cpOrders').innerHTML='<div class="cp-empty">ডাটা আপডেট করা যায়নি।</div>'; });
   }catch(e){ console.error(e); $('cpOrders').innerHTML='<div class="cp-empty">ডাটা লোড করা যায়নি।</div>'; }
 }
+function buildCpWA(){
+  const name=$("cpOrderName")?.value.trim()||"";
+  const phone=$("cpOrderPhone")?.value.trim()||"";
+  const customerId=$("cpOrderCustomerId")?.value.trim().toUpperCase()||"";
+  const service=$("cpOrderService")?.value||"";
+  const details=$("cpOrderDetails")?.value.trim()||"";
+  const wa=$("cpWaBtn");
+  if(!wa) return;
+  let msg="আমি একটি অর্ডার দিতে চাই।\n\n";
+  msg+="Customer ID: "+(customerId||"-")+"\n";
+  msg+="নাম: "+(name||"-")+"\n";
+  msg+="মোবাইল: "+(phone||"-")+"\n";
+  msg+="সেবা: "+(service||"-")+"\n";
+  msg+="বিস্তারিত: "+(details||"-");
+  const waNumber=window.__waNumber||DEFAULT_CONTACT.whatsapp;
+  wa.setAttribute("href","https://wa.me/"+waNumber+"?text="+encodeURIComponent(msg));
+}
+window.checkCpPromoCode=async function(){
+  const input=$("cpOrderPromoCode"), msg=$("cpOrderPromoMsg");
+  if(!input||!msg) return;
+  const code=input.value.trim().toUpperCase(); input.value=code; window.__cpAppliedPromo=null;
+  if(!code){msg.textContent="";return;}
+  msg.style.color="var(--ink-soft)"; msg.textContent="যাচাই হচ্ছে...";
+  try{
+    const snap=await get(ref(db,"dorkhast/site/promoCodes/"+code));
+    if(!snap.exists()||snap.val().active===false){msg.style.color="var(--stamp)";msg.textContent="✗ এই প্রোমো কোডটি সঠিক নয়।";return;}
+    const p=snap.val();
+    const discountText=p.discountType==="percent"?(Number(p.discountValue)+"% ছাড়"):("৳"+Number(p.discountValue)+" ছাড়");
+    msg.style.color="var(--green)";msg.textContent="✓ প্রোমো কোড প্রযোজ্য — "+discountText; window.__cpAppliedPromo=code;
+  }catch(e){console.error(e);msg.style.color="var(--stamp)";msg.textContent="কোড যাচাই করা যায়নি। আবার চেষ্টা করুন।";}
+};
+$("cpOrderService")?.addEventListener("change",()=>{updateServiceRequiredInfo("cpOrderService","cpServiceRequiredInfo");buildCpWA();});
+$("cpOrderName")?.addEventListener("input",buildCpWA);
+$("cpOrderDetails")?.addEventListener("input",buildCpWA);
+$("cpOrderPromoCode")?.addEventListener("input",()=>{window.__cpAppliedPromo=null;$("cpOrderPromoMsg").textContent="";});
+$("cpOrderFile")?.addEventListener("change",()=>{
+  const f=$("cpOrderFile").files[0], m=$("cpOrderFileMsg");
+  if(!f){m.textContent="";return;}
+  if(f.size>MAX_ORDER_FILE_SIZE){m.textContent="ফাইলের আকার ১MB এর বেশি — অনুগ্রহ করে ছোট ফাইল দিন।";m.style.color="var(--stamp-dark)";$("cpOrderFile").value="";}
+  else{m.textContent="✓ "+f.name+" ("+humanFileSize(f.size)+")";m.style.color="var(--green)";}
+});
 window.cpSubmitOrder=async function(){
   const s=getSession(); if(!s||!s.phone) return;
-  const name=$('cpOrderName').value.trim(), service=$('cpOrderService').value, details=$('cpOrderDetails').value.trim();
-  const msg=$('cpOrderMsg'), btn=$('cpOrderBtn');
-  if(!name){msg.textContent='নাম লিখুন।';msg.className='cp-msg err';return;}
-  btn.disabled=true;btn.textContent='জমা হচ্ছে...';msg.textContent='';
+  const name=$("cpOrderName").value.trim(), service=$("cpOrderService").value, details=$("cpOrderDetails").value.trim();
+  const customerId=$("cpOrderCustomerId").value.trim().toUpperCase() || s.customerId || "";
+  const msg=$("cpOrderMsg"), btn=$("cpOrderBtn"), fileEl=$("cpOrderFile");
+  if(!name){msg.textContent="নাম লিখুন।";msg.className="cp-msg err";return;}
+  if(!service){msg.textContent="একটি সেবা নির্বাচন করুন।";msg.className="cp-msg err";return;}
+  if(fileEl?.files?.[0] && fileEl.files[0].size>MAX_ORDER_FILE_SIZE){msg.textContent="ফাইলের আকার ১MB এর বেশি — অনুগ্রহ করে ছোট ফাইল দিন।";msg.className="cp-msg err";return;}
+  btn.disabled=true;btn.textContent="জমা হচ্ছে...";msg.textContent="";
   try{
-    const customerId=await ensureCustomerProfile(service,name,s.phone,s.customerId);
-    const orderId=push(ref(db,'dorkhast/orders')).key, now=Date.now(), hk=push(ref(db,'dorkhast/orders/'+orderId+'/trackingHistory')).key;
+    const ensuredCustomerId=await ensureCustomerProfile(service,name,s.phone,customerId);
+    const orderId=push(ref(db,'dorkhast/orders')).key, now=Date.now();
+    const hk=push(ref(db,'dorkhast/orders/'+orderId+'/trackingHistory')).key;
+    const promoCodeVal=(($("cpOrderPromoCode")?.value||"").trim().toUpperCase()===window.__cpAppliedPromo && window.__cpAppliedPromo)?window.__cpAppliedPromo:null;
+    let customerFile=null;
+    if(fileEl?.files?.[0]){
+      const f=fileEl.files[0];
+      customerFile={name:f.name,url:await readFileAsDataURL(f),size:f.size};
+    }
     const hist={[hk]:{status:'pending',note:'কাস্টমার প্যানেল থেকে অর্ডার গ্রহণ করা হয়েছে।',at:now}};
-    const orderData={orderId,customerId,name,phone:s.phone,service,details,status:'pending',trackingHistory:hist,createdAt:now,updatedAt:now};
+    const orderData={orderId,customerId:ensuredCustomerId,name,phone:s.phone,service,details,status:'pending',trackingHistory:hist,createdAt:now,updatedAt:now, ...(promoCodeVal?{promoCode:promoCodeVal}:{}), ...(customerFile?{customerFile}: {})};
     await update(ref(db),{['dorkhast/orders/'+orderId]:orderData,['dorkhast/ordersByPhone/'+s.phone+'/'+orderId]:orderData});
-    $('cpOrderDetails').value=''; $('cpOrderName').value=name; msg.textContent='✓ অর্ডার সফলভাবে জমা হয়েছে।';msg.className='cp-msg';
+    runTransaction(ref(db,'dorkhast/stats/totalOrders'),v=>(v||0)+1);
+    msg.textContent='✓ অর্ডার সফলভাবে জমা হয়েছে।';msg.className='cp-msg';
+    $("cpOrderCustomerId").value=ensuredCustomerId; $("cpOrderName").value=name; $("cpOrderDetails").value=""; $("cpOrderFile").value=""; $("cpOrderFileMsg").textContent=""; $("cpOrderPromoCode").value=""; $("cpOrderPromoMsg").textContent=""; window.__cpAppliedPromo=null;
+    updateServiceRequiredInfo("cpOrderService","cpServiceRequiredInfo"); buildCpWA();
     await loadCustomerPanelData(); cpTab('orders');
-  }catch(e){console.error(e);msg.textContent='অর্ডার জমা দেওয়া যায়নি। আবার চেষ্টা করুন।';msg.className='cp-msg err';}
+  }catch(e){console.error(e);msg.textContent=e.message==="FILE_TOO_LARGE"?"ফাইলের আকার ১MB এর বেশি — অনুগ্রহ করে ছোট ফাইল দিন।":"অর্ডার জমা দেওয়া যায়নি। আবার চেষ্টা করুন।";msg.className='cp-msg err';}
   finally{btn.disabled=false;btn.textContent='অর্ডার জমা দিন';}
 };
+
 function initCustomerPanel(){
   const isPanel=new URLSearchParams(location.search).get('customerPanel')==='1';
   if(!isPanel) return;
   const s=getSession();
   if(!s||!s.phone){ window.location.href=location.href.split('?')[0].split('#')[0]; return; }
   document.body.classList.add('customer-panel-mode'); $('customerPanelView').classList.remove('hidden');
-  $('cpName').textContent=s.name||s.phone; $('cpId').textContent='Customer ID: '+(s.customerId||'-'); $('cpStatId').textContent=s.customerId||'-'; $('cpOrderName').value=s.name||''; $('cpOrderPhone').value=s.phone||''; $('cpAvatar').innerHTML=avatarHTML(s.name,s.photo);
+  $('cpName').textContent=s.name||s.phone; $('cpId').textContent='Customer ID: '+(s.customerId||'-'); $('cpStatId').textContent=s.customerId||'-'; $('cpOrderCustomerId').value=s.customerId||''; $('cpOrderName').value=s.name||''; $('cpOrderPhone').value=s.phone||''; $('cpAvatar').innerHTML=avatarHTML(s.name,s.photo);
+  updateAllServiceRequiredInfo(); buildCpWA();
   loadCustomerPanelData();
 }
 
