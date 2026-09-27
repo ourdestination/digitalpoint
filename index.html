@@ -13,8 +13,10 @@
 <meta name="description" content="সিভি, কভার লেটার, চাকরির আবেদন ও ভর্তি ফরম পূরণে সহায়তা — মোবাইল অ্যাপ থেকে সরাসরি অর্ডার ও ট্র্যাক করুন।">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@500;600;700;800&family=Noto+Sans+Bengali:wght@500;700&display=swap" rel="stylesheet">
 <style>
+  /* সংখ্যা (০-৯) গুলো আলাদা, বেশি স্পষ্ট একটা বাংলা ফন্টে দেখানোর জন্য — bnDigits() এই class দিয়ে সংখ্যা wrap করে */
+  .bn-digit{font-family:'Noto Sans Bengali','Hind Siliguri',sans-serif;font-variant-numeric:normal;}
   /* =========================================================
      Digital Point — design tokens
      Deep ledger green + seal red + amber, on a cool paper ground.
@@ -1640,7 +1642,13 @@ const PAYMENT_LABEL = {bkash:"বিকাশ", rocket:"রকেট", nagad:"�
 
 const $=x=>document.getElementById(x);
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-const fmt=x=>x?new Date(x).toLocaleString("bn-BD",{dateStyle:"medium",timeStyle:"short"}):"";
+// বাংলা সংখ্যা (০-৯) গুলো আলাদা, স্পষ্ট ফন্টে (Noto Sans Bengali) দেখানোর জন্য span দিয়ে wrap করে
+const bnDigits=s=>String(s).replace(/[০-৯]+/g,m=>`<span class="bn-digit">${m}</span>`);
+// বাংলা কিবোর্ড থেকে টাইপ করা সংখ্যা (০-৯) কে ইংলিশ সংখ্যায় (0-9) রূপান্তর করে — পেমেন্ট ফর্মের
+// শেষ ২ ডিজিট ও Transaction ID অবশ্যই ইংলিশ সংখ্যায় সেভ হতে হবে, কারণ auto-verify এই ডেটা
+// SMS-forwarder থেকে আসা Firebase ডেটার (ইংলিশ সংখ্যা) সাথে হুবহু মিলিয়ে দেখে।
+const toEnDigits=s=>String(s).replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d));
+const fmt=x=>x?bnDigits(new Date(x).toLocaleString("bn-BD",{dateStyle:"medium",timeStyle:"short"})):"";
 
 /* ---- phone normalization: this is the customer's unique ID ---- */
 function normalizePhone(raw){
@@ -1912,7 +1920,7 @@ setInterval(highlightServiceCard, 3000);
 setTimeout(highlightServiceCard, 800);
 
 /* ---- header stats: total visitors, live visitors, total orders ---- */
-const setStat=(id,n)=>{ const el=$(id); if(el) el.textContent=n; };
+const setStat=(id,n)=>{ const el=$(id); if(el) el.innerHTML=n; };
 function trackVisitorStats(){
   // count this browser as a visitor once per session
   try{
@@ -1931,19 +1939,19 @@ function trackVisitorStats(){
 
   onValue(ref(db,"dorkhast/presence"), s=>{
     const v=s.val();
-    const n=(v?Object.keys(v).length:0).toLocaleString("bn-BD");
+    const n=bnDigits((v?Object.keys(v).length:0).toLocaleString("bn-BD"));
     setStat("statLive",n);
   });
   onValue(ref(db,"dorkhast/stats/totalVisitors"), s=>{
-    const n=(s.val()||0).toLocaleString("bn-BD");
+    const n=bnDigits((s.val()||0).toLocaleString("bn-BD"));
     setStat("statVisitors",n);
   });
   onValue(ref(db,"dorkhast/stats/totalOrders"), s=>{
-    const n=(s.val()||0).toLocaleString("bn-BD");
+    const n=bnDigits((s.val()||0).toLocaleString("bn-BD"));
     setStat("statOrders",n);
   });
   onValue(ref(db,"dorkhast/stats/totalApkDownloads"), s=>{
-    const n=(s.val()||0).toLocaleString("bn-BD");
+    const n=bnDigits((s.val()||0).toLocaleString("bn-BD"));
     setStat("statDownloads",n);
   });
 }
@@ -2642,8 +2650,8 @@ window.togglePay = function(orderId){
 
 window.submitPayment = async function(orderId, phone){
   const method = $("payMethod-"+orderId).value;
-  const last2 = $("payLast2-"+orderId).value.trim();
-  const transactionId = $("payTxn-"+orderId).value.trim();
+  const last2 = toEnDigits($("payLast2-"+orderId).value.trim());
+  const transactionId = toEnDigits($("payTxn-"+orderId).value.trim());
   const msgEl = $("payMsg-"+orderId);
   const showPayMsg=(t,isErr)=>{ if(!msgEl) return; msgEl.textContent=t; msgEl.classList.add("show"); msgEl.classList.toggle("err",!!isErr); };
   const ord = window.__trackedOrders && window.__trackedOrders[orderId] ? window.__trackedOrders[orderId] : null;
@@ -2711,6 +2719,7 @@ window.viewBill=function(orderId){
           <div class="atm-memo-divider dashed"></div>
           <div class="atm-memo-row"><span>সাবটোটাল</span><b>৳${esc(m.subtotal)}</b></div>
           ${m.discount?`<div class="atm-memo-row"><span>ছাড়</span><b>−৳${esc(m.discount)}</b></div>`:""}
+          ${m.promo&&m.promo.discountAmount?`<div class="atm-memo-row"><span>প্রোমো ছাড় (${esc(m.promo.code)})</span><b>−৳${esc(m.promo.discountAmount)}</b></div>`:""}
           <div class="atm-memo-row atm-memo-amount"><span>সর্বমোট প্রদেয়</span><b>৳${esc(m.total)}</b></div>
           <div class="atm-memo-divider dashed"></div>
           <div class="atm-memo-row" style="display:block;"><span>পেমেন্ট মাধ্যম: বিকাশ (সেন্ডমানি/ক্যাশইন) - 01518411872</span></div>
