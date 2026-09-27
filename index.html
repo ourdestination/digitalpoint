@@ -2546,6 +2546,10 @@ function paymentSectionHTML(o){
   if(p && !p.verified){
     return `<div class="payment-btn-row"><div class="payment-box payment-pending">পেমেন্ট তথ্য জমা হয়েছে, যাচাইয়ের অপেক্ষায়...</div>${billBtn}</div>`;
   }
+  const m = o.memo;
+  if(!m){
+    return `<div class="payment-btn-row"><div class="payment-box payment-pending">মেমো তৈরি না হওয়া পর্যন্ত পেমেন্ট করা যাবে না। একটু পর আবার চেষ্টা করুন।</div>${billBtn}</div>`;
+  }
   const NUM = window.__paymentNumbers||{};
   const QR = window.__paymentQR||"";
   return `
@@ -2572,8 +2576,8 @@ function paymentSectionHTML(o){
         <input id="payLast2-${esc(o.orderId)}" maxlength="2" inputmode="numeric" placeholder="৪৫">
       </div>
       <div class="field">
-        <label>টাকার পরিমাণ</label>
-        <input id="payAmount-${esc(o.orderId)}" type="number" placeholder="যেমন: ৪০০">
+        <label>টাকার পরিমাণ <small style="font-weight:400;color:#667085">(বিল অনুযায়ী নির্ধারিত, পরিবর্তনযোগ্য নয়)</small></label>
+        <input id="payAmount-${esc(o.orderId)}" type="number" value="${esc(m.total)}" readonly disabled style="background:#F3F4F6;cursor:not-allowed;">
       </div>
       <div class="field">
         <label>Transaction ID <span style="color:#d00">*</span> (SMS-এ থাকা TrxID/TxnID)</label>
@@ -2639,12 +2643,14 @@ window.togglePay = function(orderId){
 window.submitPayment = async function(orderId, phone){
   const method = $("payMethod-"+orderId).value;
   const last2 = $("payLast2-"+orderId).value.trim();
-  const amount = $("payAmount-"+orderId).value.trim();
   const transactionId = $("payTxn-"+orderId).value.trim();
   const msgEl = $("payMsg-"+orderId);
   const showPayMsg=(t,isErr)=>{ if(!msgEl) return; msgEl.textContent=t; msgEl.classList.add("show"); msgEl.classList.toggle("err",!!isErr); };
+  const ord = window.__trackedOrders && window.__trackedOrders[orderId] ? window.__trackedOrders[orderId] : null;
+  if(!ord || !ord.memo) return showPayMsg("মেমো তৈরি না হওয়া পর্যন্ত পেমেন্ট করা যাবে না।", true);
+  const amount = ord.memo.total; // amount is always taken from the admin-authored memo total — never from the (uneditable) field
   if(!/^\d{2}$/.test(last2)) return showPayMsg("পেমেন্ট করা নম্বরের সঠিক শেষ ২ ডিজিট দিন।", true);
-  if(!amount || isNaN(amount) || Number(amount)<=0) return showPayMsg("সঠিক টাকার পরিমাণ দিন।", true);
+  if(!amount || isNaN(amount) || Number(amount)<=0) return showPayMsg("বিলে সঠিক পরিমাণ পাওয়া যায়নি, আমাদের সাথে যোগাযোগ করুন।", true);
   if(!transactionId || transactionId.length < 4) return showPayMsg("SMS-এ থাকা সঠিক Transaction ID দিন।", true);
   const existingPayment = window.__trackedOrders && window.__trackedOrders[orderId] ? window.__trackedOrders[orderId].paymentInfo : null;
   if(existingPayment && (existingPayment.verified || existingPayment.verificationPending)) return showPayMsg(existingPayment.verified ? "এই অর্ডারের পেমেন্ট ইতিমধ্যে ভেরিফাইড।" : "এই অর্ডারের পেমেন্ট যাচাইয়ের জন্য ইতিমধ্যে পাঠানো হয়েছে।", true);
