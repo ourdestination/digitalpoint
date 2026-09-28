@@ -1813,6 +1813,11 @@ function renderLogo(logoUrl){
   else{ img.classList.add("hidden"); img.removeAttribute("src"); }
 }
 let __allServices = [];
+/* which list the customer panel's ম্যানুয়াল অর্ডার "কোন সেবা প্রয়োজন" dropdown shows:
+   "normal"  = the regular service list (+ অন্যান্য)
+   "special" = only the admin's special services — set when an order starts from a special card */
+let __cpOrderMode = "normal";
+let __allSpecialCards = [];
 /* a small, professional accent palette — each card gets a matching bold accent
    colour and a soft pastel tint of the same hue, cycling in order, so the grid
    reads as colourful/lively without ever clashing */
@@ -1834,9 +1839,12 @@ function renderServices(list){
 }
 function renderServiceSelectOptions(){
   /* main order form + customer-panel "ম্যানুয়াল অর্ডার" tab both use the same live list */
-  const optionsHTML = __allServices.map(s=>`<option value="${esc(s.title)}">${esc(s.title)}</option>`).join("") +
+  const normalHTML = __allServices.map(s=>`<option value="${esc(s.title)}">${esc(s.title)}</option>`).join("") +
     `<option value="অন্যান্য">অন্যান্য</option>`;
-  ["service","cpOrderService"].forEach(id=>{
+  const specialTitles = [...new Set((typeof __allSpecialCards!=="undefined"?__allSpecialCards:[]).map(s=>String(s.title||"").trim()).filter(Boolean))];
+  const specialHTML = specialTitles.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join("");
+  const useSpecial = specialTitles.length>0; /* কাস্টমার প্যানেলের ম্যানুয়াল অর্ডারে সবসময় স্পেশাল সেবার তালিকা; স্পেশাল সেবা না থাকলে সাধারণ তালিকা */
+  [["service",normalHTML],["cpOrderService",useSpecial?specialHTML:normalHTML]].forEach(([id,optionsHTML])=>{
     const sel = $(id);
     if(!sel) return;
     const current = sel.value;
@@ -1855,7 +1863,12 @@ function serviceDescriptionFor(title){
 function updateServiceRequiredInfo(selectId, infoId){
   const sel=$(selectId), info=$(infoId);
   if(!sel || !info) return;
-  const desc=serviceDescriptionFor(sel.value);
+  let desc="";
+  if(selectId==="cpOrderService"){
+    const sp=(typeof __allSpecialCards!=="undefined"?__allSpecialCards:[]).find(x=>String(x.title||"").trim()===String(sel.value||"").trim());
+    desc = sp && String(sp.desc||"").trim() ? String(sp.desc).trim() : "";
+  }
+  if(!desc) desc=serviceDescriptionFor(sel.value);
   info.value=desc || "এই সেবার জন্য আলাদা কোনো প্রয়োজনীয় তথ্য দেওয়া হয়নি।";
 }
 function updateAllServiceRequiredInfo(){
@@ -1921,13 +1934,13 @@ window.orderNow = function(title){
    grid (accent stripe, discount ribbon, price, description, dashed tear
    line, বিস্তারিত/অর্ডার করুন buttons) — just fed from D.site.specialCards
    instead of D.site.services. */
-let __allSpecialCards = [];
 function renderSpecialCards(list){
   __allSpecialCards = list||[];
   const grid = $("cpSpecialGrid");
   if(!grid) return;
   if(!__allSpecialCards.length){
     grid.innerHTML = `<div class="cp-special-empty">এখনও কোনো বিশেষ সেবা যুক্ত করা হয়নি।</div>`;
+    renderServiceSelectOptions();
     return;
   }
   grid.innerHTML = __allSpecialCards.map((c,i)=>{
@@ -1947,15 +1960,18 @@ function renderSpecialCards(list){
       </div>
     </div>`;
   }).join("");
+  renderServiceSelectOptions();
   updateAllServiceRequiredInfo();
 }
 window.cpOrderSpecial = function(title, link){
   if(link){ window.open(link, "_blank", "noopener"); return; }
-  if(typeof cpTab==="function") cpTab("manual");
+  if(typeof cpTab==="function") cpTab("manual", true);
+  __cpOrderMode = "special";
+  renderServiceSelectOptions();
   const sel = $("cpOrderService");
   if(sel){
     const match = [...sel.options].some(o=>o.value===title);
-    sel.value = match ? title : "অন্যান্য";
+    if(match) sel.value = title;
   }
   const details = $("cpOrderDetails");
   if(details && !details.value.trim()) details.value = "বিশেষ সেবা: "+title;
@@ -3324,7 +3340,13 @@ window.sendChatMessage = async function(){
 let __cpOrders = [];
 let __cpUnsub = null;
 function cpPanelUrl(){ return window.location.href.split('#')[0].split('?')[0]+'?customerPanel=1'; }
-window.cpTab = function(name){
+window.cpTab = function(name, keepSpecial){
+  if(!keepSpecial && __cpOrderMode!=="normal"){
+    __cpOrderMode="normal";
+    renderServiceSelectOptions();
+    updateServiceRequiredInfo("cpOrderService","cpServiceRequiredInfo");
+    if(typeof buildCpWA==="function") buildCpWA();
+  }
   document.querySelectorAll('.cp-tab').forEach(b=>b.classList.toggle('active',b.dataset.cp===name));
   document.querySelectorAll('.cp-section').forEach(x=>x.classList.toggle('active',x.id==='cp-'+name));
   if(name==='orders'||name==='track'||name==='notifications') loadCustomerPanelData();
