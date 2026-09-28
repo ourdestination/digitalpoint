@@ -1384,7 +1384,7 @@
 <div id="billModal" class="congrats-modal hidden" role="dialog" aria-modal="true">
   <div class="bill-modal-box">
     <div id="billModalBody"></div>
-    <button class="btn btn-soft btn-wide" type="button" style="margin-top:16px;" onclick="closeBillModal()">বন্ধ করুন</button>
+    <button class="btn btn-soft btn-wide" type="button" style="margin-top:16px;" onclick="closeBillModal()">Close</button>
   </div>
 </div>
 
@@ -2826,6 +2826,22 @@ window.submitPayment = async function(orderId, phone){
 /* ---- bill / cash memo viewer (the memo is authored by the admin — customers
        only ever see it, never generate or edit it themselves) ---- */
 function billMemoIdLabel(o){ return "DKH-"+o.orderId.slice(-6).toUpperCase(); }
+
+/* ---- Cash memo is ALWAYS rendered in English ---- */
+const MEMO_PAY_LINE="Payment Method: bKash (Send Money/Cash In) - 01518411872";
+const MEMO_BN2EN_DIGITS={"০":"0","১":"1","২":"2","৩":"3","৪":"4","৫":"5","৬":"6","৭":"7","৮":"8","৯":"9"};
+const MEMO_LABEL_EN={
+  "ভর্তির আবেদন":"Admission Application",
+  "ফর্ম ফিলাপ":"Form Fill-up",
+  "সরকারি চাকরির আবেদন":"Government Job Application",
+  "সিভি ২ পাতা":"CV (2 Pages)",
+  "সিভি ইন্টারন্যাশনাল":"CV (International)",
+  "ড্রাইভিং লাইসেন্স (মোটর সাইকেল)":"Driving License (Motorcycle)"
+};
+function memoEnDigits(t){ return String(t==null?"":t).replace(/[০-৯]/g,c=>MEMO_BN2EN_DIGITS[c]); }
+function memoLabel(l){ const t=(l||"").trim(); if(!t) return "Item"; return MEMO_LABEL_EN[t]||memoEnDigits(t); }
+function memoMoney(x){ return "Tk "+(Math.round((Number(x)||0)*100)/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function memoDate(x){ return x?new Date(x).toLocaleString("en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true}):"—"; }
 window.viewBill=function(orderId){
   const o = (window.__trackedOrders||{})[orderId];
   const body=$("billModalBody");
@@ -2834,8 +2850,8 @@ window.viewBill=function(orderId){
   if(!m){
     body.innerHTML = `
       <div class="bill-empty">
-        এই অর্ডারের জন্য এখনও কোনো বিল / ক্যাশ মেমো তৈরি করা হয়নি।<br>
-        একটু পর আবার চেষ্টা করুন, অথবা আমাদের সাথে যোগাযোগ করুন।
+        No bill / cash memo has been created for this order yet.<br>
+        Please try again shortly, or contact us.
       </div>`;
   }else{
     const logoUrl = window.__siteLogo || "";
@@ -2844,36 +2860,36 @@ window.viewBill=function(orderId){
         <div class="atm-memo-paper">
           <div class="atm-memo-head">
             <div class="atm-memo-brandrow">
-              ${logoUrl?`<img src="${esc(logoUrl)}" class="atm-memo-logo" alt="লোগো">`:""}
+              ${logoUrl?`<img src="${esc(logoUrl)}" class="atm-memo-logo" alt="Logo">`:""}
               <div class="atm-memo-brand">Digital Point</div>
             </div>
-            <div class="atm-memo-sub">ক্যাশ মেমো / বিল</div>
+            <div class="atm-memo-sub">CASH MEMO / BILL</div>
           </div>
           <div class="atm-memo-divider"></div>
-          <div class="atm-memo-row"><span>অর্ডার নং</span><b>${billMemoIdLabel(o)}</b></div>
-          <div class="atm-memo-row"><span>তারিখ</span><b>${fmt(m.generatedAt)}</b></div>
+          <div class="atm-memo-row"><span>Order No</span><b>${billMemoIdLabel(o)}</b></div>
+          <div class="atm-memo-row"><span>Date</span><b>${memoDate(m.generatedAt)}</b></div>
           <div class="atm-memo-divider dashed"></div>
-          <div class="atm-memo-row"><span>নাম</span><b>${esc(o.name)}</b></div>
-          ${o.customerId?`<div class="atm-memo-row"><span>কাস্টমার আইডি</span><b>${esc(o.customerId)}</b></div>`:""}
-          <div class="atm-memo-row"><span>মোবাইল</span><b>${esc(o.phone)}</b></div>
+          <div class="atm-memo-row"><span>Name</span><b>${esc(o.name)}</b></div>
+          ${o.customerId?`<div class="atm-memo-row"><span>Customer ID</span><b>${esc(o.customerId)}</b></div>`:""}
+          <div class="atm-memo-row"><span>Mobile</span><b>${esc(o.phone)}</b></div>
           <div class="atm-memo-divider dashed"></div>
-          ${(m.items||[]).map(it=>`<div class="atm-memo-row"><span>${esc(it.label||"আইটেম")}</span><b>৳${esc(it.amount||0)}</b></div>`).join("")}
+          ${(m.items||[]).map(it=>`<div class="atm-memo-row"><span>${esc(memoLabel(it.label))}</span><b>${memoMoney(it.amount)}</b></div>`).join("")}
           <div class="atm-memo-divider dashed"></div>
-          <div class="atm-memo-row"><span>সাবটোটাল</span><b>৳${esc(m.subtotal)}</b></div>
-          ${m.discount?`<div class="atm-memo-row"><span>ছাড়</span><b>−৳${esc(m.discount)}</b></div>`:""}
-          ${m.promo&&m.promo.discountAmount?`<div class="atm-memo-row"><span>প্রোমো ছাড় (${esc(m.promo.code)})</span><b>−৳${esc(m.promo.discountAmount)}</b></div>`:""}
-          <div class="atm-memo-row atm-memo-amount"><span>সর্বমোট প্রদেয়</span><b>৳${esc(m.total)}</b></div>
+          <div class="atm-memo-row"><span>Subtotal</span><b>${memoMoney(m.subtotal)}</b></div>
+          ${m.discount?`<div class="atm-memo-row"><span>Discount</span><b>-${memoMoney(m.discount)}</b></div>`:""}
+          ${m.promo&&m.promo.discountAmount?`<div class="atm-memo-row"><span>Promo Discount (${esc(m.promo.code)})</span><b>-${memoMoney(m.promo.discountAmount)}</b></div>`:""}
+          <div class="atm-memo-row atm-memo-amount"><span>TOTAL DUE</span><b>${memoMoney(m.total)}</b></div>
           <div class="atm-memo-divider dashed"></div>
-          <div class="atm-memo-row" style="display:block;"><span>পেমেন্ট মাধ্যম: বিকাশ (সেন্ডমানি/ক্যাশইন) - 01518411872</span></div>
-          ${m.note?`<div class="atm-memo-divider dashed"></div><div class="atm-memo-row" style="display:block;"><span>${esc(m.note)}</span></div>`:""}
+          <div class="atm-memo-row" style="display:block;"><span>${MEMO_PAY_LINE}</span></div>
+          ${m.note?`<div class="atm-memo-divider dashed"></div><div class="atm-memo-row" style="display:block;"><span>${esc(memoEnDigits(m.note))}</span></div>`:""}
           <div class="atm-memo-divider"></div>
           <div class="atm-memo-barcode"></div>
-          <div class="atm-memo-thanks">ধন্যবাদান্তে — Digital Point</div>
+          <div class="atm-memo-thanks">Thank you — Digital Point</div>
           <div class="atm-memo-mgmt">Management by Hredoy Roy</div>
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
-        <button class="btn btn-primary btn-wide" type="button" onclick="saveBillAsJPG('${esc(orderId)}')">সেভ করুন</button>
+        <button class="btn btn-primary btn-wide" type="button" onclick="saveBillAsJPG('${esc(orderId)}')">Save as JPG</button>
       </div>`;
   }
   $("billModal").classList.remove("hidden");
