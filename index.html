@@ -625,6 +625,52 @@
   .atm-memo-brandrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
   .atm-memo-logo{height:34px;width:34px;object-fit:cover;border-radius:6px;flex-shrink:0;}
 
+  /* ---------- customer notifications (bell, list, toast) ---------- */
+  .nf-wrap{position:relative;display:flex;align-items:center;}
+  .nf-bell{position:relative;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--green-deep);display:grid;place-items:center;cursor:pointer;}
+  .nf-bell:hover{border-color:var(--green);background:var(--green-tint);}
+  .nf-bell svg{width:18px;height:18px;}
+  .nf-badge{position:absolute;top:-4px;right:-4px;background:var(--stamp);color:#fff;font:700 10.5px/1 var(--sans);min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff;}
+  .nf-tabbadge{display:inline-flex;align-items:center;justify-content:center;background:var(--stamp);color:#fff;font:700 11px/1 var(--sans);min-width:18px;height:18px;border-radius:9px;padding:0 5px;margin-left:6px;}
+  .nf-panel{position:absolute;top:calc(100% + 10px);right:0;width:330px;max-height:430px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:var(--r-md);box-shadow:0 14px 34px rgba(10,40,30,.16);z-index:85;}
+  .nf-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px;font-weight:600;position:sticky;top:0;background:#fff;}
+  .nf-head button{font-size:12.5px;color:var(--green);text-decoration:underline;background:none;border:0;cursor:pointer;font-family:var(--sans);}
+  .nf-item{display:block;width:100%;text-align:left;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:#fff;cursor:pointer;font-family:var(--sans);}
+  .nf-item:hover{background:var(--paper);}
+  .nf-item.unread{background:var(--gold-tint);}
+  .nf-item b{display:block;font-size:14px;color:var(--ink);}
+  .nf-item span{display:block;font-size:13px;color:var(--ink-soft);margin-top:2px;}
+  .nf-item small{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:4px;}
+  .nf-empty{padding:30px 14px;text-align:center;color:var(--ink-soft);font-size:13.5px;}
+  .nf-toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-140%);width:min(420px,calc(100vw - 24px));z-index:400;display:flex;align-items:flex-start;gap:12px;padding:13px 14px;background:var(--green-deep);color:#fff;border-radius:var(--r-md);box-shadow:0 16px 40px rgba(10,40,30,.35);cursor:pointer;transition:transform .35s ease;padding-top:max(13px,env(safe-area-inset-top));}
+  .nf-toast.show{transform:translate(-50%,0);}
+  .nf-toast-ico{font-size:22px;line-height:1.2;}
+  .nf-toast-txt{flex:1;min-width:0;}
+  .nf-toast-txt b{display:block;font-size:14.5px;}
+  .nf-toast-txt span{display:block;font-size:13px;opacity:.9;margin-top:2px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+  .nf-toast-x{background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;padding:0 2px;}
+  @media (max-width:600px){ .nf-panel{position:fixed;left:10px;right:10px;top:64px;width:auto;} }
+
+  /* ---------- floating social + complaint buttons ---------- */
+  .fab-stack{position:fixed;right:18px;bottom:92px;z-index:89;width:56px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .fab{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;border:0;cursor:pointer;box-shadow:0 8px 20px rgba(10,40,30,.28);text-decoration:none;transition:transform .15s ease;}
+  .fab:hover{transform:scale(1.07);}
+  .fab svg{width:24px;height:24px;}
+  .fab-wa{background:#25D366;}
+  .fab-fb{background:#1877F2;}
+  .fab-cmp{background:var(--amber);color:var(--ink);}
+  .cmp-modal-box textarea{min-height:120px;}
+  .cmp-type{display:flex;gap:8px;margin-top:18px;}
+  .cmp-type label{flex:1;text-align:center;padding:9px 6px;border:1.5px solid var(--line-strong);border-radius:var(--r-sm);cursor:pointer;font-size:14.5px;font-weight:600;color:var(--ink-soft);}
+  .cmp-type input{display:none;}
+  .cmp-type input:checked + span{color:var(--green-deep);}
+  .cmp-type label:has(input:checked){border-color:var(--green);background:var(--green-tint);color:var(--green-deep);}
+  @media (max-width:760px){
+    .fab-stack{right:14px;width:48px;bottom:calc(128px + env(safe-area-inset-bottom));}
+    .fab{width:44px;height:44px;}
+    .fab svg{width:22px;height:22px;}
+  }
+
   /* ---------- live chat ---------- */
   .chat-fab{
     position:fixed;right:18px;bottom:24px;z-index:90;width:56px;height:56px;border-radius:50%;
@@ -730,7 +776,7 @@
   }
 
   /* ---------- customer panel (separate login view) ---------- */
-  body.customer-panel-mode > *:not(#customerPanelView):not(.congrats-modal){display:none!important;}
+  body.customer-panel-mode > *:not(#customerPanelView):not(.congrats-modal):not(.nf-root){display:none!important;}
   .customer-panel-view{min-height:100vh;background:var(--paper);color:var(--ink);padding:20px 16px 60px;}
   .cp-wrap{max-width:1040px;margin:0 auto;}
   .cp-head{
@@ -1039,6 +1085,16 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
       <span>APK</span>
     </a>
+    <div class="nf-wrap hidden" id="nfWrap">
+      <button type="button" class="nf-bell" id="nfBell" onclick="nfToggle(event)" aria-label="নোটিফিকেশন">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span class="nf-badge hidden" id="nfBadge">0</span>
+      </button>
+      <div class="nf-panel hidden" id="nfPanel">
+        <div class="nf-head"><span>নোটিফিকেশন</span><button type="button" onclick="nfMarkAllRead(event)">সব পঠিত করুন</button></div>
+        <div id="nfList"></div>
+      </div>
+    </div>
     <div class="account-area" id="accountArea">
       <button type="button" class="login-btn" id="loginBtn" onclick="openLoginModal()" aria-label="লগইন">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1417,6 +1473,37 @@
   </div>
 </div>
 
+<div class="nf-root"><div class="nf-toast" id="nfToast" role="status" aria-live="polite"></div></div>
+
+<div class="fab-stack" id="fabStack">
+  <a class="fab fab-wa hidden" id="fabWa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp-এ মেসেজ করুন" title="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.91-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.04 21.5a9.44 9.44 0 0 1-4.81-1.32l-.34-.2-3.57.94.95-3.48-.22-.36a9.45 9.45 0 1 1 8 4.42zM12.05 2a10.45 10.45 0 0 0-8.9 15.9L2 22l4.2-1.1A10.45 10.45 0 1 0 12.05 2z"/></svg>
+  </a>
+  <a class="fab fab-fb hidden" id="fabFb" href="#" target="_blank" rel="noopener" aria-label="Facebook পেজ" title="Facebook">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>
+  </a>
+  <button class="fab fab-cmp" type="button" onclick="openComplaintModal()" aria-label="অভিযোগ / পরামর্শ" title="অভিযোগ / পরামর্শ">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+  </button>
+</div>
+
+<div id="complaintModal" class="congrats-modal hidden" role="dialog" aria-modal="true">
+  <div class="auth-modal-box cmp-modal-box">
+    <button class="auth-modal-close" type="button" onclick="closeComplaintModal()" aria-label="বন্ধ করুন">×</button>
+    <h3>অভিযোগ / পরামর্শ</h3>
+    <p class="sub">আপনার অভিযোগ বা পরামর্শ সরাসরি অ্যাডমিনের কাছে পৌঁছে যাবে।</p>
+    <div class="cmp-type">
+      <label><input type="radio" name="cmpType" value="complaint" checked><span>অভিযোগ</span></label>
+      <label><input type="radio" name="cmpType" value="suggestion"><span>পরামর্শ</span></label>
+    </div>
+    <div class="field"><label for="cmpName">আপনার নাম</label><input id="cmpName" type="text" maxlength="80" placeholder="নাম"></div>
+    <div class="field"><label for="cmpPhone">মোবাইল নম্বর</label><input id="cmpPhone" type="tel" inputmode="numeric" maxlength="14" placeholder="01XXXXXXXXX"></div>
+    <div class="field"><label for="cmpText">আপনার বার্তা</label><textarea id="cmpText" maxlength="1500" placeholder="বিস্তারিত লিখুন..."></textarea></div>
+    <div class="form-msg" id="cmpMsg"></div>
+    <button class="btn btn-primary" type="button" id="cmpBtn" onclick="submitComplaint()">জমা দিন</button>
+  </div>
+</div>
+
 <button class="chat-fab" id="chatFab" type="button" onclick="openChatModal()" title="লাইভ চ্যাট" aria-label="লাইভ চ্যাট">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
   <span class="chat-dot" id="chatDot"></span>
@@ -1459,7 +1546,7 @@
       <button class="cp-tab" data-cp="manual" onclick="cpTab('manual')">ম্যানুয়াল অর্ডার</button>
       <button class="cp-tab" data-cp="track" onclick="cpTab('track')">ট্র্যাক</button>
       <button class="cp-tab" data-cp="chat" onclick="cpTab('chat')">চ্যাট</button>
-      <button class="cp-tab" data-cp="notifications" onclick="cpTab('notifications')">নোটিফিকেশন</button>
+      <button class="cp-tab" data-cp="notifications" onclick="cpTab('notifications')">নোটিফিকেশন<span class="nf-tabbadge hidden" id="cpNfBadge">0</span></button>
     </div>
     <section class="cp-section active" id="cp-overview">
       <h2 class="cp-title">আমার অ্যাকাউন্ট</h2>
@@ -1606,6 +1693,7 @@ document.getElementById("apkInfoModal").addEventListener("click", e=>{
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import {getDatabase,ref,push,set,update,get,child,onValue,runTransaction,onDisconnect,remove} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+import {getMessaging,getToken,isSupported} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging.js";
 
 /* ---- Firebase (reused project from index_5 — isolated under the "dorkhast" key) ---- */
 const firebaseConfig = {
@@ -1620,6 +1708,31 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+/* ---- FCM ব্যাকগ্রাউন্ড পুশ নোটিফিকেশন (সাইট/অ্যাপ বন্ধ থাকলেও ফোনে আসবে) ----
+   টোকেন Firebase-এ সেভ হয়; সার্ভারের Cloud Function সেই টোকেনে পুশ পাঠায় ---- */
+const FCM_VAPID_KEY = "BGiiqJ9iM-aLnbkrIYRofgeAcThOtSMG9ayGuR9r8fEDIx2kM-wN66y8YqFXBYIse6ntlmZeIAvnW_kkSGOxcQ8";
+let __fcmToken=null, __fcmPath=null;
+async function fcmRegister(basePath){
+  try{
+    if(!window.Notification || Notification.permission!=="granted") return;
+    if(!("serviceWorker" in navigator) || !(await isSupported())) return;
+    const reg = await navigator.serviceWorker.register("./firebase-messaging-sw.js");
+    await navigator.serviceWorker.ready;
+    const token = await getToken(getMessaging(app), {vapidKey:FCM_VAPID_KEY, serviceWorkerRegistration:reg});
+    if(!token) return;
+    if(__fcmToken && __fcmPath && (__fcmToken!==token || __fcmPath!==basePath)) await fcmUnregister();
+    await set(ref(db, basePath+"/"+token), {at:Date.now(), ua:navigator.userAgent.slice(0,150)});
+    __fcmToken=token; __fcmPath=basePath; window.__fcmReady=true;
+  }catch(e){ console.warn("FCM setup failed:", e); }
+}
+async function fcmUnregister(){
+  const t=__fcmToken, p=__fcmPath;
+  if(!t || !p) return;
+  __fcmToken=null; __fcmPath=null; window.__fcmReady=false;
+  try{ await remove(ref(db, p+"/"+t)); }catch(e){}
+}
+const fcmCustomerPath = p => "dorkhast/fcmTokens/customers/"+p;
 const MAX_ORDER_FILE_SIZE = 1*1024*1024; // 1MB
 
 /* ---- defaults (used until admin sets real content in the management panel) ---- */
@@ -2804,6 +2917,7 @@ function setSession(data){
 function clearSession(){
   try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
   stopChatMetaListener();
+  stopCustomerNotifier();
   renderAccountUI();
 }
 function avatarHTML(name, photo){
@@ -2821,6 +2935,7 @@ function renderAccountUI(){
     $("accountNameLabel").textContent = s.name || s.phone;
     applySessionToForms(s);
     startChatMetaListener(s.phone);
+    startCustomerNotifier(s.phone);
   }else{
     loginBtn.classList.remove("hidden");
     chip.classList.add("hidden");
@@ -3229,6 +3344,7 @@ window.cpTab = function(name){
   document.querySelectorAll('.cp-tab').forEach(b=>b.classList.toggle('active',b.dataset.cp===name));
   document.querySelectorAll('.cp-section').forEach(x=>x.classList.toggle('active',x.id==='cp-'+name));
   if(name==='orders'||name==='track'||name==='notifications') loadCustomerPanelData();
+  if(name==='notifications') nfMarkAllRead();
 }
 window.goToCustomerPanel=function(){
   const s = getSession();
@@ -3248,7 +3364,7 @@ function cpRenderOrders(){
   const html=__cpOrders.map(cpOrderHTML).join(''); box.innerHTML=html; track.innerHTML=html;
   $('cpStatOrders').textContent=__cpOrders.length; $('cpStatLast').innerHTML=fmt(__cpOrders[0]?.createdAt)||'-';
   const notes=[]; __cpOrders.forEach(o=>Object.values(o.trackingHistory||{}).forEach(h=>notes.push({text:`${o.service||'অর্ডার'}: ${STATUS_LABEL[h.status]||h.status||'আপডেট'}${h.note?' — '+h.note:''}`,at:h.at||0})));
-  notes.sort((a,b)=>b.at-a.at); $('cpNotifications').innerHTML=notes.length?notes.slice(0,30).map(n=>`<div class="cp-note">${esc(n.text)}<small>${fmt(n.at)}</small></div>`).join(''):'<div class="cp-empty">এখনো কোনো নোটিফিকেশন নেই।</div>';
+  notes.sort((a,b)=>b.at-a.at); window.__cpDerived=notes.length?notes.slice(0,30).map(n=>`<div class="cp-note">${esc(n.text)}<small>${fmt(n.at)}</small></div>`).join(''):'<div class="cp-empty">এখনো কোনো নোটিফিকেশন নেই।</div>'; nfRenderPanel();
 }
 async function loadCustomerPanelData(){
   const s=getSession(); if(!s||!s.phone) return;
@@ -3343,6 +3459,291 @@ function initCustomerPanel(){
   $('cpName').textContent=s.name||s.phone; $('cpId').textContent='Customer ID: '+(s.customerId||'-'); $('cpStatId').textContent=s.customerId||'-'; $('cpOrderCustomerId').value=s.customerId||''; $('cpOrderName').value=s.name||''; $('cpOrderPhone').value=s.phone||''; $('cpAvatar').innerHTML=avatarHTML(s.name,s.photo);
   updateAllServiceRequiredInfo(); buildCpWA();
   loadCustomerPanelData();
+}
+
+/* ---- ফ্লোটিং WhatsApp / Facebook বাটন (নম্বর ও লিংক অ্যাডমিন প্যানেলের "ওয়েবসাইট তথ্য" থেকে আসে) ---- */
+function normalizeFbLink(raw){
+  let v=String(raw||"").trim();
+  if(!v) return "";
+  if(/^(https?:)?\/\//i.test(v)) return v.startsWith("//")?"https:"+v:v;
+  if(/^(www\.|m\.)?(facebook|fb)\.com/i.test(v) || /^fb\.me/i.test(v)) return "https://"+v;
+  return "https://www.facebook.com/"+v.replace(/^@/,"").replace(/^\/+/,""); // শুধু পেজের ইউজারনেম দিলেও চলবে
+}
+function renderFloatingSocial(c){
+  c = c||{};
+  const wa=$("fabWa"), fb=$("fabFb");
+  const num=String(c.whatsapp||"").replace(/[^\d]/g,"");
+  const validWa = num.length>=10 && !/X/i.test(String(c.whatsapp||""));
+  if(wa){
+    if(validWa){ wa.href="https://wa.me/"+num; wa.classList.remove("hidden"); }
+    else{ wa.classList.add("hidden"); wa.removeAttribute("href"); }
+  }
+  const fbLink = normalizeFbLink(c.facebook);
+  if(fb){
+    if(fbLink){ fb.href=fbLink; fb.classList.remove("hidden"); }
+    else{ fb.classList.add("hidden"); fb.removeAttribute("href"); }
+  }
+}
+onValue(ref(db,"dorkhast/site/contact"), s=>renderFloatingSocial(s.exists()?s.val():DEFAULT_CONTACT), ()=>{});
+
+/* ---- অভিযোগ / পরামর্শ ---- */
+window.openComplaintModal=function(){
+  const s=getSession()||{};
+  if(!$("cmpName").value) $("cmpName").value=s.name||"";
+  if(!$("cmpPhone").value) $("cmpPhone").value=s.phone||"";
+  $("cmpMsg").textContent=""; $("cmpMsg").classList.remove("show");
+  $("complaintModal").classList.remove("hidden");
+};
+window.closeComplaintModal=function(){ $("complaintModal").classList.add("hidden"); };
+$("complaintModal").addEventListener("click",e=>{ if(e.target.id==="complaintModal") closeComplaintModal(); });
+window.submitComplaint=async function(){
+  const msg=$("cmpMsg"), btn=$("cmpBtn");
+  const say=(t,ok)=>{ msg.textContent=t; msg.classList.add("show"); msg.style.color=ok?"var(--green)":"var(--stamp-dark)"; };
+  const type=(document.querySelector('input[name="cmpType"]:checked')||{}).value||"complaint";
+  const name=$("cmpName").value.trim();
+  const phone=toEnDigits($("cmpPhone").value.trim());
+  const text=$("cmpText").value.trim();
+  if(!name) return say("আপনার নাম লিখুন।");
+  if(!/^0\d{9,10}$/.test(phone)) return say("সঠিক মোবাইল নম্বর দিন (যেমন: 01712345678)।");
+  if(text.length<5) return say("আপনার বার্তা আরেকটু বিস্তারিত লিখুন।");
+  btn.disabled=true; btn.textContent="জমা হচ্ছে...";
+  try{
+    const s=getSession()||{};
+    const id=push(ref(db,"dorkhast/complaints")).key;
+    await set(ref(db,"dorkhast/complaints/"+id), {type, name, phone, message:text, customerId:(s.phone===phone&&s.customerId)||"", at:Date.now()});
+    $("cmpText").value="";
+    say("✓ ধন্যবাদ! আপনার "+(type==="suggestion"?"পরামর্শ":"অভিযোগ")+" জমা হয়েছে।", true);
+    setTimeout(closeComplaintModal, 1800);
+  }catch(e){
+    console.error(e);
+    say("জমা দেওয়া যায়নি, আবার চেষ্টা করুন।");
+  }finally{
+    btn.disabled=false; btn.textContent="জমা দিন";
+  }
+};
+
+/* ===== কাস্টমার নোটিফিকেশন (অ্যাপের ভেতরে + সাউন্ড + ব্রাউজার নোটিফিকেশন) =====
+   যেসব ঘটনায় নোটিফিকেশন আসবে: অ্যাডমিন অর্ডারের স্ট্যাটাস আপডেট করলে, পেমেন্ট
+   ভেরিফাই (ম্যানুয়াল/অটো) হলে, মেসেজ দিলে, নতুন নোটিশ দিলে।
+   কোন ঘটনা আগে দেখানো হয়েছে সেটা localStorage-এ ফোন নম্বর ধরে রাখা হয়, তাই
+   অফলাইন থাকার সময় ঘটে যাওয়া আপডেটও পরের বার খুললে পাওয়া যাবে। */
+const NF_MAX = 50;
+let __nfPhone = null, __nfUnsubs = [], __nfList = [], __nfSeen = null;
+let __nfOrdersReady = false, __nfNoticesReady = false, __nfAudio = null, __nfToastTimer = null, __nfAsked = false;
+const nfListKey = p => "dp_notifs_"+p;
+const nfSeenKey = p => "dp_notif_seen_"+p;
+function nfLoad(phone){
+  try{ __nfList = JSON.parse(localStorage.getItem(nfListKey(phone)) || "[]") || []; }catch(e){ __nfList = []; }
+  try{ __nfSeen = JSON.parse(localStorage.getItem(nfSeenKey(phone)) || "null"); }catch(e){ __nfSeen = null; }
+}
+function nfSave(){
+  if(!__nfPhone) return;
+  try{ localStorage.setItem(nfListKey(__nfPhone), JSON.stringify(__nfList.slice(0,NF_MAX))); }catch(e){}
+  try{ localStorage.setItem(nfSeenKey(__nfPhone), JSON.stringify(__nfSeen)); }catch(e){}
+}
+
+/* ---- সাউন্ড (Web Audio — আলাদা ফাইল লাগে না) ---- */
+function nfCtx(){
+  if(!__nfAudio){ const C = window.AudioContext||window.webkitAudioContext; if(C) __nfAudio = new C(); }
+  return __nfAudio;
+}
+function nfUnlock(){
+  try{ const c=nfCtx(); if(c && c.state==="suspended") c.resume(); }catch(e){}
+  // ব্রাউজার নোটিফিকেশনের অনুমতি — শুধু ইউজারের ক্লিক/টাচের সময়েই চাওয়া যায়
+  if(!__nfAsked && __nfPhone && window.Notification && Notification.permission==="default"){
+    __nfAsked = true;
+    try{ Notification.requestPermission().then(()=>{ if(__nfPhone) fcmRegister(fcmCustomerPath(__nfPhone)); }).catch(()=>{}); }catch(e){}
+  }
+}
+["pointerdown","keydown","touchstart"].forEach(ev=>document.addEventListener(ev, nfUnlock, {passive:true}));
+function nfSound(repeat){
+  try{
+    const ctx = nfCtx(); if(!ctx) return;
+    if(ctx.state==="suspended") ctx.resume();
+    const tone=(freq,start,dur)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type="sine"; o.frequency.value=freq; o.connect(g); g.connect(ctx.destination);
+      const t=ctx.currentTime+start;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.35,t+0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.start(t); o.stop(t+dur+0.05);
+    };
+    const n = repeat||2;
+    for(let c=0;c<n;c++){ tone(880,c*0.65,0.16); tone(1180,c*0.65+0.17,0.22); }
+  }catch(e){ console.error(e); }
+  try{ if(navigator.vibrate) navigator.vibrate([180,90,180]); }catch(e){}
+}
+
+/* ---- নোটিফিকেশন যোগ করা ---- */
+function nfAdd(items, opts){
+  opts = opts||{};
+  if(!items.length) return;
+  const cpNfOpen = document.body.classList.contains("customer-panel-mode") &&
+                   document.getElementById("cp-notifications")?.classList.contains("active");
+  items.forEach(it=>{ it.read = !!cpNfOpen; __nfList.unshift(it); });
+  __nfList.sort((a,b)=>(b.at||0)-(a.at||0));
+  if(__nfList.length>NF_MAX) __nfList.length = NF_MAX;
+  nfSave(); nfRenderAll();
+  if(opts.silent) return;
+  nfSound(2);
+  nfShowToast(items[0]);
+  if(document.hidden && window.Notification && Notification.permission==="granted" && !window.__fcmReady){
+    items.slice(0,3).forEach(it=>{ try{ new Notification(it.title, {body:it.body||"", tag:"dp-"+it.id}); }catch(e){} });
+  }
+}
+
+/* ---- UI ---- */
+function nfUnread(){ return __nfList.filter(n=>!n.read).length; }
+function nfIcon(t){ return t==="payment"?"✅":t==="chat"?"💬":t==="notice"?"📢":"🔔"; }
+function nfItemHTML(n){
+  return `<button type="button" class="nf-item ${n.read?"":"unread"}" onclick="nfOpen('${esc(n.id)}')">
+    <b>${nfIcon(n.type)} ${esc(n.title)}</b>
+    ${n.body?`<span>${esc(n.body)}</span>`:""}
+    <small>${fmt(n.at)}</small>
+  </button>`;
+}
+function nfRenderAll(){
+  const unread = nfUnread();
+  const badge = $("nfBadge");
+  if(badge){ badge.textContent = unread>99?"99+":String(unread); badge.classList.toggle("hidden", unread===0); }
+  const list = $("nfList");
+  if(list) list.innerHTML = __nfList.length ? __nfList.map(nfItemHTML).join("") : `<div class="nf-empty">এখনও কোনো নোটিফিকেশন নেই।</div>`;
+  const tb = $("cpNfBadge");
+  if(tb){ tb.textContent = unread>99?"99+":String(unread); tb.classList.toggle("hidden", unread===0); }
+  nfRenderPanel();
+}
+function nfRenderPanel(){
+  const box = $("cpNotifications"); if(!box) return;
+  if(__nfList.length){
+    box.innerHTML = `<div style="text-align:right;margin-bottom:8px"><button class="btn btn-ghost btn-sm" type="button" onclick="nfMarkAllRead()">সব পঠিত করুন</button></div>` + __nfList.map(nfItemHTML).join("");
+  }else{
+    box.innerHTML = window.__cpDerived || '<div class="cp-empty">এখনো কোনো নোটিফিকেশন নেই।</div>';
+  }
+}
+window.nfToggle = function(e){
+  if(e) e.stopPropagation();
+  $("nfPanel").classList.toggle("hidden");
+};
+window.nfMarkAllRead = function(e){
+  if(e) e.stopPropagation();
+  __nfList.forEach(n=>n.read=true); nfSave(); nfRenderAll();
+};
+document.addEventListener("click", e=>{
+  const p=$("nfPanel");
+  if(p && !p.classList.contains("hidden") && !e.target.closest(".nf-wrap")) p.classList.add("hidden");
+});
+window.nfOpen = function(id){
+  const n = __nfList.find(x=>x.id===id); if(!n) return;
+  n.read = true; nfSave(); nfRenderAll();
+  const p=$("nfPanel"); if(p) p.classList.add("hidden");
+  hideNfToast();
+  const inPanel = document.body.classList.contains("customer-panel-mode");
+  if(n.type==="chat"){ openChatModal(); return; }
+  if(n.type==="notice"){
+    if(inPanel){ window.location.href = window.location.href.split("?")[0].split("#")[0]+"#notice"; }
+    else{ const t=$("notice"); if(t) t.scrollIntoView({behavior:"smooth"}); }
+    return;
+  }
+  // অর্ডার স্ট্যাটাস / পেমেন্ট → অর্ডারের বিস্তারিত
+  if(inPanel){ cpTab("orders"); }
+  else{ goToCustomerPanel(); }
+};
+function nfShowToast(n){
+  const t = $("nfToast"); if(!t) return;
+  t.innerHTML = `<div class="nf-toast-ico">${nfIcon(n.type)}</div><div class="nf-toast-txt"><b>${esc(n.title)}</b><span>${esc(n.body||"")}</span></div><button type="button" class="nf-toast-x" aria-label="বন্ধ করুন" onclick="event.stopPropagation();hideNfToast()">×</button>`;
+  t.onclick = ()=>nfOpen(n.id);
+  t.classList.add("show");
+  clearTimeout(__nfToastTimer);
+  __nfToastTimer = setTimeout(hideNfToast, 7000);
+}
+window.hideNfToast = function(){ const t=$("nfToast"); if(t) t.classList.remove("show"); };
+
+/* ---- লিসেনার ---- */
+function nfSeenInit(){
+  if(!__nfSeen) __nfSeen = {init:false, hist:[], notices:[], chatTs:0, noticesInit:false};
+  if(!Array.isArray(__nfSeen.hist)) __nfSeen.hist=[];
+  if(!Array.isArray(__nfSeen.notices)) __nfSeen.notices=[];
+}
+function nfIsCustomerEntry(h){
+  // কাস্টমার নিজে যে হিস্ট্রি এন্ট্রি তৈরি করে (অর্ডার জমা/তথ্য হালনাগাদ) — এগুলোর জন্য নোটিফিকেশন নয়
+  return h.status==="pending" && !h.paymentVerification && /^(কাস্টমার|অর্ডার গ্রহণ)/.test(String(h.note||""));
+}
+function startCustomerNotifier(phone){
+  if(__nfPhone===phone && __nfUnsubs.length) return;
+  stopCustomerNotifier();
+  __nfPhone = phone; __nfOrdersReady = false; __nfNoticesReady = false;
+  nfLoad(phone); nfSeenInit(); nfRenderAll();
+  fcmRegister(fcmCustomerPath(phone)); // অনুমতি আগে দেওয়া থাকলে সাথে সাথে পুশ চালু
+  const wrap=$("nfWrap"); if(wrap) wrap.classList.remove("hidden");
+
+  // ১) অর্ডার স্ট্যাটাস / পেমেন্ট ভেরিফাই
+  __nfUnsubs.push(onValue(ref(db,"dorkhast/ordersByPhone/"+phone), snap=>{
+    const orders = snap.exists()? snap.val() : {};
+    const entries = [];
+    Object.values(orders).forEach(o=>{
+      Object.entries(o.trackingHistory||{}).forEach(([k,h])=>entries.push({k, h, o}));
+    });
+    if(!__nfSeen.init){
+      // এই ডিভাইসে প্রথমবার — আগের সব ইতিহাস "দেখা" ধরে নিই, পুরনো আপডেটের জন্য নোটিফিকেশন নয়
+      __nfSeen.hist = entries.map(x=>x.k); __nfSeen.init = true; nfSave(); __nfOrdersReady = true; return;
+    }
+    const seen = new Set(__nfSeen.hist);
+    const fresh = entries.filter(x=>!seen.has(x.k)).sort((a,b)=>(b.h.at||0)-(a.h.at||0));
+    fresh.forEach(x=>seen.add(x.k));
+    __nfSeen.hist = Array.from(seen).slice(-400);
+    const items = fresh.filter(x=>!nfIsCustomerEntry(x.h)).map(x=>{
+      const svc = x.o.service || "অর্ডার";
+      if(x.h.paymentVerification){
+        return {id:"h_"+x.k, type:"payment", title:"পেমেন্ট ভেরিফাই হয়েছে ✓", body:`${svc}: আপনার পেমেন্ট ${x.h.paymentVerification==="auto"?"স্বয়ংক্রিয়ভাবে":"অ্যাডমিন"} যাচাই করা হয়েছে।`, at:x.h.at||Date.now(), orderId:x.o.orderId};
+      }
+      const label = STATUS_LABEL[x.h.status] || x.h.status || "আপডেট";
+      const note = x.h.note && x.h.note!==label ? " — "+x.h.note : "";
+      return {id:"h_"+x.k, type:"status", title:"অর্ডারের অবস্থা আপডেট হয়েছে", body:`${svc}: ${label}${note}`, at:x.h.at||Date.now(), orderId:x.o.orderId};
+    });
+    nfSave();
+    if(items.length) nfAdd(items);
+    __nfOrdersReady = true;
+  }));
+
+  // ২) অ্যাডমিনের মেসেজ
+  __nfUnsubs.push(onValue(ref(db,"dorkhast/chats/"+phone+"/meta"), snap=>{
+    const m = snap.exists()? snap.val() : null;
+    if(!m || !m.unreadForCustomer || !m.lastMessageAt) return;
+    if(Number(m.lastMessageAt)===Number(__nfSeen.chatTs)) return;
+    __nfSeen.chatTs = Number(m.lastMessageAt);
+    const chatOpen = !$("chatModal").classList.contains("hidden");
+    if(chatOpen){
+      // চ্যাট খোলা থাকলে শুধু সাউন্ড; মেসেজ সাথে সাথে পঠিত
+      nfSave(); nfSound(1);
+      update(ref(db,"dorkhast/chats/"+phone+"/meta"), {unreadForCustomer:false}).catch(()=>{});
+      return;
+    }
+    nfAdd([{id:"c_"+m.lastMessageAt, type:"chat", title:"অ্যাডমিনের নতুন মেসেজ", body:m.lastMessage||"", at:m.lastMessageAt}]);
+  }));
+
+  // ৩) নতুন নোটিশ
+  __nfUnsubs.push(onValue(ref(db,"dorkhast/site/notices"), snap=>{
+    const now = Date.now();
+    const all = Object.entries(snap.val()||{}).map(([id,n])=>({id,...n})).filter(n=>!n.expiresAt || n.expiresAt>now);
+    if(!__nfSeen.noticesInit){
+      __nfSeen.notices = all.map(n=>n.id); __nfSeen.noticesInit = true; nfSave(); __nfNoticesReady = true; return;
+    }
+    const seen = new Set(__nfSeen.notices);
+    const fresh = all.filter(n=>!seen.has(n.id)).sort((a,b)=>(b.at||0)-(a.at||0));
+    fresh.forEach(n=>seen.add(n.id));
+    __nfSeen.notices = Array.from(seen).slice(-200);
+    nfSave();
+    if(fresh.length) nfAdd(fresh.map(n=>({id:"n_"+n.id, type:"notice", title:"নতুন নোটিশ", body:n.title||"", at:n.at||Date.now()})));
+    __nfNoticesReady = true;
+  }));
+}
+function stopCustomerNotifier(){
+  fcmUnregister(); // লগআউট/নম্বর বদলালে এই ডিভাইসে আর পুশ যাবে না
+  __nfUnsubs.forEach(f=>{ try{f();}catch(e){} }); __nfUnsubs = [];
+  __nfPhone = null; __nfList = []; __nfSeen = null;
+  const wrap=$("nfWrap"); if(wrap) wrap.classList.add("hidden");
+  hideNfToast();
 }
 
 /* ---- restore session on load ---- */
