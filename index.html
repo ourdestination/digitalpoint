@@ -607,16 +607,17 @@
   .bill-empty{text-align:center;color:var(--ink-soft);font-size:15px;padding:20px 6px;}
 
   /* bill / cash memo (admin-authored, shown to the customer via "বিল দেখুন") */
-  .atm-memo{width:100%;font-family:'Courier New',monospace;}
+  .atm-memo{width:100%;font-family:'DejaVu Sans Mono','Menlo','SF Mono','Consolas','Liberation Mono','Courier New',monospace;}
+  .atm-memo *{font-family:inherit;}
   .atm-memo-paper{background:#fff;border-left:1px dashed #bbb;border-right:1px dashed #bbb;padding:18px 16px 14px;color:#1a1a1a;box-shadow:0 4px 14px rgba(0,0,0,.10);}
   .atm-memo-head{text-align:center;}
-  .atm-memo-brand{font-family:var(--serif);font-weight:700;font-size:19px;letter-spacing:1px;}
+  .atm-memo-brand{font-family:inherit;font-weight:700;font-size:19px;letter-spacing:1px;}
   .atm-memo-sub{font-size:12px;color:#555;margin-top:2px;}
   .atm-memo-divider{border-top:1px solid #1a1a1a;margin:10px 0;}
   .atm-memo-divider.dashed{border-top:1px dashed #999;}
   .atm-memo-row{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:3px 0;}
-  .atm-memo-row span{color:#555;}
-  .atm-memo-row b{font-weight:700;text-align:left;}
+  .atm-memo-row span{color:#555;flex:1 1 auto;min-width:0;overflow-wrap:anywhere;}
+  .atm-memo-row b{font-weight:700;text-align:right;white-space:nowrap;flex:0 0 auto;}
   .atm-memo-amount{font-size:15px;padding:6px 0;}
   .atm-memo-amount b{color:var(--stamp-dark);}
   .atm-memo-barcode{height:30px;margin:12px 0 6px;background:repeating-linear-gradient(90deg,#1a1a1a 0,#1a1a1a 2px,transparent 2px,transparent 5px,#1a1a1a 5px,#1a1a1a 6px,transparent 6px,transparent 9px);}
