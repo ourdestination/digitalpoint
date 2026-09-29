@@ -1674,6 +1674,7 @@ document.getElementById("apkInfoModal").addEventListener("click", e=>{
 });
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
@@ -2884,7 +2885,7 @@ window.viewBill=function(orderId){
           <div class="atm-memo-row" style="display:block;"><span>${MEMO_PAY_LINE}</span></div>
           ${m.note?`<div class="atm-memo-divider dashed"></div><div class="atm-memo-row" style="display:block;"><span>${esc(memoEnDigits(m.note))}</span></div>`:""}
           <div class="atm-memo-divider"></div>
-          <div class="atm-memo-barcode"></div>
+          <div style="text-align:center;margin:12px 0 6px;"><div id="memoQR" style="display:inline-block;padding:6px;background:#fff;line-height:0;"></div><div style="font-size:10.5px;color:#555;margin-top:4px;">Scan to read memo details</div></div>
           <div class="atm-memo-thanks">Thank you — Digital Point</div>
           <div class="atm-memo-mgmt">Management by Hredoy Roy</div>
         </div>
@@ -2893,22 +2894,146 @@ window.viewBill=function(orderId){
         <button class="btn btn-primary btn-wide" type="button" onclick="saveBillAsJPG('${esc(orderId)}')">Save as JPG</button>
       </div>`;
   }
+  if(m) drawMemoQR(o);
   $("billModal").classList.remove("hidden");
 };
 window.closeBillModal=function(){
   $("billModal").classList.add("hidden");
 };
-window.saveBillAsJPG=function(orderId){
-  const el=document.getElementById("billMemoPrint");
-  if(!el || typeof html2canvas==="undefined") return;
+window.saveBillAsJPG=async function(orderId){
   const o=(window.__trackedOrders||{})[orderId];
-  html2canvas(el, {scale:2, backgroundColor:"#ffffff", useCORS:true}).then(canvas=>{
+  if(!o||!o.memo) return;
+  try{
+    if(typeof QRCode==="undefined") throw new Error("QR library not loaded — check internet");
+    const cv=await memoToJPGCanvas(o,billMemoIdLabel,window.__siteLogo||"");
     const link=document.createElement("a");
-    link.download = "Memo-"+(o?billMemoIdLabel(o):orderId)+".jpg";
-    link.href = canvas.toDataURL("image/jpeg", 0.95);
+    link.download="Memo-"+billMemoIdLabel(o)+".jpg";
+    link.href=cv.toDataURL("image/jpeg",0.95);
     link.click();
-  }).catch(e=>{ console.error(e); });
+  }catch(e){ console.error(e); alert("ছবি সেভ করা যায়নি: "+e.message); }
 };
+/* ---- QR code carries the memo data itself as plain text (no link, no internet needed to read it) ---- */
+/* ---- Save-as-JPG: memo is drawn directly on a canvas (no html2canvas), so the QR always appears ---- */
+function loadImg(src){ return new Promise(res=>{ const i=new Image(); i.crossOrigin="anonymous"; i.onload=()=>res(i); i.onerror=()=>res(null); i.src=src; }); }
+function wrapLines(ctx,text,maxW){
+  const out=[];
+  String(text).split("\n").forEach(par=>{
+    let cur="";
+    par.split(" ").forEach(word=>{
+      const t=cur?cur+" "+word:word;
+      if(ctx.measureText(t).width<=maxW){ cur=t; return; }
+      if(cur){ out.push(cur); cur=""; }
+      let w=word;
+      while(ctx.measureText(w).width>maxW && w.length>1){
+        let k=w.length; while(k>1 && ctx.measureText(w.slice(0,k)).width>maxW) k--;
+        out.push(w.slice(0,k)); w=w.slice(k);
+      }
+      cur=w;
+    });
+    out.push(cur);
+  });
+  return out.length?out:[""];
+}
+async function memoToJPGCanvas(o,idLabel,logoUrl){
+  const m=o.memo, S=2, W=390, P=18, IW=W-2*P;
+  const F='"DejaVu Sans Mono","Menlo","SF Mono","Consolas","Liberation Mono","Courier New",monospace';
+  const logo=logoUrl?await loadImg(logoUrl):null;
+  const tmp=document.createElement("div");
+  new QRCode(tmp,{text:memoQRText(o),width:300,height:300,colorDark:"#1a1a1a",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.L});
+  const qrCv=tmp.querySelector("canvas");
+  function run(ctx,draw){
+    let y=20;
+    const font=(sz,b)=>{ ctx.font=(b?"bold ":"")+sz+"px "+F; };
+    const center=(t,sz,col,b)=>{ font(sz,b); if(draw){ ctx.fillStyle=col; ctx.textAlign="center"; ctx.fillText(t,W/2,y+sz); } y+=sz+5; };
+    const line=dashed=>{ y+=10; if(draw){ ctx.strokeStyle=dashed?"#999":"#1a1a1a"; ctx.lineWidth=1; ctx.setLineDash(dashed?[3,3]:[]); ctx.beginPath(); ctx.moveTo(P,y+.5); ctx.lineTo(W-P,y+.5); ctx.stroke(); ctx.setLineDash([]); } y+=10; };
+    const row=(l,v,x)=>{
+      x=x||{}; const sz=x.size||12.5, lh=sz+6;
+      font(sz,true); const vw=ctx.measureText(v).width;
+      font(sz,false); const lines=wrapLines(ctx,l,IW-vw-10);
+      if(draw){
+        ctx.textAlign="left"; ctx.fillStyle=x.lcol||"#555"; font(sz,false);
+        lines.forEach((t,i)=>ctx.fillText(t,P,y+sz+3+i*lh));
+        font(sz,true); ctx.textAlign="right"; ctx.fillStyle=x.vcol||"#1a1a1a"; ctx.fillText(v,W-P,y+sz+3);
+      }
+      y+=lines.length*lh;
+    };
+    const para=(t,sz,col)=>{
+      font(sz,false); const lines=wrapLines(ctx,t,IW), lh=sz+6;
+      if(draw){ ctx.textAlign="left"; ctx.fillStyle=col; lines.forEach((s,i)=>ctx.fillText(s,P,y+sz+3+i*lh)); }
+      y+=lines.length*lh;
+    };
+    if(logo){
+      if(draw){ const lx=(W-34)/2; ctx.save(); ctx.beginPath(); ctx.roundRect?ctx.roundRect(lx,y,34,34,6):ctx.rect(lx,y,34,34); ctx.clip(); ctx.drawImage(logo,lx,y,34,34); ctx.restore(); }
+      y+=40;
+    }
+    center("Digital Point",19,"#1a1a1a",true);
+    center("CASH MEMO / BILL",12,"#555");
+    line(false);
+    row("Order No",idLabel(o));
+    row("Date",memoDate(m.generatedAt));
+    line(true);
+    row("Name",String(o.name||""));
+    if(o.customerId) row("Customer ID",String(o.customerId));
+    row("Mobile",String(o.phone||""));
+    line(true);
+    (m.items||[]).forEach(it=>row(memoLabel(it.label),memoMoney(it.amount)));
+    line(true);
+    row("Subtotal",memoMoney(m.subtotal));
+    if(m.discount) row("Discount","-"+memoMoney(m.discount));
+    if(m.promo&&m.promo.discountAmount) row("Promo Discount ("+m.promo.code+")","-"+memoMoney(m.promo.discountAmount));
+    y+=4; row("TOTAL DUE",memoMoney(m.total),{size:15,lcol:"#1a1a1a",vcol:"#4a2fa0"}); y+=4;
+    line(true);
+    para(MEMO_PAY_LINE,12.5,"#555");
+    if(m.note){ line(true); para(memoEnDigits(m.note),12.5,"#555"); }
+    line(false);
+    y+=6;
+    if(draw && qrCv){ const qx=(W-150)/2; ctx.fillStyle="#fff"; ctx.fillRect(qx-6,y,162,162); ctx.drawImage(qrCv,qx,y+6,150,150); }
+    y+=168;
+    center("Scan to read memo details",10.5,"#555");
+    y+=4;
+    center("Thank you \u2014 Digital Point",12,"#555");
+    center("Management by Hredoy Roy",10.5,"#888");
+    return y+12;
+  }
+  const H=Math.ceil(run(document.createElement("canvas").getContext("2d"),false));
+  const cv=document.createElement("canvas"); cv.width=W*S; cv.height=H*S;
+  const ctx=cv.getContext("2d"); ctx.scale(S,S); ctx.textBaseline="alphabetic";
+  ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle="#bbb"; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(.5,0); ctx.lineTo(.5,H); ctx.moveTo(W-.5,0); ctx.lineTo(W-.5,H); ctx.stroke(); ctx.setLineDash([]);
+  run(ctx,true);
+  return cv;
+}
+function memoQRText(o){
+  const m=o.memo, L=[];
+  L.push("DIGITAL POINT - CASH MEMO");
+  L.push("Order No: "+billMemoIdLabel(o));
+  L.push("Date: "+memoDate(m.generatedAt));
+  L.push("Name: "+o.name);
+  if(o.customerId) L.push("Customer ID: "+o.customerId);
+  L.push("Mobile: "+o.phone);
+  L.push("--------------");
+  (m.items||[]).forEach(it=>L.push(memoLabel(it.label)+": "+memoMoney(it.amount)));
+  L.push("--------------");
+  L.push("Subtotal: "+memoMoney(m.subtotal));
+  if(m.discount) L.push("Discount: -"+memoMoney(m.discount));
+  if(m.promo&&m.promo.discountAmount) L.push("Promo ("+m.promo.code+"): -"+memoMoney(m.promo.discountAmount));
+  L.push("TOTAL: "+memoMoney(m.total));
+  if(m.note) L.push("Note: "+memoEnDigits(m.note));
+  return L.join("\n");
+}
+function drawMemoQR(o){
+  const el=document.getElementById("memoQR"); if(!el||typeof QRCode==="undefined") return;
+  el.innerHTML="";
+  try{
+    /* draw at 300px, then swap the library's canvas/img for one plain <img> so html2canvas (Save as JPG) captures it reliably */
+    new QRCode(el,{text:memoQRText(o),width:300,height:300,colorDark:"#1a1a1a",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.L});
+    const cv=el.querySelector("canvas");
+    if(cv){ window.__memoQRUrl=cv.toDataURL("image/png"); el.innerHTML='<img alt="QR" src="'+cv.toDataURL("image/png")+'" width="150" height="150" style="display:block;width:150px;height:150px;">'; }
+  }
+  catch(e){ console.warn("QR failed",e); el.innerHTML='<div style="font-size:11px;color:#a11;line-height:1.3;">QR too large</div>'; }
+}
+
 document.getElementById("billModal").addEventListener("click", e=>{
   if(e.target.id==="billModal") closeBillModal();
 });
