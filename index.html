@@ -1537,8 +1537,8 @@
       <h2 class="cp-title">আমার অ্যাকাউন্ট</h2>
       <div class="cp-grid"><div class="cp-stat"><span>Customer ID</span><b id="cpStatId">-</b></div><div class="cp-stat"><span>মোট অর্ডার</span><b id="cpStatOrders">0</b></div><div class="cp-stat"><span>সর্বশেষ অর্ডার</span><b id="cpStatLast" style="font-size:16px">-</b></div></div>
       <div class="cp-card" style="margin-top:14px"><div class="cp-muted">এই প্যানেল থেকে আপনার অর্ডারের সম্পূর্ণ ইতিহাস, নতুন অর্ডার, লাইভ চ্যাট, ট্র্যাকিং এবং অর্ডার-সংক্রান্ত নোটিফিকেশন এক জায়গায় দেখা যাবে।</div></div>
-      <h3 class="cp-special-title">স্পেশাল সেবা</h3>
-      <div id="cpSpecialGrid" class="service-grid cp-special-grid"><div class="cp-special-empty">লোড হচ্ছে...</div></div>
+      <h3 class="cp-special-title hidden" id="cpSpecialTitle">⭐ স্পেশাল সেবা</h3>
+      <div id="cpSpecialGrid" class="service-grid cp-special-grid hidden"><div class="cp-special-empty">লোড হচ্ছে...</div></div>
     </section>
     <section class="cp-section" id="cp-orders"><h2 class="cp-title">সব অর্ডার হিস্টোরি</h2><div id="cpOrders" class="cp-orders"><div class="cp-empty">অর্ডার লোড হচ্ছে...</div></div></section>
     <section class="cp-section" id="cp-manual">
@@ -1772,7 +1772,8 @@ async function loadSiteContent(){
     renderHero(site.hero||DEFAULT_HERO);
     renderLogo(site.logo);
     renderMarquee(site.marquee);
-    renderSpecialCards(site.specialCards?Object.values(site.specialCards).sort((a,b)=>(a.sort||0)-(b.sort||0)):[]);
+    window.__rawSpecialCards=site.specialCards?Object.values(site.specialCards).sort((a,b)=>(a.sort||0)-(b.sort||0)):[];
+    applySpecialAccess();
     window.__paymentQR = site.paymentQR || "";
     window.__siteLogo = site.logo || "";
   }catch(e){
@@ -1781,7 +1782,8 @@ async function loadSiteContent(){
     renderContact(DEFAULT_CONTACT);
     renderHero(DEFAULT_HERO);
     renderMarquee(DEFAULT_MARQUEE);
-    renderSpecialCards([]);
+    window.__rawSpecialCards=[];
+    applySpecialAccess();
     window.__paymentQR = "";
     window.__siteLogo = "";
   }
@@ -1964,6 +1966,31 @@ function renderSpecialCards(list){
   }).join("");
   renderServiceSelectOptions();
   updateAllServiceRequiredInfo();
+}
+/* ===== স্পেশাল সেবার অনুমতি =====
+   অ্যাডমিন যে কাস্টমারকে অনুমোদন দেন, তাঁর মোবাইল নম্বর dorkhast/specialAccess/{নম্বর}-এ সেভ হয়।
+   শুধু সেই নম্বর দিয়ে লগইন করা কাস্টমারই স্পেশাল সেবার তালিকা দেখতে ও অর্ডার করতে পারেন;
+   অন্য সবার জন্য অংশটি পুরোপুরি লুকানো থাকে। */
+window.__rawSpecialCards = window.__rawSpecialCards || [];
+window.__specialAccess = {phone:null, ok:false};
+function sessionPhoneNorm(){ const s=getSession(); return s&&s.phone?normalizePhone(s.phone):""; }
+async function fetchSpecialAccess(){
+  const phone=sessionPhoneNorm();
+  if(!phone){ window.__specialAccess={phone:"",ok:false}; return false; }
+  try{
+    const snap=await get(ref(db,"dorkhast/specialAccess/"+phone));
+    window.__specialAccess={phone, ok:snap.exists()};
+  }catch(e){ console.error(e); window.__specialAccess={phone, ok:false}; }
+  return window.__specialAccess.ok;
+}
+async function applySpecialAccess(force){
+  const phone=sessionPhoneNorm();
+  if(force || window.__specialAccess.phone!==phone) await fetchSpecialAccess();
+  const ok = !!phone && window.__specialAccess.phone===phone && window.__specialAccess.ok;
+  const t=$("cpSpecialTitle"), g=$("cpSpecialGrid");
+  if(t) t.classList.toggle("hidden",!ok);
+  if(g) g.classList.toggle("hidden",!ok);
+  renderSpecialCards(ok?(window.__rawSpecialCards||[]):[]);
 }
 window.cpOrderSpecial = function(title, link){
   if(link){ window.open(link, "_blank", "noopener"); return; }
@@ -3058,6 +3085,7 @@ function setSession(data){
 }
 function clearSession(){
   try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
+  window.__specialAccess={phone:null, ok:false};
   stopChatMetaListener();
   stopCustomerNotifier();
   renderAccountUI();
@@ -3147,6 +3175,27 @@ document.getElementById("loginModal").addEventListener("click", e=>{
   if(e.target.id==="loginModal") closeLoginModal();
 });
 
+/* যার প্রোফাইল/ইনডেক্স নেই কিন্তু অ্যাডমিনের কাস্টমার রেকর্ডে আছেন (বা স্পেশাল সেবার অনুমতি পেয়েছেন),
+   তাঁর জন্য লগইনের সময়ই Customer ID সহ প্রোফাইল তৈরি করে দেওয়া হয়। */
+async function provisionCustomerForLogin(phone){
+  let name="", approved=false, found=null;
+  try{ const sa=await get(ref(db,"dorkhast/specialAccess/"+phone)); if(sa.exists()){ approved=true; name=(sa.val()||{}).name||""; } }catch(e){ console.error(e); }
+  try{ found=await findCustomerByPhone(phone); }catch(e){ console.error(e); }
+  if(found && found.id){
+    await set(ref(db,"dorkhast/site/customerIndexByPhone/"+phone), found.id);
+    return {customerId:found.id, data:found.data||{}};
+  }
+  if(!found && !approved) return null;
+  if(found && found.data && found.data.name) name=found.data.name;
+  const customerId=await nextCustomerId(), now=Date.now();
+  const profile={customerId, name:name||"", phone, createdAt:now, updatedAt:now, orderCount:0};
+  const updates={};
+  updates["dorkhast/site/customers/"+customerId]=profile;
+  updates["dorkhast/site/customerIndexByPhone/"+phone]=customerId;
+  if(found && found.legacy) updates["dorkhast/site/customerRecords/"+found.sectionId+"/customers/"+found.custKey+"/customerId"]=customerId;
+  await update(ref(db),updates);
+  return {customerId, data:profile};
+}
 async function completeLogin(data){
   setSession(data);
   closeLoginModal();
@@ -3184,14 +3233,21 @@ window.doLogin = async function(){
   if(!/^0\d{9,10}$/.test(phone)) return show("সঠিক মোবাইল নম্বর দিন।", true);
   btn.disabled=true; btn.textContent="খোঁজা হচ্ছে...";
   try{
+    let customerId, data={};
     const idx = await get(ref(db,"dorkhast/site/customerIndexByPhone/"+phone));
-    if(!idx.exists()){
-      show("এই নম্বরে কোনো অর্ডার পাওয়া যায়নি। প্রথমে একটি অর্ডার করুন।", true);
-      return;
+    if(idx.exists()){
+      customerId = idx.val();
+      const p = await get(ref(db,"dorkhast/site/customers/"+customerId));
+      data = p.exists() ? p.val() : {};
+    }else{
+      /* অ্যাডমিন কাস্টমার রেকর্ডে যোগ করেছেন বা স্পেশাল সেবার অনুমতি দিয়েছেন — অথচ এখনো অর্ডার করেননি */
+      const prov = await provisionCustomerForLogin(phone);
+      if(!prov){
+        show("এই নম্বরে কোনো অর্ডার পাওয়া যায়নি। প্রথমে একটি অর্ডার করুন।", true);
+        return;
+      }
+      customerId = prov.customerId; data = prov.data || {};
     }
-    const customerId = idx.val();
-    const p = await get(ref(db,"dorkhast/site/customers/"+customerId));
-    const data = p.exists() ? p.val() : {};
     if(data.passwordHash){
       window.__loginStage="password";
       window.__loginPending={customerId, phone, name:data.name||"", photo:data.photo||"", passwordHash:data.passwordHash};
@@ -3206,7 +3262,7 @@ window.doLogin = async function(){
     await completeLogin({customerId, phone, name:data.name||"", photo:data.photo||""});
   }catch(e){
     console.error(e);
-    show("লগইন করা যায়নি। আবার চেষ্টা করুন।", true);
+    show("লগইন করা যায়নি। আবার চেষ্টা করুন।"+(/permission/i.test(String(e&&(e.code||e.message)))?" (ডাটাবেস Rules অনুমতি দিচ্ছে না)":""), true);
   }finally{
     btn.disabled=false;
     if((window.__loginStage||"phone")==="phone") btn.textContent="লগইন করুন";
@@ -3574,6 +3630,12 @@ window.cpSubmitOrder=async function(){
   const msg=$("cpOrderMsg"), btn=$("cpOrderBtn"), fileEl=$("cpOrderFile");
   if(!name){msg.textContent="নাম লিখুন।";msg.className="cp-msg err";return;}
   if(!service){msg.textContent="একটি সেবা নির্বাচন করুন।";msg.className="cp-msg err";return;}
+  { const sv=String(service).trim();
+    const isSpecialSvc=(window.__rawSpecialCards||[]).some(c=>String(c.title||"").trim()===sv);
+    const isNormalSvc=sv==="অন্যান্য"||(__allServices||[]).some(x=>String(x.title||"").trim()===sv);
+    if(isSpecialSvc && !isNormalSvc && !(await fetchSpecialAccess())){
+      msg.textContent="এই স্পেশাল সেবা আপনার অ্যাকাউন্টে চালু নেই। অনুমতির জন্য আমাদের সাথে যোগাযোগ করুন।";msg.className="cp-msg err";return;
+    } }
   if(fileEl?.files?.[0] && fileEl.files[0].size>MAX_ORDER_FILE_SIZE){msg.textContent="ফাইলের আকার ১MB এর বেশি — অনুগ্রহ করে ছোট ফাইল দিন।";msg.className="cp-msg err";return;}
   btn.disabled=true;btn.textContent="জমা হচ্ছে...";msg.textContent="";
   try{
@@ -3605,6 +3667,9 @@ function initCustomerPanel(){
   if(!s||!s.phone){ window.location.href=location.href.split('?')[0].split('#')[0]; return; }
   document.body.classList.add('customer-panel-mode'); $('customerPanelView').classList.remove('hidden');
   $('cpName').textContent=s.name||s.phone; $('cpId').textContent='Customer ID: '+(s.customerId||'-'); $('cpStatId').textContent=s.customerId||'-'; $('cpOrderCustomerId').value=s.customerId||''; $('cpOrderName').value=s.name||''; $('cpOrderPhone').value=s.phone||''; $('cpAvatar').innerHTML=avatarHTML(s.name,s.photo);
+  { const sp=normalizePhone(s.phone);
+    onValue(ref(db,"dorkhast/specialAccess/"+sp), snap=>{ window.__specialAccess={phone:sp, ok:snap.exists()}; applySpecialAccess(); },
+      ()=>{ window.__specialAccess={phone:sp, ok:false}; applySpecialAccess(); }); }
   updateAllServiceRequiredInfo(); buildCpWA();
   loadCustomerPanelData();
 }
