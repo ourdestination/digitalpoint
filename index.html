@@ -596,6 +596,67 @@
     font-size:24px;color:var(--ink-soft);cursor:pointer;line-height:1;
   }
   .auth-modal-close:hover{background:var(--green-tint);}
+  /* ---------- bKash payment popup ---------- */
+  .pay-modal-box{max-width:420px;}
+  .pay-modal-box .sub{margin-top:8px;}
+  .pay-amount{margin-top:18px;padding:14px 16px;border-radius:var(--r-md);background:var(--green-tint);text-align:center;}
+  .pay-amount small{display:block;font-size:13.5px;color:var(--ink-soft);}
+  .pay-amount strong{display:block;font-family:var(--serif);font-size:32px;line-height:1.35;color:var(--green-deep);}
+  .pay-hint{display:block;margin-top:6px;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  .pay-timer{margin-top:18px;text-align:center;}
+  .pay-timer-num{font-family:var(--serif);font-size:42px;line-height:1.2;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .pay-timer.low .pay-timer-num{color:var(--stamp-dark);}
+  .pay-timer-bar{height:6px;margin-top:8px;border-radius:6px;background:var(--line);overflow:hidden;}
+  .pay-timer-bar i{display:block;height:100%;width:100%;background:var(--green);transition:width 1s linear;}
+  .pay-timer.low .pay-timer-bar i{background:var(--stamp);}
+  .pay-send{margin-top:18px;border:1px solid var(--line);border-radius:var(--r-md);padding:8px 16px;}
+  .pay-send-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;font-size:14.5px;color:var(--ink-soft);}
+  .pay-send-row + .pay-send-row{border-top:1px solid var(--line);}
+  .pay-send-row b{font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:.3px;}
+  .pay-send-val{display:flex;align-items:center;gap:8px;}
+  .pay-copy{border:0;border-radius:8px;padding:5px 11px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;background:var(--green-tint);color:var(--green-deep);}
+  .pay-copy:hover{background:#d2e6da;}
+  .pay-wait-note{margin-top:16px;font-size:14px;line-height:1.7;color:var(--ink-soft);text-align:center;}
+  .pay-done-icon{width:60px;height:60px;border-radius:50%;margin:0 auto 16px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;}
+  .pay-result{text-align:center;}
+  .pay-result p{color:var(--ink-soft);font-size:15px;line-height:1.75;margin:12px 0 0;}
+  .pay-result-actions{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+  .pay-result-actions .btn{margin-top:0;}
+  /* ---- bKash theme (payment popup only) ---- */
+  .pay-modal-box{--bk:#E2136E;--bk-deep:#B80E58;--bk-tint:#FDE8F1;--bk-line:#F6C3D9;padding:0 0 26px;overflow:auto;border-top:0;}
+  .pay-bk-head{background:linear-gradient(135deg,#E2136E 0%,#C20F5C 100%);padding:20px 20px 18px;text-align:center;border-radius:inherit;border-bottom-left-radius:0;border-bottom-right-radius:0;}
+  .pay-bk-logo{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-radius:16px;padding:8px 18px;box-shadow:0 6px 16px rgba(120,0,50,.28);}
+  .pay-bk-logo img{display:block;height:46px;width:auto;}
+  .pay-bk-tag{margin:10px 0 0;color:#fff;font-size:13.5px;opacity:.95;}
+  .pay-modal-box #payBody{padding:6px 24px 0;}
+  .pay-modal-box .auth-modal-close{color:#fff;z-index:2;}
+  .pay-modal-box .auth-modal-close:hover{background:rgba(255,255,255,.2);}
+  .pay-modal-box h3{color:var(--bk-deep);margin-top:18px;}
+  .pay-modal-box .pay-amount{background:var(--bk-tint);border:1px solid var(--bk-line);}
+  .pay-modal-box .pay-amount strong{color:var(--bk);}
+  .pay-modal-box .field input:focus{border-color:var(--bk);outline:0;box-shadow:0 0 0 3px rgba(226,19,110,.18);}
+  .pay-modal-box .btn-primary{background:var(--bk);border-color:var(--bk);color:#fff;}
+  .pay-modal-box .btn-primary:hover{background:var(--bk-deep);border-color:var(--bk-deep);}
+  .pay-modal-box .btn-soft{background:var(--bk-tint);color:var(--bk-deep);}
+  .pay-modal-box .btn-soft:hover{background:#fbd5e6;}
+  .pay-modal-box .pay-timer-bar{background:var(--bk-tint);}
+  .pay-modal-box .pay-timer-bar i{background:var(--bk);}
+  .pay-modal-box .pay-timer-num{color:var(--bk-deep);}
+  .pay-modal-box .pay-timer.low .pay-timer-num{color:#7A0A3A;}
+  .pay-modal-box .pay-send{border-color:var(--bk-line);background:#fff;}
+  .pay-modal-box .pay-send-row + .pay-send-row{border-top-color:var(--bk-line);}
+  .pay-modal-box .pay-copy{background:var(--bk-tint);color:var(--bk-deep);}
+  .pay-modal-box .pay-copy:hover{background:#fbd5e6;}
+  .pay-modal-box .pay-done-icon{background:var(--bk);}
+  .pay-open-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:18px;padding:14px 16px;border:0;border-radius:var(--r-md);background:var(--bk);color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 8px 18px rgba(226,19,110,.30);}
+  .pay-open-btn:hover{background:var(--bk-deep);}
+  .pay-open-btn:active{transform:translateY(1px);}
+  .pay-open-hint{margin:8px 0 0;font-size:12.5px;line-height:1.65;color:var(--ink-soft);text-align:center;}
+  .pay-steps{margin-top:14px;padding:12px 14px;border-radius:var(--r-md);background:var(--bk-tint);border:1px solid var(--bk-line);font-size:13.5px;line-height:1.75;color:var(--ink);}
+  .pay-steps ol{margin:6px 0 0;padding-left:20px;}
+  .pay-steps a{color:var(--bk-deep);font-weight:600;text-decoration:underline;}
+  .pay-steps b{color:var(--bk-deep);}
+  @media (prefers-reduced-motion: reduce){ .pay-timer-bar i{transition:none;} }
   .profile-photo-row{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:8px;}
   .profile-photo-lg{
     width:88px;height:88px;border-radius:50%;overflow:hidden;background:var(--green);color:#fff;
@@ -1748,7 +1809,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&
 // বাংলা সংখ্যা (০-৯) গুলো আলাদা, স্পষ্ট ফন্টে (Noto Sans Bengali) দেখানোর জন্য span দিয়ে wrap করে
 const bnDigits=s=>String(s).replace(/[০-৯]+/g,m=>`<span class="bn-digit">${m}</span>`);
 // বাংলা কিবোর্ড থেকে টাইপ করা সংখ্যা (০-৯) কে ইংলিশ সংখ্যায় (0-9) রূপান্তর করে — পেমেন্ট ফর্মের
-// শেষ ২ ডিজিট ও Transaction ID অবশ্যই ইংলিশ সংখ্যায় সেভ হতে হবে, কারণ auto-verify এই ডেটা
+// পূর্ণ ১১ ডিজিটের bKash নম্বর ও Transaction ID অবশ্যই ইংলিশ সংখ্যায় সেভ হতে হবে, কারণ auto-verify এই ডেটা
 // SMS-forwarder থেকে আসা Firebase ডেটার (ইংলিশ সংখ্যা) সাথে হুবহু মিলিয়ে দেখে।
 const toEnDigits=s=>String(s).replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d));
 window.toEnDigits=toEnDigits;
@@ -2693,7 +2754,8 @@ window.trackOrders = async function(){
 
 function paymentSectionHTML(o){
   if(o.status!=='ready') return "";
-  const billBtn = `<button class="btn btn-soft btn-sm" type="button" onclick="viewBill('${esc(o.orderId)}')">বিল দেখুন</button>`;
+  const id=esc(o.orderId);
+  const billBtn = `<button class="btn btn-soft btn-sm" type="button" onclick="viewBill('${id}')">বিল দেখুন</button>`;
   const p=o.paymentInfo;
   if(p && p.verified){
     return `<div class="payment-btn-row"><div class="payment-box payment-verified">✓ পেমেন্ট ভেরিফাইড${p.amount?(" — ৳"+esc(p.amount)):""}</div>${billBtn}</div>`;
@@ -2702,55 +2764,32 @@ function paymentSectionHTML(o){
   if(!m){
     return `<div class="payment-btn-row"><div class="payment-box payment-pending">মেমো তৈরি না হওয়া পর্যন্ত পেমেন্ট করা যাবে না। একটু পর আবার চেষ্টা করুন।</div>${billBtn}</div>`;
   }
-  const NUM = window.__paymentNumbers||{};
-  const QR = window.__paymentQR||"";
-  // পেমেন্ট তথ্য জমা হয়ে থাকলেও এখনো ভেরিফাই না হওয়া পর্যন্ত (verificationPending) গ্রাহক
-  // ভুল সংশোধন করে আবার জমা দিতে পারবেন — শুধু ভেরিফাইড হয়ে গেলে আর এডিট করা যাবে না
-  const pending = !!(p && !p.verified);
-  const toggleBtn = pending
-    ? `<button class="btn btn-soft btn-sm" type="button" onclick="togglePay('${esc(o.orderId)}')">তথ্য সংশোধন করুন</button>`
-    : `<button class="btn btn-primary btn-sm" type="button" onclick="togglePay('${esc(o.orderId)}')">পেমেন্ট করুন</button>`;
-  const pendingNotice = pending
-    ? `<div class="payment-box payment-pending">
-        পেমেন্ট তথ্য জমা হয়েছে, যাচাইয়ের অপেক্ষায়...<br>
-        <span style="font-size:12.5px;">আপনার দেওয়া তথ্য — মাধ্যম: <b>${esc(PAYMENT_LABEL[p.method]||p.method||"—")}</b> · পরিমাণ: <b>৳${esc(p.amount||0)}</b> · শেষ ২ ডিজিট: <b>${esc(p.lastTwo||"—")}</b> · Transaction ID: <b>${esc(p.transactionId||"—")}</b></span><br>
-        ভুল হয়ে থাকলে "তথ্য সংশোধন করুন" বাটনে চেপে ঠিক করে দিন।
-      </div>`
-    : "";
+  // ১০ মিনিটের উইন্ডো এখনো চলছে কি না (সার্ভারের সময় ধরে)
+  const live = !!(p && p.verificationPending && p.expiresAt && srvNow() < p.expiresAt);
+  if(live){
+    armPayExpiry(o);
+    return `
+      <div class="payment-btn-row">
+        <button class="btn btn-primary btn-sm" type="button" onclick="openPayPopup('${id}')">পেমেন্ট দেখুন</button>
+        ${billBtn}
+      </div>
+      <div class="payment-box payment-pending">
+        পেমেন্ট যাচাইয়ের অপেক্ষায় আছে...<br>
+        <span style="font-size:12.5px;">পরিমাণ: <b>৳${esc(p.amount||m.total)}</b> · আপনার bKash নম্বর: <b>${esc(p.senderNumber||(p.lastTwo?("•••••••••"+p.lastTwo):"—"))}</b><br>সময় শেষ হওয়ার আগে Send Money করুন।</span>
+      </div>`;
+  }
+  let notice = "";
+  if(p && !p.verified){
+    notice = p.expiresAt
+      ? `<div class="payment-box payment-pending">১০ মিনিটের মধ্যে পেমেন্ট মেলেনি। টাকা পাঠিয়ে থাকলে আবার পাঠাবেন না — আমাদের জানান, আমরা নিজে যাচাই করে দেব।</div>`
+      : `<div class="payment-box payment-pending">আগে জমা দেওয়া পেমেন্ট তথ্য যাচাইয়ের অপেক্ষায় আছে।</div>`;
+  }
   return `
     <div class="payment-btn-row">
-      ${toggleBtn}
+      <button class="btn btn-primary btn-sm" type="button" onclick="openPayPopup('${id}')">${p?"আবার পেমেন্ট করুন":"পেমেন্ট করুন"}</button>
       ${billBtn}
     </div>
-    ${pendingNotice}
-    <div class="pay-form" id="payform-${esc(o.orderId)}" style="display:none;">
-      <div class="pay-numbers">
-        <div>bKash: <b>${esc(NUM.bkash||"—")}</b></div>
-      </div>
-      ${QR?`<div class="pay-qr"><p class="pay-qr-label">বাংলা কিউআর (QR) স্ক্যান করে পেমেন্ট করুন</p><img src="${QR}" alt="বাংলা কিউআর পেমেন্ট কোড" class="pay-qr-img"></div>`:""}
-      <div class="field">
-        <label>পেমেন্ট মাধ্যম</label>
-        <select id="payMethod-${esc(o.orderId)}">
-          <option value="bkash" ${p&&p.method==='bkash'?'selected':''}>bKash</option>
-          <option value="banglaqr" ${p&&p.method==='banglaqr'?'selected':''}>Bangla QR</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>যে নম্বর থেকে পেমেন্ট করেছেন তার শেষ ২ ডিজিট</label>
-        <input id="payLast2-${esc(o.orderId)}" maxlength="2" inputmode="numeric" placeholder="45" value="${p?esc(p.lastTwo||""):""}" oninput="this.value=toEnDigits(this.value)">
-      </div>
-      <div class="field">
-        <label>টাকার পরিমাণ (Amount) <small style="font-weight:400;color:#667085">(বিল অনুযায়ী নির্ধারিত, পরিবর্তনযোগ্য নয়)</small></label>
-        <input id="payAmount-${esc(o.orderId)}" type="text" value="${esc(m.total)}" readonly disabled style="background:#F3F4F6;cursor:not-allowed;">
-      </div>
-      <div class="field">
-        <label>Transaction ID <span style="color:#d00">*</span> (SMS-এ থাকা TrxID/TxnID)</label>
-        <input id="payTxn-${esc(o.orderId)}" maxlength="40" autocomplete="off" required placeholder="যেমন: 8ABC123XYZ" value="${p?esc(p.transactionId||""):""}">
-        <small style="display:block;margin-top:5px;color:#667085">Transaction ID অবশ্যই SMS-এর সঙ্গে হুবহু মিলতে হবে।</small>
-      </div>
-      <div class="form-msg" id="payMsg-${esc(o.orderId)}"></div>
-      <button class="btn btn-primary btn-sm" type="button" onclick="submitPayment('${esc(o.orderId)}','${esc(o.phone)}')">${pending?"তথ্য আপডেট করুন":"পেমেন্ট ভেরিফাই"}</button>
-    </div>`;
+    ${notice}`;
 }
 
 function humanFileSize(bytes){
@@ -2798,59 +2837,325 @@ function orderCard(o){
   </div>`;
 }
 
-window.togglePay = function(orderId){
-  const els=$$("payform-"+orderId);
-  if(!els.length) return;
-  const show = els[0].style.display==="none" || !els[0].style.display;
-  els.forEach(el=>{ el.style.display = show ? "block" : "none"; });
+/* =====================================================================
+   bKash পেমেন্ট পপআপ — ১০ মিনিটের টাইমার সহ
+   ১) "পেমেন্ট করুন" চাপলে পপআপ → পরিমাণ + গ্রাহকের bKash নম্বর
+   ২) "পেমেন্ট করুন" চাপলে Firebase-এ ১০ মিনিটের pending রেকর্ড (createdAt/expiresAt)
+      তৈরি হয় এবং অ্যাডমিনের bKash নম্বর + countdown দেখায়
+   ৩) SMS মিললে অ্যাডমিন-সাইড/ফাংশন paymentInfo.verified=true করে দেয় → পপআপে সফল দেখায়
+   ৪) সময় শেষ হলে রেকর্ড expired হয় (verified না হলে)
+   ===================================================================== */
+const PAY_WINDOW_MS = 10*60*1000;
+
+// Firebase সার্ভারের সাথে ঘড়ির পার্থক্য — গ্রাহকের ফোনের ঘড়ি ভুল হলেও ১০ মিনিট ঠিক থাকবে
+try{ onValue(ref(db,".info/serverTimeOffset"), s=>{ window.__srvOffset = Number(s.val())||0; }); }catch(e){}
+function srvNow(){ return Date.now() + (window.__srvOffset||0); }
+function payState(){ return window.__payState || (window.__payState = { orderId:"", phone:"", requestId:"", expiresAt:0, timer:null, unsub:null, expiry:{} }); }
+function payOrder(){ const st=payState(); return window.__trackedOrders && window.__trackedOrders[st.orderId] || null; }
+function payBody(){ return $("payBody"); }
+
+function buildPayModal(){
+  if($("payModal")) return;
+  const wrap=document.createElement("div");
+  wrap.id="payModal";
+  wrap.className="congrats-modal hidden";
+  wrap.setAttribute("role","dialog");
+  wrap.setAttribute("aria-modal","true");
+  wrap.setAttribute("aria-labelledby","payTitle");
+  wrap.innerHTML=`<div class="auth-modal-box pay-modal-box">
+    <button class="auth-modal-close" type="button" onclick="closePayPopup()" aria-label="বন্ধ করুন">×</button>
+    <div class="pay-bk-head">
+      <span class="pay-bk-logo"><img src="data:image/png;base64,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" alt="bKash"></span>
+      <p class="pay-bk-tag">bKash Send Money পেমেন্ট</p>
+    </div>
+    <div id="payBody"></div>
+  </div>`;
+  document.body.appendChild(wrap);
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape" && !$("payModal").classList.contains("hidden")) closePayPopup();
+  });
+}
+
+function stopPayTimer(){
+  const st=payState();
+  if(st.timer){ clearInterval(st.timer); st.timer=null; }
+  if(st.unsub){ st.unsub(); st.unsub=null; }
+}
+
+window.openPayPopup = function(orderId){
+  const ord = window.__trackedOrders && window.__trackedOrders[orderId];
+  if(!ord) return;
+  buildPayModal();
+  const st=payState();
+  st.orderId=orderId; st.phone=ord.phone;
+  $("payModal").classList.remove("hidden");
+  const p=ord.paymentInfo;
+  if(p && p.verified) return payDone(p);
+  if(p && p.verificationPending && p.expiresAt && srvNow() < p.expiresAt) return payWaiting(p);
+  payInput();
 };
 
-window.submitPayment = async function(orderId, phone){
-  const methodEl=$visible("payMethod-"+orderId), last2El=$visible("payLast2-"+orderId), txnEl=$visible("payTxn-"+orderId);
-  const method = methodEl.value;
-  const last2 = toEnDigits(last2El.value.trim());
-  const transactionId = toEnDigits(txnEl.value.trim());
-  const msgEls = $$("payMsg-"+orderId);
-  const showPayMsg=(t,isErr)=>{ msgEls.forEach(msgEl=>{ msgEl.textContent=t; msgEl.classList.add("show"); msgEl.classList.toggle("err",!!isErr); }); };
-  const ord = window.__trackedOrders && window.__trackedOrders[orderId] ? window.__trackedOrders[orderId] : null;
-  if(!ord || !ord.memo) return showPayMsg("মেমো তৈরি না হওয়া পর্যন্ত পেমেন্ট করা যাবে না।", true);
-  const amount = ord.memo.total; // amount is always taken from the admin-authored memo total — never from the (uneditable) field
-  if(!/^\d{2}$/.test(last2)) return showPayMsg("পেমেন্ট করা নম্বরের সঠিক শেষ ২ ডিজিট দিন।", true);
-  if(!amount || isNaN(amount) || Number(amount)<=0) return showPayMsg("বিলে সঠিক পরিমাণ পাওয়া যায়নি, আমাদের সাথে যোগাযোগ করুন।", true);
-  if(!transactionId || transactionId.length < 4) return showPayMsg("SMS-এ থাকা সঠিক Transaction ID দিন।", true);
-  const existingPayment = window.__trackedOrders && window.__trackedOrders[orderId] ? window.__trackedOrders[orderId].paymentInfo : null;
-  if(existingPayment && existingPayment.verified) return showPayMsg("এই অর্ডারের পেমেন্ট ইতিমধ্যে ভেরিফাইড।", true);
-  const isEdit = !!(existingPayment && existingPayment.verificationPending);
+window.closePayPopup = function(){
+  stopPayTimer();
+  const m=$("payModal");
+  if(m) m.classList.add("hidden");
+};
+
+/* ---- ধাপ ১: পরিমাণ + গ্রাহকের bKash নম্বর ---- */
+function payInput(){
+  stopPayTimer();
+  const ord=payOrder();
+  const m=ord && ord.memo;
+  if(!m){
+    payBody().innerHTML=`<div class="pay-result"><h3 id="payTitle">পেমেন্ট করা যাচ্ছে না</h3><p>মেমো তৈরি না হওয়া পর্যন্ত পেমেন্ট করা যাবে না। একটু পর আবার চেষ্টা করুন।</p><div class="pay-result-actions"><button class="btn btn-soft" type="button" onclick="closePayPopup()">বন্ধ করুন</button></div></div>`;
+    return;
+  }
+  payBody().innerHTML=`
+    <h3 id="payTitle">পেমেন্ট করুন</h3>
+    <div class="pay-amount"><small>আপনাকে দিতে হবে</small><strong>৳${esc(m.total)}</strong></div>
+    <div class="field">
+      <label for="paySender">আপনার bKash নম্বর</label>
+      <input id="paySender" inputmode="numeric" maxlength="11" autocomplete="tel" placeholder="01XXXXXXXXX" oninput="this.value=toEnDigits(this.value)">
+      <span class="pay-hint">যে নম্বর থেকে টাকা পাঠাবেন, সেই পুরো ১১ ডিজিটের নম্বরটাই দিন — এই নম্বর মিলিয়েই পেমেন্ট ভেরিফাই হবে।</span>
+    </div>
+    <div class="form-msg" id="payPopMsg"></div>
+    <button class="btn btn-primary" type="button" id="payGoBtn" onclick="startPayment()">পেমেন্ট করুন</button>`;
+  setTimeout(()=>{ const i=$("paySender"); if(i) i.focus(); },50);
+}
+
+function payMsg(t,isErr){
+  const el=$("payPopMsg"); if(!el) return;
+  el.textContent=t; el.classList.add("show"); el.classList.toggle("err",!!isErr);
+}
+
+/* ---- "পেমেন্ট করুন" চাপলে: Firebase-এ ১০ মিনিটের pending রেকর্ড ---- */
+window.startPayment = async function(){
+  const st=payState();
+  const ord=payOrder();
+  if(!ord || !ord.memo) return payMsg("মেমো তৈরি না হওয়া পর্যন্ত পেমেন্ট করা যাবে না।", true);
+  const amount = Number(ord.memo.total); // পরিমাণ সবসময় অ্যাডমিনের মেমো থেকে — গ্রাহক বদলাতে পারবেন না
+  const sender = toEnDigits(($("paySender").value||"").trim());
+  const adminNumber = (window.__paymentNumbers||{}).bkash || "";
+  if(!/^01[3-9]\d{8}$/.test(sender)) return payMsg("সঠিক ১১ ডিজিটের bKash নম্বর দিন।", true);
+  if(!amount || isNaN(amount) || amount<=0) return payMsg("বিলে সঠিক পরিমাণ পাওয়া যায়নি, আমাদের সাথে যোগাযোগ করুন।", true);
+  if(!adminNumber) return payMsg("পেমেন্ট নম্বর এখনো সেট করা নেই, আমাদের সাথে যোগাযোগ করুন।", true);
+  const existing = ord.paymentInfo;
+  if(existing && existing.verified) return payMsg("এই অর্ডারের পেমেন্ট ইতিমধ্যে ভেরিফাইড।", true);
+
+  const btn=$("payGoBtn"); if(btn){ btn.disabled=true; btn.textContent="অপেক্ষা করুন..."; }
   try{
-    const now=Date.now();
-    const requestRef=push(ref(db,"dorkhast/paymentVerificationRequests"));
-    const requestId=requestRef.key;
-    const paymentInfo = { method, lastTwo:last2, amount:Number(amount), transactionId, submittedAt:now, verified:false, verificationPending:true, requestId };
-    const requestData = { orderId, phone, method, senderLast2:last2, amount:Number(amount), transactionId, createdAt:now, status:"pending", requestId };
+    const now = srvNow();
+    const expiresAt = now + PAY_WINDOW_MS;
+    const requestId = push(ref(db,"dorkhast/paymentVerificationRequests")).key;
+    const paymentInfo = { method:"bkash", senderNumber:sender, matchBy:"full11", amount, adminNumber, submittedAt:now, expiresAt, verified:false, verificationPending:true, requestId };
+    const requestData = { requestId, orderId:ord.orderId, phone:ord.phone, method:"bkash", senderNumber:sender, matchBy:"full11", amount, adminNumber, createdAt:now, expiresAt, status:"pending" };
     const updates={};
-    updates[`dorkhast/orders/${orderId}/paymentInfo`] = paymentInfo;
-    updates[`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfo`] = paymentInfo;
+    const oid=ord.orderId, ph=ord.phone;
+    updates[`dorkhast/orders/${oid}/paymentInfo`] = paymentInfo;
+    updates[`dorkhast/ordersByPhone/${ph}/${oid}/paymentInfo`] = paymentInfo;
     updates[`dorkhast/paymentVerificationRequests/${requestId}`] = requestData;
-    // এডিট হলে আগের (সংশোধনের আগের) তথ্যটা হিস্টরি হিসেবে রেখে দেওয়া হয়, যাতে admin panel-এ
-    // দেখা যায় গ্রাহক আগে কী জমা দিয়েছিলেন
-    if(isEdit){
-      const histKey = push(ref(db,`dorkhast/orders/${orderId}/paymentInfoHistory`)).key;
-      const historyEntry = { method: existingPayment.method, lastTwo: existingPayment.lastTwo, amount: existingPayment.amount, transactionId: existingPayment.transactionId, submittedAt: existingPayment.submittedAt, replacedAt: now };
-      updates[`dorkhast/orders/${orderId}/paymentInfoHistory/${histKey}`] = historyEntry;
-      updates[`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfoHistory/${histKey}`] = historyEntry;
-    }
-    // আগের (ভুল) সাবমিশনের request-টা superseded হিসেবে মার্ক করে রাখা — admin side-এর কিছু ভাঙে না, শুধু ট্র্যাকিংয়ের জন্য
-    if(isEdit && existingPayment.requestId && existingPayment.requestId!==requestId){
-      updates[`dorkhast/paymentVerificationRequests/${existingPayment.requestId}/status`] = "superseded";
+    // আগের চেষ্টা থাকলে ইতিহাসে রাখা এবং আগের request "superseded" মার্ক করা
+    if(existing && (existing.requestId || existing.transactionId || existing.senderNumber)){
+      const histKey = push(ref(db,`dorkhast/orders/${oid}/paymentInfoHistory`)).key;
+      const hist = { method:existing.method||"", amount:existing.amount||0, transactionId:existing.transactionId||"", senderNumber:existing.senderNumber||"", submittedAt:existing.submittedAt||0, replacedAt:now };
+      updates[`dorkhast/orders/${oid}/paymentInfoHistory/${histKey}`] = hist;
+      updates[`dorkhast/ordersByPhone/${ph}/${oid}/paymentInfoHistory/${histKey}`] = hist;
+      if(existing.requestId) updates[`dorkhast/paymentVerificationRequests/${existing.requestId}/status`] = "superseded";
     }
     await update(ref(db), updates);
-    showPayMsg(isEdit ? "পেমেন্ট তথ্য আপডেট করা হয়েছে। SMS-এর সঙ্গে মিললে স্বয়ংক্রিয়ভাবে ভেরিফাই হবে।" : "পেমেন্ট তথ্য গ্রহণ করা হয়েছে। SMS-এর সঙ্গে মিললে স্বয়ংক্রিয়ভাবে ভেরিফাই হবে।", false);
-    trackOrders();
+    payWaiting(paymentInfo);
+    if(typeof window.trackOrders==="function") window.trackOrders();
   }catch(e){
     console.error(e);
-    showPayMsg("দুঃখিত, পাঠানো যায়নি। আবার চেষ্টা করুন।", true);
+    if(btn){ btn.disabled=false; btn.textContent="পেমেন্ট করুন"; }
+    payMsg("দুঃখিত, শুরু করা যায়নি। আবার চেষ্টা করুন।", true);
   }
 };
+
+/* ---- ধাপ ২: অ্যাডমিনের নম্বর + countdown ---- */
+function payWaiting(p){
+  stopPayTimer();
+  const st=payState();
+  st.requestId=p.requestId; st.expiresAt=p.expiresAt;
+  const adminNumber = p.adminNumber || (window.__paymentNumbers||{}).bkash || "";
+  payBody().innerHTML=`
+    <h3 id="payTitle">টাকা পাঠান</h3>
+    <p class="sub">নিচের সময়ের মধ্যে আপনার নম্বর থেকে <b>Send Money</b> করুন।</p>
+    <div class="pay-timer" id="payTimer">
+      <div class="pay-timer-num" id="payTimerNum" role="timer">10:00</div>
+      <div class="pay-timer-bar"><i id="payTimerBar"></i></div>
+    </div>
+    <div class="pay-send">
+      <div class="pay-send-row"><span>পরিমাণ</span><b>৳${esc(p.amount)}</b></div>
+      <div class="pay-send-row"><span>এই নম্বরে পাঠান</span>
+        <span class="pay-send-val"><b id="payAdminNum">${esc(adminNumber)}</b><button class="pay-copy" type="button" id="payCopyBtn" onclick="copyPayNumber()">কপি</button></span>
+      </div>
+      <div class="pay-send-row"><span>আপনার নম্বর</span><b>${esc(p.senderNumber||"—")}</b></div>
+    </div>
+    <button class="pay-open-btn" type="button" id="payOpenBtn" onclick="openBkashApp()">📲 Open bKash &amp; Send Money</button>
+    <p class="pay-open-hint">বাটন চাপলে অ্যাডমিনের নম্বর <b>অটো কপি</b> হবে ও bKash app খুলবে। Send Money-তে নম্বরটি পেস্ট করে শুধু <b>৳${esc(p.amount)}</b> দিন।</p>
+    <div class="pay-steps hidden" id="payFallback"></div>
+    <p class="pay-wait-note">টাকা পাঠানোর পর SMS মিললে নিজে থেকেই ভেরিফাই হয়ে যাবে। এই পপআপ বন্ধ করলেও সময় চলতে থাকবে।</p>`;
+  tickPay();
+  st.timer=setInterval(tickPay,1000);
+  st.unsub = onValue(ref(db,`dorkhast/ordersByPhone/${st.phone}/${st.orderId}/paymentInfo`), snap=>{
+    const v=snap.val();
+    if(v && v.verified) payDone(v);
+  }, err=>console.error(err));
+}
+
+function tickPay(){
+  const st=payState();
+  const num=$("payTimerNum");
+  if(!num){ stopPayTimer(); return; }
+  const left = st.expiresAt - srvNow();
+  if(left<=0){
+    stopPayTimer();
+    expirePayment(st.orderId, st.phone, st.requestId);
+    payExpired();
+    return;
+  }
+  const s=Math.ceil(left/1000);
+  num.textContent = String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+  const bar=$("payTimerBar"); if(bar) bar.style.width = (left/PAY_WINDOW_MS*100).toFixed(1)+"%";
+  const box=$("payTimer"); if(box) box.classList.toggle("low", s<=60);
+}
+
+window.copyPayNumber = function(){
+  const n = ($("payAdminNum")||{}).textContent || "";
+  const btn=$("payCopyBtn");
+  const done=()=>{ if(btn){ btn.textContent="কপি হয়েছে"; setTimeout(()=>{ if(btn) btn.textContent="কপি"; },1800); } };
+  const fallback=()=>{
+    const ta=document.createElement("textarea"); ta.value=n; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){}
+    document.body.removeChild(ta);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(n).then(done,fallback);
+  else fallback();
+};
+
+/* ---- "Open bKash & Send Money" ----
+   bKash Send Money স্ক্রিনে নম্বর pre-fill করার কোনো পাবলিক deep link নেই।
+   তাই: (১) অ্যাডমিনের নম্বর ক্লিপবোর্ডে কপি (২) bKash app খোলার চেষ্টা
+   (৩) app না খুললে বিকল্প নির্দেশনা (Play Store/App Store, *247#, bkash.com) দেখানো। */
+const BKASH_ANDROID_PKG = "com.bKash.customerapp";
+const BKASH_PLAY_URL = "https://play.google.com/store/apps/details?id=com.bKash.customerapp";
+const BKASH_IOS_URL  = "https://apps.apple.com/app/bkash/id1458393372";
+const BKASH_WEB_URL  = "https://www.bkash.com/";
+
+function copyTextQuiet(t){
+  return new Promise(res=>{
+    const fb=()=>{
+      try{
+        const ta=document.createElement("textarea"); ta.value=t; ta.style.position="fixed"; ta.style.opacity="0";
+        document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); res(true);
+      }catch(e){ res(false); }
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(()=>res(true),fb); else fb();
+  });
+}
+
+function showBkashFallback(adminNumber, isAndroid, isIOS){
+  const box=$("payFallback"); if(!box) return;
+  const store = isAndroid ? `<a href="${BKASH_PLAY_URL}" target="_blank" rel="noopener">Google Play থেকে bKash app নিন</a>`
+              : isIOS ? `<a href="${BKASH_IOS_URL}" target="_blank" rel="noopener">App Store থেকে bKash app নিন</a>`
+              : `<a href="${BKASH_PLAY_URL}" target="_blank" rel="noopener">bKash app ডাউনলোড করুন</a>`;
+  box.innerHTML=`<b>bKash app না খুললে, নিচের যেকোনো উপায়ে Send Money করুন:</b>
+    <ol>
+      <li>ফোনে bKash app খুলে <b>Send Money</b> চাপুন → নম্বর <b>${esc(adminNumber)}</b> পেস্ট করুন (কপি করা আছে) → শুধু amount দিয়ে পাঠান।</li>
+      <li>app না থাকলে ${store}।</li>
+      <li>অথবা ডায়াল করুন <a href="tel:*247%23"><b>*247#</b></a> → <b>Send Money</b> → নম্বর ও amount দিন।</li>
+      <li>অথবা <a href="${BKASH_WEB_URL}" target="_blank" rel="noopener">bkash.com</a> ঘুরে দেখুন।</li>
+    </ol>`;
+  box.classList.remove("hidden");
+}
+
+window.openBkashApp = async function(){
+  const st=payState();
+  const ord=payOrder();
+  const p = (ord && ord.paymentInfo) || {};
+  const adminNumber = p.adminNumber || (window.__paymentNumbers||{}).bkash || ($("payAdminNum")||{}).textContent || "";
+  if(!adminNumber) return;
+  const btn=$("payOpenBtn");
+  const ok = await copyTextQuiet(adminNumber);
+  if(btn){ btn.innerHTML = ok ? "✓ নম্বর কপি হয়েছে — bKash খুলছে..." : "bKash খুলছে..."; setTimeout(()=>{ if(btn) btn.innerHTML="📲 Open bKash &amp; Send Money"; },2500); }
+
+  const ua = navigator.userAgent || "";
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+  if(!isAndroid && !isIOS){ showBkashFallback(adminNumber,false,false); return; }
+
+  let left=false;
+  const onHide=()=>{ if(document.hidden) left=true; };
+  document.addEventListener("visibilitychange",onHide);
+  window.addEventListener("pagehide",()=>{ left=true; },{once:true});
+
+  try{
+    if(isAndroid){
+      // app ইনস্টল থাকলে খুলবে; না থাকলে Play Store-এ নেবে
+      window.location.href = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package="+BKASH_ANDROID_PKG+";S.browser_fallback_url="+encodeURIComponent(BKASH_PLAY_URL)+";end";
+    }else{
+      window.location.href = "bkash://";
+    }
+  }catch(e){}
+
+  setTimeout(()=>{
+    document.removeEventListener("visibilitychange",onHide);
+    if(!left && !document.hidden) showBkashFallback(adminNumber,isAndroid,isIOS);
+  }, 2200);
+};
+
+/* ---- ফলাফল: ভেরিফাইড / সময় শেষ ---- */
+function payDone(p){
+  stopPayTimer();
+  payBody().innerHTML=`<div class="pay-result">
+    <div class="pay-done-icon" aria-hidden="true">✓</div>
+    <h3 id="payTitle">পেমেন্ট ভেরিফাইড হয়েছে</h3>
+    <p>৳${esc(p.amount)} পেমেন্ট সফলভাবে যাচাই হয়েছে। ধন্যবাদ!</p>
+    <div class="pay-result-actions"><button class="btn btn-primary" type="button" onclick="closePayPopup()">ঠিক আছে</button></div>
+  </div>`;
+}
+
+function payExpired(){
+  payBody().innerHTML=`<div class="pay-result">
+    <h3 id="payTitle">সময় শেষ হয়ে গেছে</h3>
+    <p>১০ মিনিটের মধ্যে পেমেন্ট মেলেনি। টাকা পাঠিয়ে থাকলে আবার পাঠাবেন না — আমাদের জানান, আমরা নিজে যাচাই করে দেব।</p>
+    <div class="pay-result-actions">
+      <button class="btn btn-primary" type="button" onclick="payInput()">আবার পেমেন্ট করুন</button>
+      <button class="btn btn-soft" type="button" onclick="closePayPopup()">বন্ধ করুন</button>
+    </div>
+  </div>`;
+}
+window.payInput = payInput;
+
+/* সময় শেষে (ভেরিফাইড না হলে) রেকর্ড expired মার্ক করা — পপআপ বন্ধ থাকলেও কাজ করে */
+async function expirePayment(orderId, phone, requestId){
+  try{
+    const snap = await get(ref(db,`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfo`));
+    const pi = snap.val();
+    if(!pi || pi.verified || pi.requestId!==requestId || !pi.verificationPending) return;
+    const u={};
+    u[`dorkhast/orders/${orderId}/paymentInfo/verificationPending`] = false;
+    u[`dorkhast/orders/${orderId}/paymentInfo/expired`] = true;
+    u[`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfo/verificationPending`] = false;
+    u[`dorkhast/ordersByPhone/${phone}/${orderId}/paymentInfo/expired`] = true;
+    u[`dorkhast/paymentVerificationRequests/${requestId}/status`] = "expired";
+    await update(ref(db), u);
+  }catch(e){ console.error(e); }
+}
+
+function armPayExpiry(o){
+  const p=o.paymentInfo; if(!p || !p.expiresAt) return;
+  const ex=payState().expiry;
+  const key=o.orderId+":"+p.requestId;
+  if(ex[key]) return;
+  ex[key]=setTimeout(async()=>{
+    await expirePayment(o.orderId, o.phone, p.requestId);
+    delete ex[key];
+  }, Math.max(0, p.expiresAt - srvNow()) + 1500);
+}
 
 /* ---- bill / cash memo viewer (the memo is authored by the admin — customers
        only ever see it, never generate or edit it themselves) ---- */
